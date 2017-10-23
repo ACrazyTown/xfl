@@ -8,7 +8,7 @@
 
 	I developed XFL while beeing hired to port a medium sized browser game frontend from Adobe Flash to OpenFL/Haxe. See "https://www.pirate-century.com". 
 
-1.2 Who did this?
+1.3 Who did this?
 
 	XFL was programmed by Andreas Drewke at Pixel Racoons GmbH. Pixel Racoons allowed me to open source this! Thank you.
 	XFL basic functionality like parsing was derived from "https://github.com/haxenme-old/xfl".
