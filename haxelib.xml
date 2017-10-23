@@ -1,7 +1,0 @@
-<project name="xfl" url="http://github.com/haxenme/swf" license="MIT">
-    <user name="elyon"/>
-    <tag v="cpp"/>
-    <tag v="flash"/>
-    <description>Provides support for parsing and rendering XFL content</description>
-    <version name="1.04">Update for Neko 2</version>
-</project>
