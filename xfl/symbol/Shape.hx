@@ -9,7 +9,7 @@ class Shape extends ShapeBase {
 	public var domShape: DOMShape;
 
 	public function new(domShape: DOMShape) {
-		super ();
+		super();
 		this.domShape = domShape;
 		commands = [];
 		fillStyles = readFillStyles (domShape);
@@ -19,8 +19,8 @@ class Shape extends ShapeBase {
 		var currentFill0 = -1;
 		var currentFill1 = -1;
 		var currentLine = -1;
-		var edges = new Array <RenderCommand> ();
-		var fills = new Array <ShapeEdge> ();
+		var edges = new Array<RenderCommand>();
+		var fills = new Array<ShapeEdge>();
 		for (edge in domShape.edges) {
 			var newLineStyle = (edge.strokeStyle > -1 && edge.strokeStyle != currentLine);
 			var newFillStyle0 = (edge.fillStyle0 > -1 && edge.fillStyle0 != currentFill0);
@@ -67,19 +67,19 @@ class Shape extends ShapeBase {
 							var px = Std.parseInt (cmds[i + 1]) / 20;
 							var py = Std.parseInt (cmds[i + 2]) / 20;
 							if (currentLine > 0) {
-								edges.push (function (g:Graphics) {
+								edges.push(function (g:Graphics) {
 									g.lineTo (px, py);
 								});
 							} else {
-								edges.push (function (g:Graphics) {
+								edges.push(function (g:Graphics) {
 									g.moveTo (px, py);
 								});
 							}
 							if (currentFill0 > 0) {
-								fills.push (ShapeEdge.line (currentFill0, penX, penY, px, py));
+								fills.push(ShapeEdge.line(currentFill0, penX, penY, px, py));
 							}
 							if (currentFill1 > 0) {
-								fills.push (ShapeEdge.line (currentFill1, px, py, penX, penY));
+								fills.push(ShapeEdge.line(currentFill1, px, py, penX, penY));
 							}
 							penX = px;
 							penY = py;
@@ -95,10 +95,10 @@ class Shape extends ShapeBase {
 								});
 							}
 							if (currentFill0 > 0) {	
-								fills.push (ShapeEdge.curve (currentFill0, penX, penY, cx, cy, px, py));
+								fills.push(ShapeEdge.curve(currentFill0, penX, penY, cx, cy, px, py));
 							}
-							if (currentFill1 > 0) {	
-								fills.push (ShapeEdge.curve (currentFill1, px, py, cx, cy, penX, penY));
+							if (currentFill1 > 0) {
+								fills.push(ShapeEdge.curve(currentFill1, px, py, cx, cy, penX, penY));
 							}
 							penX = px;
 							penY = py;
@@ -111,9 +111,9 @@ class Shape extends ShapeBase {
 				}
 			}
 		}
-		flushCommands (edges, fills);
+		flushCommands(edges, fills);
 		for (command in commands) {
-			command (this.graphics);
+			command(this.graphics);
 		}
 	}
 

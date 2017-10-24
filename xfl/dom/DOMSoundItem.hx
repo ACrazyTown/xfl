@@ -28,7 +28,6 @@ class DOMSoundItem {
 		soundItem.format = xml.att.format;
 		soundItem.href = xml.att.href;
 		soundItem.soundDataHRef = xml.att.soundDataHRef;
-        trace(soundItem.name + ":" + soundItem);
 		return soundItem;
 	}
 

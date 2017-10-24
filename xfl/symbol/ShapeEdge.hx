@@ -2,6 +2,7 @@ package xfl.symbol;
 
 import xfl.symbol.Symbol;
 import openfl.display.Graphics;
+import openfl.display.GraphicsPath;
 
 class ShapeEdge {
 
@@ -17,14 +18,14 @@ class ShapeEdge {
 	public function new() {
 	}
 
-	public function asCommand(): RenderCommand {
+	public function asCommand(): GraphicsPathCommand {
 		if (isQuadratic) {
-			return function(gfx: Graphics) { 
-				gfx.curveTo (cx, cy, x1, y1);
+			return function(graphicsPath: GraphicsPath) { 
+				graphicsPath.curveTo(cx, cy, x1, y1);
 			}
 		} else {
-			return function (gfx: Graphics) {
-				gfx.lineTo (x1, y1); 
+			return function(graphicsPath: GraphicsPath) {
+				graphicsPath.lineTo(x1, y1); 
 			}
 		}
 	}

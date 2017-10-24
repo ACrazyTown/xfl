@@ -187,6 +187,9 @@ class Shared {
 	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int) {
 		var currentLayer: Int = 0;
 		for (layer in layers) {
+			// TODO: a.drewke, handle hit area correctly
+			if (layer.name != null && 
+				(layer.name == "HitArea" || layer.name == "hitbox")) continue;
 			for (frameIdx in 0...layer.frames.length) {
 				var frameAnonymousObjectId : Int = 0;
 				var frame: DOMFrame = layer.frames[frameIdx];
@@ -204,7 +207,7 @@ class Shared {
 								if (bitmap != null && layer.visible == true) {
 									bitmap.visible = false;
 								}
-							} else 
+							} else
 							if (Std.is(element, DOMComponentInstance)) {
 								var component: DisplayObject = container.getChildByName(cast(element, DOMComponentInstance).name);
 								if (component != null && layer.visible == true) {
@@ -254,6 +257,9 @@ class Shared {
     public static function enableFrame(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int): Void {
 		var currentLayer: Int = 0;
 		for (layer in layers) {
+			// TODO: a.drewke, handle hit area correctly
+			if (layer.name != null && 
+				(layer.name == "HitArea" || layer.name == "hitbox")) continue;
 			for (frameIdx in 0...layer.frames.length) {
 				var frameAnonymousObjectId : Int = 0;
 				var frame: DOMFrame = layer.frames[frameIdx];

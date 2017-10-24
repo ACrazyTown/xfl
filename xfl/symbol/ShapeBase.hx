@@ -9,6 +9,8 @@ import xfl.fill.RadialGradient;
 import xfl.stroke.SolidStroke;
 import openfl.display.GradientType;
 import openfl.display.Graphics;
+import openfl.display.GraphicsPath;
+import openfl.display.GraphicsPathWinding;
 
 class ShapeBase extends openfl.display.Shape {
 
@@ -24,6 +26,7 @@ class ShapeBase extends openfl.display.Shape {
     }
 
 	private function flushCommands(edges: Array<RenderCommand>, fills: Array<ShapeEdge>) {
+		var graphicsPathCommands: Array<GraphicsPathCommand> = new Array<GraphicsPathCommand>();
 		var left = fills.length;
 		while (left > 0) {
 			var first = fills[0];
@@ -32,24 +35,22 @@ class ShapeBase extends openfl.display.Shape {
 				continue;
 			}
 			commands.push(fillStyles[first.fillStyle]);
-			var mx = first.x0;
-			var my = first.y0;
-			commands.push (function(gfx: Graphics) { 
-				gfx.moveTo (mx, my);
+			graphicsPathCommands.push(function(graphicsPath: GraphicsPath) { 
+				graphicsPath.moveTo(first.x0, first.y0);
 			});
-			commands.push (first.asCommand());
+			graphicsPathCommands.push(first.asCommand());
 			var prev = first;
-			var loop = false;
-			while (!loop) {
+			var done = false;
+			while (!done) {
 				var found = false;
 				for (i in 0...left) {
 					if (prev.connects(fills[i])) {
 						prev = fills[i];
 						fills[i] = fills[--left];
-						commands.push (prev.asCommand());
+						graphicsPathCommands.push(prev.asCommand());
 						found = true;
 						if (prev.connects(first)) {
-							loop = true;
+							done = true;
 						}
 						break;
 					}
@@ -59,8 +60,16 @@ class ShapeBase extends openfl.display.Shape {
 				}
 			}
 		}
+		var graphicsPath: GraphicsPath = new GraphicsPath();
+		graphicsPath.winding = GraphicsPathWinding.EVEN_ODD;
+		for (graphicsPathCommand in graphicsPathCommands) {
+			graphicsPathCommand(graphicsPath);
+		}
+		commands.push(function(gfx: Graphics) {
+			gfx.drawPath(graphicsPath.commands, graphicsPath.data, graphicsPath.winding);
+		});
 		if (fills.length > 0) {
-			commands.push (function(gfx: Graphics) {
+			commands.push(function(gfx: Graphics) {
 				gfx.endFill();
 			});
 		}
@@ -74,20 +83,20 @@ class ShapeBase extends openfl.display.Shape {
 
 	private function readFillStyles(domShape: DOMShapeBase): Array<RenderCommand> {
 		var result = [];
-		result.push (function(g:Graphics) {
+		result.push(function(g:Graphics) {
 			g.endFill();
 		});
 		for (fillStyle in domShape.fills) {
 			if (Std.is(fillStyle.data, SolidColor)) {
 				var color = fillStyle.data.color;
 				var alpha = fillStyle.data.alpha;
-				result.push (function (g:Graphics) {
+				result.push(function (g:Graphics) {
 					g.beginFill(color, alpha);
 				});
 			} else 
 			if (Std.is(fillStyle.data, LinearGradient)) {
 				var data: LinearGradient = cast fillStyle.data;
-				var colors : Array<Int> = [];
+				var colors : Array<UInt> = [];
 				var alphas : Array<Float> = [];
 				var ratios : Array<Int> = [];
 				for (entry in data.entries) {
@@ -95,14 +104,14 @@ class ShapeBase extends openfl.display.Shape {
 					alphas.push(entry.alpha);
 					ratios.push(Std.int(0xFF * entry.ratio));
 				}
-				result.push (function(g:Graphics) {	
+				result.push(function(g:Graphics) {	
 					g.beginGradientFill(GradientType.LINEAR, colors, alphas, ratios, data.matrix);
 				});
 			} else 
 			if (Std.is(fillStyle.data, RadialGradient)) {
 				#if !html5
 				var data: RadialGradient = cast fillStyle.data;
-				var colors : Array<Int> = [];
+				var colors : Array<UInt> = [];
 				var alphas : Array<Float> = [];
 				var ratios : Array<Int> = [];
 				for (entry in data.entries) {
@@ -110,7 +119,7 @@ class ShapeBase extends openfl.display.Shape {
 					alphas.push(entry.alpha);
 					ratios.push(Std.int(0xFF * entry.ratio));
 				}
-				result.push (function(g: Graphics) {	
+				result.push(function(g: Graphics) {	
 					g.beginGradientFill(GradientType.RADIAL, colors, alphas, ratios, data.matrix);
 				});
 				#end
@@ -130,7 +139,7 @@ class ShapeBase extends openfl.display.Shape {
 					var weight = strokeStyle.data.weight;
 					var color = strokeStyle.data.fill.color;
 					var alpha = strokeStyle.data.fill.alpha;
-					result.push (function (g: Graphics) { g.lineStyle(weight, color, alpha); } );
+					result.push(function (g: Graphics) { g.lineStyle(weight, color, alpha); } );
 				}
 			}
 		}
