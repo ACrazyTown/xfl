@@ -60,14 +60,16 @@ class ShapeBase extends openfl.display.Shape {
 				}
 			}
 		}
-		var graphicsPath: GraphicsPath = new GraphicsPath();
-		graphicsPath.winding = GraphicsPathWinding.EVEN_ODD;
-		for (graphicsPathCommand in graphicsPathCommands) {
-			graphicsPathCommand(graphicsPath);
+		if (graphicsPathCommands.length > 0) {
+			var graphicsPath: GraphicsPath = new GraphicsPath();
+			graphicsPath.winding = GraphicsPathWinding.EVEN_ODD;
+			for (graphicsPathCommand in graphicsPathCommands) {
+				graphicsPathCommand(graphicsPath);
+			}
+			commands.push(function(gfx: Graphics) {
+				gfx.drawPath(graphicsPath.commands, graphicsPath.data, graphicsPath.winding);
+			});
 		}
-		commands.push(function(gfx: Graphics) {
-			gfx.drawPath(graphicsPath.commands, graphicsPath.data, graphicsPath.winding);
-		});
 		if (fills.length > 0) {
 			commands.push(function(gfx: Graphics) {
 				gfx.endFill();
