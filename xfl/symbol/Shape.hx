@@ -11,17 +11,17 @@ class Shape extends ShapeBase {
 	public function new(domShape: DOMShape) {
 		super();
 		this.domShape = domShape;
-		commands = [];
-		fillStyles = readFillStyles (domShape);
-		lineStyles = readLineStyles (domShape);
-		var penX = 0.0;
-		var penY = 0.0;
-		var currentFill0 = -1;
-		var currentFill1 = -1;
-		var currentLine = -1;
-		var edges = new Array<RenderCommand>();
-		var fills = new Array<ShapeEdge>();
 		for (edge in domShape.edges) {
+			commands = [];
+			fillStyles = readFillStyles(domShape);
+			lineStyles = readLineStyles(domShape);
+			var penX = 0.0;
+			var penY = 0.0;
+			var currentFill0 = -1;
+			var currentFill1 = -1;
+			var currentLine = -1;
+			var edges = new Array<RenderCommand>();
+			var fills = new Array<ShapeEdge>();
 			var newLineStyle = (edge.strokeStyle > -1 && edge.strokeStyle != currentLine);
 			var newFillStyle0 = (edge.fillStyle0 > -1 && edge.fillStyle0 != currentFill0);
 			var newFillStyle1 = (edge.fillStyle1 > -1 && edge.fillStyle1 != currentFill1);			
@@ -110,10 +110,10 @@ class Shape extends ShapeBase {
 					}
 				}
 			}
-		}
-		flushCommands(edges, fills);
-		for (command in commands) {
-			command(this.graphics);
+			flushCommands(edges, fills);
+			for (command in commands) {
+				command(this.graphics);
+			}
 		}
 	}
 

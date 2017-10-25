@@ -36,9 +36,6 @@ class DataGrid extends Sprite {
     private var _width: Float;
     private var _height: Float;
 
-    private var backgroundShape: Shape;
-    private var borderShape: Shape;
-
     private var displayObjects: Array<DisplayObject>;
 
     /**
@@ -53,36 +50,11 @@ class DataGrid extends Sprite {
         super();
         _width = 0;
         _height = 0;
-        backgroundShape = new Shape();
-        backgroundShape.name = "datagrid.backgroundshape";
-        addBackgroundShape();
-        borderShape = new Shape();
-        borderShape.name = "datagrid.bordershape";
-        addBorderShape();
         x = 0;
         y = 0;
         width = 0;
         height = 0;
         mouseChildren = true;
-    }
-
-    private function addBorderShape() {
-        borderShape.graphics.clear();
-        borderShape.graphics.lineStyle(1, 0x000000);
-        borderShape.graphics.beginFill(0x000000, 0);
-        borderShape.graphics.drawRect(0, 0, _width, _height);
-        borderShape.graphics.endFill();
-        addChild(borderShape);
-        displayObjects.push(borderShape);
-    }
-
-    private function addBackgroundShape() {
-        backgroundShape.graphics.clear();
-        backgroundShape.graphics.beginFill(0xFFFFFF, 1);
-        backgroundShape.graphics.drawRect(1.0, 1.0, _width - 1.0, _height - 1.0);
-        backgroundShape.graphics.endFill();
-        addChild(backgroundShape);
-        displayObjects.push(backgroundShape);
     }
 
     /**
@@ -153,7 +125,6 @@ class DataGrid extends Sprite {
             removeChild(displayObject);
         }
         displayObjects = new Array<DisplayObject>();
-        addBackgroundShape();
         var _x: Float = 0.0;
         var columnIdx: Int = 0;
         var headerTextFormat: TextFormat = styles.get("headerTextFormat") != null?cast(styles.get("headerTextFormat"), TextFormat):null;
@@ -223,17 +194,16 @@ class DataGrid extends Sprite {
         for (i in 0...Std.int(numChildren / columns.length)) {
             var cellHeight: Float = 0.0;
             for (j in 0...columns.length) {
-                var cell: DisplayObject = displayObjects[1 + (i * columns.length) + j];
+                var cell: DisplayObject = displayObjects[(i * columns.length) + j];
                 if (cell.height > cellHeight) cellHeight = cell.height;
             }
             for (j in 0...columns.length) {
-                var cell: DisplayObject = displayObjects[1 + (i * columns.length) + j];
+                var cell: DisplayObject = displayObjects[(i * columns.length) + j];
                 cell.y = _y;
                 cell.height = cellHeight;
             }
             _y+= cellHeight;
         }
-        addBorderShape();
     }
 
     private function setColumnWidth(_width: Float): Void {
@@ -280,13 +250,13 @@ class DataGrid extends Sprite {
     private function onMouseEventMove(event: MouseEvent) : Void {
         if (Std.is(cast(event.target, DisplayObject), HeaderRenderer) == true) {
             for (columnIdx in 0...columns.length) {
-                cast(displayObjects[1 + columnIdx], HeaderRenderer).setMouseState(event.type);
+                cast(displayObjects[columnIdx], HeaderRenderer).setMouseState(event.type);
             }
         }
         if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
             var cell: CellRenderer = cast(event.target, CellRenderer);
             for (columnIdx in 0...columns.length) {
-                cast(displayObjects[1 + (cell.listData.index * columns.length) + columnIdx], CellRenderer).setMouseState(event.type);
+                cast(displayObjects[(cell.listData.index * columns.length) + columnIdx], CellRenderer).setMouseState(event.type);
             }
         }
     }
