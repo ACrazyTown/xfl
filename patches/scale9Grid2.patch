@@ -1,0 +1,30 @@
+diff --git a/xfl/dom/DOMSymbolItemScaleGrid.hx b/xfl/dom/DOMSymbolItemScaleGrid.hx
+new file mode 100644
+index 0000000..028b52d
+--- /dev/null
++++ b/xfl/dom/DOMSymbolItemScaleGrid.hx
+@@ -0,0 +1,24 @@
++package xfl.dom;
++
++import haxe.xml.Fast;
++
++class DOMSymbolItemScaleGrid {
++
++	public var left: Float;
++	public var right: Float;
++	public var top: Float;
++	public var bottom: Float;
++
++	public function new () {
++	}
++
++	public static function parse(xml: Fast): DOMSymbolItemScaleGrid {
++		var symbolItemScaleGrid = new DOMSymbolItemScaleGrid();
++		if (xml.has.scaleGridLeft == true) symbolItemScaleGrid.left = Std.parseFloat(xml.att.scaleGridLeft);
++		if (xml.has.scaleGridRight == true) symbolItemScaleGrid.right = Std.parseFloat(xml.att.scaleGridRight);
++		if (xml.has.scaleGridTop == true) symbolItemScaleGrid.top = Std.parseFloat(xml.att.scaleGridTop);
++		if (xml.has.scaleGridBottom == true) symbolItemScaleGrid.bottom = Std.parseFloat(xml.att.scaleGridBottom);
++		return symbolItemScaleGrid;
++	}
++
++}
