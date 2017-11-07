@@ -16,8 +16,8 @@ class XFLAssets {
      *  Constructor
      *  @param paths
      */
-    public function new(paths: Array<String>) {
-        xfl = new XFL(paths);
+    public function new(paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
+        xfl = new XFL(paths, customSymbolLoader);
     }
 
     /**

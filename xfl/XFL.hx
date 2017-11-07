@@ -14,10 +14,12 @@ class XFL {
 
 	public var documents: Array<DOMDocument>;
 	public var paths: Array<String>;
+	public var customSymbolLoader: XFLCustomSymbolLoader;
 
-	public function new (paths: Array<String>) {
+	public function new (paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
 		this.documents = [];
 		this.paths = paths;
+		this.customSymbolLoader = customSymbolLoader;
 		for (path in this.paths) {
 			documents.push(DOMDocument.load(path, "DOMDocument.xml"));
 		}
@@ -66,10 +68,17 @@ class XFL {
 	public function createMovieClip (name: String): XFLMovieClip {
 		var timeline = null;
 		for (document in documents) {
-			for (symbol in document.symbols) {
-				if (symbol.linkageClassName == name && symbol.linkageExportForAS == true) {
-					if (Std.is(symbol, DOMSymbolItem)) {
-						timeline = symbol.timeline;
+			for (symbolItem in document.symbols) {
+				if (symbolItem.linkageClassName == name && symbolItem.linkageExportForAS == true) {
+					if (Std.is(symbolItem, DOMSymbolItem)) {
+						if (customSymbolLoader != null) {
+							var movieClip: XFLMovieClip = customSymbolLoader.createMovieClip(this, symbolItem);
+							if (movieClip != null) {
+								customSymbolLoader.onMovieClipLoaded(this, symbolItem, movieClip);
+								return movieClip;
+							}
+						}
+						timeline = symbolItem.timeline;
 						break;
 					}
 				}
@@ -88,10 +97,17 @@ class XFL {
 	public function createSprite (name: String): XFLSprite {
 		var timeline = null;
 		for (document in documents) {
-			for (symbol in document.symbols) {
-				if (symbol.linkageClassName == name && symbol.linkageExportForAS == true) {
-					if (Std.is(symbol, DOMSymbolItem)) {
-						timeline = symbol.timeline;
+			for (symbolItem in document.symbols) {
+				if (symbolItem.linkageClassName == name && symbolItem.linkageExportForAS == true) {
+					if (Std.is(symbolItem, DOMSymbolItem)) {
+						if (customSymbolLoader != null) {
+							var sprite: XFLSprite = customSymbolLoader.createSprite(this, symbolItem);
+							if (sprite != null) {
+								customSymbolLoader.onSpriteLoaded(this, symbolItem, sprite);
+								return sprite;
+							}
+						}
+						timeline = symbolItem.timeline;
 						break;
 					}
 				}

@@ -141,11 +141,19 @@ class Symbols {
 	}
 
 	private static function createMovieClip(xfl: XFL, instance: DOMSymbolInstance): XFLMovieClip {
+		var symbolItem: DOMSymbolItem = null;
 		var movieClip: XFLMovieClip = null;
+		var loadedByCustomLoader = false;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				var symbolItem: DOMSymbolItem = document.symbols.get(instance.libraryItemName);
-				movieClip = new XFLMovieClip(xfl, symbolItem.timeline);
+				symbolItem = document.symbols.get(instance.libraryItemName);
+				if (xfl.customSymbolLoader != null) {
+					movieClip = xfl.customSymbolLoader.createMovieClip(xfl, symbolItem);
+					if (movieClip != null) loadedByCustomLoader = true;
+				}
+				if (movieClip == null) {
+					movieClip = new XFLMovieClip(xfl, symbolItem.timeline);
+				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
 					instance.name = symbolItem.timeline.name;
@@ -163,6 +171,9 @@ class Symbols {
 			if (instance.color != null) {	
 				movieClip.transform.colorTransform = instance.color;
 			}
+			if (loadedByCustomLoader == true) {
+				xfl.customSymbolLoader.onMovieClipLoaded(xfl, symbolItem, movieClip);
+			}
 			movieClip.cacheAsBitmap = instance.cacheAsBitmap;
 			if (instance.exportAsBitmap) {
 				movieClip.flatten();
@@ -172,11 +183,22 @@ class Symbols {
 	}
 
 	private static function createSprite(xfl: XFL, instance: DOMSymbolInstance): XFLSprite {
+		var symbolItem = null;
 		var sprite: XFLSprite = null;
+		var loadedByCustomLoader = false;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				var symbolItem = document.symbols.get(instance.libraryItemName);
-				sprite = new XFLSprite(xfl, symbolItem.timeline);
+				symbolItem = document.symbols.get(instance.libraryItemName);
+				if (xfl.customSymbolLoader != null) {
+					sprite = xfl.customSymbolLoader.createSprite(xfl, symbolItem);
+					if (sprite != null) loadedByCustomLoader = true;
+				}
+				if (sprite == null) {
+					sprite = new XFLSprite(xfl, symbolItem.timeline);
+				}
+				if (sprite == null) {
+					sprite = new XFLSprite(xfl, symbolItem.timeline);
+				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
 					instance.name = symbolItem.timeline.name;
@@ -193,6 +215,9 @@ class Symbols {
 			}
 			if (instance.color != null) {	
 				sprite.transform.colorTransform = instance.color;
+			}
+			if (loadedByCustomLoader == true) {
+				xfl.customSymbolLoader.onSpriteLoaded(xfl, symbolItem, sprite);
 			}
 			sprite.cacheAsBitmap = instance.cacheAsBitmap;
 			if (instance.exportAsBitmap) {
