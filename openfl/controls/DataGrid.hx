@@ -29,7 +29,7 @@ class DataGrid extends Sprite {
     public var dataProvider(get, set): DataProvider;
     private var _dataProvider: DataProvider;
 
-    public var rowHeight: Int;
+    public var rowHeight(default, set): Float;
 
     public var length: Int;
 
@@ -54,6 +54,7 @@ class DataGrid extends Sprite {
         y = 0;
         width = 0;
         height = 0;
+        rowHeight = 0.0;
         mouseChildren = true;
     }
 
@@ -175,6 +176,7 @@ class DataGrid extends Sprite {
                     cellRenderer.y = 0.0;
                     cellRenderer.width = column.width;
                     cellRenderer.height = cellRenderer.height;
+                    if (cellRenderer.height < rowHeight) cellRenderer.height = rowHeight;
                     cellRenderer.data = rowData;
                     cellRenderer.listData = listData;
                     cellRenderer.init();
@@ -197,6 +199,7 @@ class DataGrid extends Sprite {
                 var cell: DisplayObject = displayObjects[(i * columns.length) + j];
                 if (cell.height > cellHeight) cellHeight = cell.height;
             }
+            if (rowHeight > cellHeight) cellHeight = rowHeight;
             for (j in 0...columns.length) {
                 var cell: DisplayObject = displayObjects[(i * columns.length) + j];
                 cell.y = _y;
@@ -204,6 +207,12 @@ class DataGrid extends Sprite {
             }
             _y+= cellHeight;
         }
+    }
+
+    private function set_rowHeight(rowHeight: Float): Float {
+        this.rowHeight = rowHeight;
+        createCells();
+        return rowHeight;
     }
 
     private function setColumnWidth(_width: Float): Void {
