@@ -1,0 +1,172 @@
+diff --git a/xfl/dom/DOMLayer.hx b/xfl/dom/DOMLayer.hx
+index 23fac6b..2c49f97 100644
+--- a/xfl/dom/DOMLayer.hx
++++ b/xfl/dom/DOMLayer.hx
+@@ -8,7 +8,7 @@ class DOMLayer {
+ 	public var animationType: String;
+ 	public var visible: Bool;
+ 	public var frames: Array<DOMFrame>;
+-	public var layerType: String;
++	public var type: String;
+ 
+ 	public function new() {
+ 		frames = new Array <DOMFrame> ();
+@@ -18,12 +18,14 @@ class DOMLayer {
+ 		var layer = new DOMLayer();
+ 		layer.name = xml.has.name == true?xml.att.name:null;
+ 		if (xml.has.animationType) layer.animationType = xml.att.animationType;
+-		if (xml.has.layerType) layer.layerType = xml.att.layerType;
++		if (xml.has.layerType) layer.type = xml.att.layerType;
+ 		layer.visible = true;
++		/*
+ 		if (xml.has.layerType == true &&
+ 			xml.att.layerType == "mask") {
+ 			layer.visible = false;
+ 		}
++		*/
+ 		for (element in xml.elements) {
+ 			switch (element.name) {
+ 				case "frames":
+diff --git a/xfl/symbol/Shared.hx b/xfl/symbol/Shared.hx
+index 585ed34..b495ef3 100644
+--- a/xfl/symbol/Shared.hx
++++ b/xfl/symbol/Shared.hx
+@@ -1,5 +1,6 @@
+ package xfl.symbol;
+ 
++import com.slipshift.engine.helpers.Utils;
+ import xfl.XFL;
+ import xfl.dom.DOMFrame;
+ import xfl.dom.DOMBitmapInstance;
+@@ -17,6 +18,7 @@ import openfl.display.BitmapData;
+ import openfl.display.DisplayObject;
+ import openfl.display.DisplayObjectContainer;
+ import openfl.display.FrameLabel;
++import openfl.display.Sprite;
+ import openfl.display.XFLMovieClip;
+ 
+ /**
+@@ -44,7 +46,7 @@ class Shared {
+ 				}
+ 			}
+ 			for (layer in timeline.layers) {
+-				if (layer.layerType != "guide" && layer.frames.length > 0) {
++				if (layer.type != "guide" && layer.frames.length > 0) {
+ 					layers.push(layer);
+ 					for (frame in layer.frames) {
+ 						if (frame.index + frame.duration > totalFrames) {
+@@ -95,9 +97,6 @@ class Shared {
+     public static function createFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>): Void {
+ 		var currentLayer: Int = 0;
+ 		for (layer in layers) {
+-			// TODO: a.drewke, handle hit area correctly
+-			if (layer.name != null && 
+-				(layer.name == "HitArea" || layer.name == "hitbox")) continue;
+ 			for (i in 0...layer.frames.length) {
+ 				var frame: DOMFrame = layer.frames[i];
+ 				var frameAnonymousObjectId : Int = 0;
+@@ -185,11 +184,9 @@ class Shared {
+     }
+ 
+ 	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int) {
++		container.mask = null;
+ 		var currentLayer: Int = 0;
+ 		for (layer in layers) {
+-			// TODO: a.drewke, handle hit area correctly
+-			if (layer.name != null && 
+-				(layer.name == "HitArea" || layer.name == "hitbox")) continue;
+ 			for (frameIdx in 0...layer.frames.length) {
+ 				var frameAnonymousObjectId : Int = 0;
+ 				var frame: DOMFrame = layer.frames[frameIdx];
+@@ -257,9 +254,7 @@ class Shared {
+     public static function enableFrame(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int): Void {
+ 		var currentLayer: Int = 0;
+ 		for (layer in layers) {
+-			// TODO: a.drewke, handle hit area correctly
+-			if (layer.name != null && 
+-				(layer.name == "HitArea" || layer.name == "hitbox")) continue;
++			var maskDisplayObjects: Array<DisplayObject> = [];
+ 			for (frameIdx in 0...layer.frames.length) {
+ 				var frameAnonymousObjectId : Int = 0;
+ 				var frame: DOMFrame = layer.frames[frameIdx];
+@@ -271,42 +266,49 @@ class Shared {
+ 								if (movieClip != null && layer.visible == true) {
+ 									movieClip.visible = true;
+ 								}
++								if (layer.type == "mask") maskDisplayObjects.push(movieClip);
+ 							} else 
+ 							if (Std.is(element, DOMBitmapInstance)) {
+ 								var bitmap: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+ 								if (bitmap != null && layer.visible == true) {
+ 									bitmap.visible = true;
+ 								}
++								if (layer.type == "mask") maskDisplayObjects.push(bitmap);
+ 							} else 
+ 							if (Std.is(element, DOMComponentInstance)) {
+ 								var component: DisplayObject = container.getChildByName(cast(element, DOMComponentInstance).name);
+ 								if (component != null && layer.visible == true) {
+ 									component.visible = true;
+ 								}
++								if (layer.type == "mask") trace("enableFrame(): component is not supported as mask");
+ 							} else 
+ 							if (Std.is(element, DOMShape)) {
+ 								var shape: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+ 								if (shape != null && layer.visible == true) {
+ 									shape.visible = true;
+ 								}
++								if (layer.type == "mask") maskDisplayObjects.push(shape);
+ 							} else 
+ 							if (Std.is(element, DOMRectangle)) {
+ 								var rectangle: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+ 								if (rectangle != null && layer.visible == true) {
+ 									rectangle.visible = true;
+ 								}
++								if (layer.type == "mask") maskDisplayObjects.push(rectangle);
+ 							} else 
+ 							if (Std.is(element, DOMDynamicText)) {
+ 								var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
+ 								if (text != null && layer.visible == true) {
+ 									text.visible = true;
+ 								}
++								if (layer.type == "mask") trace("enableFrame(): text is not supported as mask");
+ 							} else 
+ 							if (Std.is(element, DOMStaticText)) {
+ 								var text: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+ 								if (text != null && layer.visible == true) {
+ 									text.visible = true;
+ 								}
++								if (layer.type == "mask") trace("enableFrame(): text is not supported as mask");
+ 							}  else {
+ 								trace("enableFrame(): Unhandled frame element of type '" + Type.getClassName(Type.getClass(element)) + '"');
+ 							}
+@@ -321,10 +323,30 @@ class Shared {
+ 				}
+ 			}
+ 			currentLayer++;
++			container.mask = null;
++			if (maskDisplayObjects.length > 0) {
++				var maskDisplayObjectCount = 0;
++				for (maskDisplayObject in maskDisplayObjects) {
++					if (Std.is(maskDisplayObject, Shape) == true) {
++						maskDisplayObjectCount++;
++						maskDisplayObject.visible = false;
++						container.mask = maskDisplayObject;
++					}
++				}
++				if (maskDisplayObjectCount > 1) {
++					trace(container.name + ": " + layer.type + ": " + layer.name + ": Have multipe masks: " + maskDisplayObjects);
++					var i: Int = 0;
++					for (maskDisplayObject in maskDisplayObjects) {
++						trace(container.name + ": mask display object #" + (i++));
++						Utils.dumpDisplayObject(maskDisplayObject);
++					}
++				}
++			}
+ 		}
+     }
+ 
+     public static function removeFrames(parent: DisplayObjectContainer) {
++		parent.mask = null;
+         for (i in 0...parent.numChildren) {
+             var child: DisplayObject = parent.getChildAt(0);
+             if (Std.is(child, MovieClip)) {
