@@ -25,6 +25,8 @@ class Symbols {
 		if (instance.matrix != null) {
 			shape.transform.matrix = instance.matrix;
 		}
+		// TODO: a.drewke, this increases rendering time a lot
+		// shape.cacheAsBitmap = true;
 		return shape;
 	}
 
@@ -33,6 +35,8 @@ class Symbols {
 		if (instance.matrix != null) {
 			rectangle.transform.matrix = instance.matrix;
 		}
+		// TODO: a.drewke, this increases rendering time a lot
+		// rectangle.cacheAsBitmap = true;
 		return rectangle;
 	}
 
@@ -192,9 +196,6 @@ class Symbols {
 				if (xfl.customSymbolLoader != null) {
 					sprite = xfl.customSymbolLoader.createSprite(xfl, symbolItem);
 					if (sprite != null) loadedByCustomLoader = true;
-				}
-				if (sprite == null) {
-					sprite = new XFLSprite(xfl, symbolItem.timeline);
 				}
 				if (sprite == null) {
 					sprite = new XFLSprite(xfl, symbolItem.timeline);
