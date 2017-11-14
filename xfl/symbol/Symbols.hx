@@ -133,11 +133,16 @@ class Symbols {
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				var symbolItem: DOMSymbolItem = document.symbols.get(instance.libraryItemName);
+				// have a movie clip by default
+				if (symbolItem.linkageBaseClass == null || symbolItem.linkageBaseClass == "") {
+					return createMovieClip(xfl, instance);
+				}
+				// handle sprites and others
 				switch (symbolItem.linkageBaseClass) {
 					case "flash.display.Sprite":
 						return createSprite(xfl, instance);
 					default:
-						return createMovieClip(xfl, instance);
+						return createOther(xfl, instance, symbolItem.linkageBaseClass);
 				}
 			}
 		}
@@ -226,6 +231,42 @@ class Symbols {
 			}
 		}
 		return sprite;
+	}
+
+	private static function createOther(xfl: XFL, instance: DOMSymbolInstance, className: String): Sprite {
+		var symbolItem = null;
+		var other: Sprite = null;
+		for (document in xfl.documents) {
+			if (document.symbols.exists(instance.libraryItemName)) {
+				symbolItem = document.symbols.get(instance.libraryItemName);
+				var classType: Class<Dynamic> = Type.resolveClass(className);
+				other = Type.createInstance(classType, [xfl, symbolItem.timeline]);
+				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
+				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
+					instance.name = symbolItem.timeline.name;
+				}
+				if (instance.name != null && instance.name != "") {
+					other.name = instance.name;
+				}
+				break;
+			}
+		}
+		if (other != null) {
+			if (instance.matrix != null) {
+				other.transform.matrix = instance.matrix;
+			}
+			if (instance.color != null) {	
+				other.transform.colorTransform = instance.color;
+			}
+			other.cacheAsBitmap = instance.cacheAsBitmap;
+			/*
+			// TODO: a.drewke
+			if (instance.exportAsBitmap) {
+				other.flatten();
+			}
+			*/
+		}
+		return other;
 	}
 
 	public static function createComponent(xfl: XFL, instance: DOMComponentInstance): DisplayObject {
