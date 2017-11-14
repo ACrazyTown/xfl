@@ -39,13 +39,14 @@ class Shape extends ShapeBase {
 			}
 			var data = edge.edges;
 			if (data != null && data != "") {
-				data = StringTools.replace (data, "!", " ! ");
-				data = StringTools.replace (data, "|", " | ");
-				data = StringTools.replace (data, "/", " | ");
-				data = StringTools.replace (data, "[", " [ ");
-				data = StringTools.replace (data, "]", " [ ");
-				data = StringTools.replace (data, "\r", "");
-				data = StringTools.replace (data, "\n", "");
+				data = StringTools.replace(data, "!", " ! ");
+				data = StringTools.replace(data, "|", " | ");
+				data = StringTools.replace(data, "/", " | ");
+				data = StringTools.replace(data, "[", " [ ");
+				data = StringTools.replace(data, "]", " [ ");
+				data = StringTools.replace(data, "S1", "");	// Not sure what this actually means right now, I just remove it
+				data = StringTools.replace(data, "\r", "");
+				data = StringTools.replace(data, "\n", "");
 				var cmds = data.split(" ");
 				var ignoreI : Int = 0;
 				for (i in 0...cmds.length) {
