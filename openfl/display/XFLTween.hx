@@ -11,6 +11,59 @@ class XFLTween {
 
     private static var tweens: Array<Dynamic> = new Array<Dynamic>();
 
+    private static function copy(value: Dynamic): Dynamic {
+        if (Reflect.isObject(value) == false) {
+			return value; 
+		} else 
+        if (Std.is(value, String)) {
+			return value;
+		} else 
+        if(Std.is(value, Array)) {
+			var result = Type.createInstance(Type.getClass(value), []); 
+			untyped { 
+				for( ii in 0...v.length ) {
+					result.push(copy(v[ii]));
+				}
+			} 
+			return result;
+		} else
+        if(Type.getClass(value) == null) {
+            var result: Dynamic = {};
+			for (field in Reflect.fields(value)) { 
+				Reflect.setField(result, field, copy(Reflect.field(value, field)));
+			}
+            return result;
+        }
+        return null;
+    }
+
+    public static function allTo(objects: Array<Dynamic>, duration: Float, tween: Dynamic, stagger: Float, onCompleteAll: Void->Void = null, onCompleteAllParams: Array<Dynamic> = null): Array<Dynamic> {
+        var allTweens: Array<Dynamic> = [];
+        if (onCompleteAll != null) {
+            tween.onComplete = function() {
+                var tweensFinished: Bool = true;
+                for (tween in allTweens) {
+                    if (tweens.indexOf(tween) != -1) {
+                        tweensFinished = false;
+                        break;
+                    }
+                }
+                if (tweensFinished == true) {
+                    Reflect.callMethod(
+                        null, 
+                        onCompleteAll,
+                        onCompleteAllParams != null?onCompleteAllParams:[]
+                    );
+                }
+            };
+        }
+        for (object in objects) {
+            var tweenCloned : Dynamic = copy(tween);
+            allTweens.push(to(object, duration, tweenCloned));
+        }
+        return tweens;
+    }
+
     public static function to(object: Dynamic, duration: Float, tween: Dynamic, appendTo: Dynamic = null): Dynamic {
         tween.object = object;
         tween.delay = Reflect.hasField(tween, "delay")?tween.delay:0.0;
@@ -35,11 +88,31 @@ class XFLTween {
         if (appendTo != null) {
             appendTo.nextTween = tween;
         } else {
-            tween.initFunc(tween);
+            if (tween.initFunc != null) tween.initFunc(tween);
             killTweensOf(object);
             addTween(tween);
         }
         return tween;
+    }
+
+    public static function delayedCall(duration: Float, onComplete: Void->Void, onCompleteParams: Array<Dynamic> = null) {
+        var tween : Dynamic = {};
+        tween.timeInit = haxe.Timer.stamp() + tween.delay;
+        tween.timeCurrent = tween.timeInit;
+        tween.timeFinal = tween.timeInit + tween.duration;
+        tween.duration = duration;
+        tween.repeat = 1;
+        tween.yoyo = false;
+        tween.runs = 0;
+        tween.completed = false;
+        tween.onCompleteCalled = false;
+        tween.nextTween = null;
+        tween.onComplete = onComplete;
+        tween.onCompleteAllParams = onCompleteParams;
+        tween.initFunc = null;
+        tween.disposeFunc = null;
+        tween.handleFunc = null;
+        tweens.push(tween);
     }
 
     private static function toInitDisplayObject(tween: Dynamic) {
@@ -227,11 +300,20 @@ class XFLTween {
 		for (tween in tweens) {
             if (tween.object == object) {
 			    completeTween(tween);
-                tweens.remove(tween);
             }
 		}
         if (tweens.length > 0) return;
         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
+    }
+
+    public static function killChildTweensOf(object: Dynamic) {
+        if (Std.is(object, DisplayObjectContainer)) {
+            var displayObjectContainer: DisplayObjectContainer = cast(object, DisplayObjectContainer);
+            for (i in 0...displayObjectContainer.numChildren) {
+                killChildTweensOf(displayObjectContainer.getChildAt(i));
+            }
+        }
+        killTweensOf(object);
     }
 
     private static function addTween(tween: Dynamic): Void {
@@ -243,17 +325,16 @@ class XFLTween {
     private static function removeTweens(): Void {
 		for (tween in tweens) {
 			completeTween(tween);
-            tweens.remove(tween);
 		}
         if (tweens.length > 0) return;
         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
 	}
 
 	private static function completeTween(tween: Dynamic) {
+        tweens.remove(tween);
         if (tween.onCompleteCalled == true) return;
         tween.onCompleteCalled = true;
 		if (Reflect.hasField(tween, "onComplete") == true) {
-            // trace("completeTween(): " + tween);
             Reflect.callMethod(
                 null, 
                 tween.onComplete,
@@ -271,7 +352,7 @@ class XFLTween {
                 tween.completed = true;
                 tween.timeCurrent = tween.timeFinal;
             }
-			tween.handleFunc(tween);
+			if (tween.handleFunc != null) tween.handleFunc(tween);
 			if (tween.completed == true) {
                 tween.runs++;
                 if (tween.repeat == -1 || tween.runs < tween.repeat) {
@@ -279,13 +360,12 @@ class XFLTween {
                     tween.timeInit = now;
                     tween.timeFinal = tween.timeInit + tween.duration;
                 } else {
-                    tween.disposeFunc(tween);
-				    completeTween(tween);
-				    tweens.remove(tween);
+                    if (tween.disposeFunc != null) tween.disposeFunc(tween);
                     if (tween.nextTween != null) {
-                        tween.nextTween.initFunc(tween.nextTween);
+                        if (tween.nextTween.initFunc != null) tween.nextTween.initFunc(tween.nextTween);
                         addTween(tween.nextTween);
                     }
+				    completeTween(tween);
                 }
 			}
 		}
