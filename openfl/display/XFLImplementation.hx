@@ -1,6 +1,7 @@
 package openfl.display;
 
 import openfl.controls.Slider;
+import openfl.controls.TextArea;
 import openfl.events.Event;
 import openfl.text.TextField;
 
@@ -63,6 +64,12 @@ class XFLImplementation {
     public function getXFLTextField(name: String) : TextField {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, TextField);
+		return null;
+	}
+
+    public function getXFLTextArea(name: String) : TextField {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, TextArea);
 		return null;
 	}
 

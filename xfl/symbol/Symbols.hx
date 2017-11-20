@@ -281,23 +281,30 @@ class Symbols {
 				if (instance.name != null && instance.name != "") {
 					component.name = instance.name;
 				}
-				// TODO: a.drewke, take parent classes into account
+				var instanceVariablesLeft: Array<String> = [];
+				for (variable in instance.variables) {
+					instanceVariablesLeft.push(variable.variable);
+				}
 				var instanceFields: Array<String> = Type.getInstanceFields(classType);
 				for (variable in instance.variables) {
-					if (instanceFields.indexOf(variable.variable) == -1) {
-						trace("createComponent(): component has no variable '" + variable.variable + "'");
-					} else {
+					if (instanceFields.indexOf(variable.variable) != -1) {
 						switch(variable.type) {
 							case "List":
 								Reflect.setProperty(component, variable.variable, variable.defaultValue);
+								instanceVariablesLeft.remove(variable.variable);
 							case "Boolean":
 								Reflect.setProperty(component, variable.variable, variable.defaultValue == "true");
+								instanceVariablesLeft.remove(variable.variable);
 							case "Number": 
 								Reflect.setProperty(component, variable.variable, Std.parseFloat(variable.defaultValue));
+								instanceVariablesLeft.remove(variable.variable);
 							default:
 								trace("createComponent(): unknown variable type '" + variable.type + "'");
 						}
 					}
+				}
+				if (instanceVariablesLeft.length > 0) {
+					trace("createComponent(): left unset variables: " + instanceVariablesLeft);
 				}
 				break;
 			}

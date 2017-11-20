@@ -2,15 +2,16 @@ package openfl.controls;
 
 import openfl.display.XFLSprite;
 import openfl.text.TextFormat;
+import openfl.text.TextField;
+import openfl.text.TextFieldType;
 
 /**
  * Textarea
  */
-class TextArea extends XFLSprite {
+class TextArea extends TextField {
 
     public var verticalScrollPosition: Int;
     public var maxVerticalScrollPosition: Int;
-    public var htmlText: String;
     public var editable: Bool;
 
     /**
@@ -19,6 +20,9 @@ class TextArea extends XFLSprite {
     public function new()
     {
         super();
+        type = TextFieldType.INPUT;
+        multiline = true;
+        wordWrap = true;
     }
 
     /**

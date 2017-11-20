@@ -49,6 +49,10 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 		return xflImplementation.getXFLTextField(name);
 	}
 
+    public function getXFLTextArea(name: String) : TextField {
+		return xflImplementation.getXFLTextArea(name);
+	}
+
     public function getXFLSlider(name: String) : Slider {
 		return xflImplementation.getXFLSlider(name);
 	}
