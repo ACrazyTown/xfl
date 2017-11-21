@@ -240,7 +240,16 @@ class Symbols {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				symbolItem = document.symbols.get(instance.libraryItemName);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
-				other = Type.createInstance(classType, [xfl, symbolItem.timeline]);
+				other = Type.createInstance(
+					classType, 
+					[
+						(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
+							symbolItem.timeline.name:
+							instance.name,
+						xfl, 
+						symbolItem.timeline
+					]
+				);
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
 					instance.name = symbolItem.timeline.name;
@@ -276,6 +285,7 @@ class Symbols {
 				var symbolItem = document.symbols.get(instance.libraryItemName);
 				var className: String = symbolItem.linkageClassName;
 				if (StringTools.startsWith(className, "fl.")) className = "openfl." + className.substr("fl.".length);
+				trace("createComponent(): " + className);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
 				component = Type.createInstance(classType, [xfl, symbolItem.timeline]);
 				if (instance.name != null && instance.name != "") {
