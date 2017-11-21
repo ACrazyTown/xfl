@@ -37,7 +37,7 @@ class XFLTween {
         return null;
     }
 
-    public static function allTo(objects: Array<Dynamic>, duration: Float, tween: Dynamic, stagger: Float, onCompleteAll: Void->Void = null, onCompleteAllParams: Array<Dynamic> = null): Array<Dynamic> {
+    public static function allTo(objects: Array<Dynamic>, duration: Float, tween: Dynamic, stagger: Float = 0.0, onCompleteAll: Void->Void = null, onCompleteAllParams: Array<Dynamic> = null): Array<Dynamic> {
         var allTweens: Array<Dynamic> = [];
         if (onCompleteAll != null) {
             tween.onComplete = function() {

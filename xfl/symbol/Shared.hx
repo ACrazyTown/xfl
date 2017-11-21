@@ -174,10 +174,10 @@ class Shared {
 					}
 				} else 
 				if (frame.tweenType == "motion") {
-					trace("Tween with type 'motion' not supported.");
+					// trace("Tween with type 'motion' not supported.");
 				} else 
 				if (frame.tweenType == "motion object") {
-					trace("Tween with type 'motion object' not supported.");
+					// trace("Tween with type 'motion object' not supported.");
 				}
 			}
 			currentLayer++;
@@ -243,10 +243,10 @@ class Shared {
 						}
 					} else 
 					if (frame.tweenType == "motion") {
-						trace("Tween with type 'motion' not supported.");
+						// trace("Tween with type 'motion' not supported.");
 					} else 
 					if (frame.tweenType == "motion object") {
-						trace("Tween with type 'motion object' not supported.");
+						// trace("Tween with type 'motion object' not supported.");
 					}
 				}
 			}
@@ -313,10 +313,10 @@ class Shared {
 						}
 					} else 
 					if (frame.tweenType == "motion") {
-						trace("Tween with type 'motion' not supported.");
+						// trace("Tween with type 'motion' not supported.");
 					} else 
 					if (frame.tweenType == "motion object") {
-						trace("Tween with type 'motion object' not supported.");
+						// trace("Tween with type 'motion object' not supported.");
 					}
 				}
 			}
