@@ -1,9 +1,11 @@
 package openfl.containers;
 
+import com.slipshift.engine.helpers.Utils;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Rectangle;
+import openfl.events.MouseEvent;
 
 /**
  * Textarea
@@ -31,7 +33,12 @@ class ScrollPane extends Sprite {
         super();
         _width = 0.0;
         _height = 0.0;
+        var maskSprite: Sprite = new Sprite();
+        maskSprite.visible = false;
+        addChild(maskSprite);
+        mask = maskSprite;
         update();
+        addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
     }
 
     /**
@@ -49,6 +56,11 @@ class ScrollPane extends Sprite {
      * Update
      */
     public function update() : Void {
+        var maskSprite: Sprite = cast(mask, Sprite);
+        maskSprite.graphics.clear();
+        maskSprite.graphics.beginFill(0x000000);
+        maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
+        maskSprite.graphics.endFill();
     }
 
     private function get_source(): DisplayObject {
@@ -59,6 +71,7 @@ class ScrollPane extends Sprite {
         if (this._source != null) removeChild(this._source);
         this._source = _source;
         addChild(this._source);
+        update();
         return this._source;
     }
 
@@ -80,6 +93,12 @@ class ScrollPane extends Sprite {
         _height = height;
         update();
         return _height;
+    }
+
+    private function onMouseWheel(event: MouseEvent): Void {
+        source.y+= event.delta;
+        if (source.y > 0.0) source.y = 0.0;
+        if (source.y < -(source.height - _height)) source.y = -(source.height - _height);
     }
 
 }

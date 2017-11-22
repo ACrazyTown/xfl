@@ -8,7 +8,7 @@ class DOMLayer {
 	public var animationType: String;
 	public var visible: Bool;
 	public var frames: Array<DOMFrame>;
-	public var layerType: String;
+	public var type: String;
 
 	public function new() {
 		frames = new Array <DOMFrame> ();
@@ -18,12 +18,8 @@ class DOMLayer {
 		var layer = new DOMLayer();
 		layer.name = xml.has.name == true?xml.att.name:null;
 		if (xml.has.animationType) layer.animationType = xml.att.animationType;
-		if (xml.has.layerType) layer.layerType = xml.att.layerType;
+		if (xml.has.layerType) layer.type = xml.att.layerType;
 		layer.visible = true;
-		if (xml.has.layerType == true &&
-			xml.att.layerType == "mask") {
-			layer.visible = false;
-		}
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "frames":

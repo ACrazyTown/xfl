@@ -1,5 +1,6 @@
 package xfl.symbol;
 
+import com.slipshift.engine.helpers.Utils;
 import xfl.XFL;
 import xfl.dom.DOMFrame;
 import xfl.dom.DOMBitmapInstance;
@@ -44,7 +45,7 @@ class Shared {
 				}
 			}
 			for (layer in timeline.layers) {
-				if (layer.layerType != "guide" && layer.frames.length > 0) {
+				if (layer.type != "guide" && layer.frames.length > 0) {
 					layers.push(layer);
 					for (frame in layer.frames) {
 						if (frame.index + frame.duration > totalFrames) {
@@ -55,13 +56,6 @@ class Shared {
 			}
 		}
 		layers.reverse();
-		/*
-		for (layer in layers) {
-			for (frame in layer.frames) {
-				frame.elements.reverse();
-			}
-		}
-		*/
         return totalFrames;
     }
 
@@ -185,6 +179,7 @@ class Shared {
     }
 
 	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int) {
+		container.mask = null;
 		var currentLayer: Int = 0;
 		for (layer in layers) {
 			// TODO: a.drewke, handle hit area correctly
@@ -256,10 +251,12 @@ class Shared {
 
     public static function enableFrame(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int): Void {
 		var currentLayer: Int = 0;
+		container.mask = null;
 		for (layer in layers) {
 			// TODO: a.drewke, handle hit area correctly
 			if (layer.name != null && 
 				(layer.name == "HitArea" || layer.name == "hitbox")) continue;
+			var maskDisplayObjects: Array<DisplayObject> = [];
 			for (frameIdx in 0...layer.frames.length) {
 				var frameAnonymousObjectId : Int = 0;
 				var frame: DOMFrame = layer.frames[frameIdx];
@@ -289,12 +286,14 @@ class Shared {
 								if (shape != null && layer.visible == true) {
 									shape.visible = true;
 								}
+								if (layer.type == "mask") maskDisplayObjects.push(shape);
 							} else 
 							if (Std.is(element, DOMRectangle)) {
 								var rectangle: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (rectangle != null && layer.visible == true) {
 									rectangle.visible = true;
 								}
+								if (layer.type == "mask") maskDisplayObjects.push(rectangle);
 							} else 
 							if (Std.is(element, DOMDynamicText)) {
 								var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
@@ -317,6 +316,24 @@ class Shared {
 					} else 
 					if (frame.tweenType == "motion object") {
 						// trace("Tween with type 'motion object' not supported.");
+					}
+				}
+			}
+			if (maskDisplayObjects.length > 0) {
+				var maskDisplayObjectCount = 0;
+				for (maskDisplayObject in maskDisplayObjects) {
+					if (Std.is(maskDisplayObject, Shape) == true) {
+						maskDisplayObjectCount++;
+						maskDisplayObject.visible = false;
+						container.mask = maskDisplayObject;
+					}
+				}
+				if (maskDisplayObjectCount > 1) {
+					trace(container.name + ": " + layer.type + ": " + layer.name + ": Have multipe masks: " + maskDisplayObjects);
+					var i: Int = 0;
+					for (maskDisplayObject in maskDisplayObjects) {
+						trace(container.name + ": mask display object #" + (i++));
+						Utils.dumpDisplayObject(maskDisplayObject);
 					}
 				}
 			}
