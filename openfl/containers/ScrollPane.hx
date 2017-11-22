@@ -8,7 +8,7 @@ import openfl.geom.Rectangle;
 import openfl.events.MouseEvent;
 
 /**
- * Textarea
+ * Scrollpane
  */
 class ScrollPane extends Sprite {
 
