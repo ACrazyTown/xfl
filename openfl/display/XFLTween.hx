@@ -120,6 +120,7 @@ class XFLTween {
         tween.timeInit = haxe.Timer.stamp() + tween.delay;
         tween.timeCurrent = tween.timeInit;
         tween.timeFinal = tween.timeInit + tween.duration;
+        tween.initialRotation = object.rotation;
         tween.initialAlpha = object.alpha;
         tween.initialX = object.x;
         tween.initialY = object.y;
@@ -127,6 +128,9 @@ class XFLTween {
         tween.initialHeight = object.height;
         tween.initialScaleX = object.scaleX;
         tween.initialScaleY = object.scaleY;
+        if (Reflect.hasField(tween, "rotation") == true) {
+            tween.targetRotation = tween.rotation;
+        }
         if (Reflect.hasField(tween, "alpha") == true) {
             tween.targetAlpha = tween.alpha;
         }
@@ -196,6 +200,13 @@ class XFLTween {
     private static function tweenToImplDisplayObject(tween: Dynamic): Void {
         var applyYoyo: Bool = tween.yoyo == true && tween.completed == true && (tween.repeat == -1 || tween.runs < tween.repeat);
         var object: DisplayObject = cast(tween.object, DisplayObject);
+        if (Reflect.hasField(tween, "rotation") == true) {
+            object.rotation = tween.initialRotation + ((tween.rotation - tween.initialRotation) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration));
+            if (applyYoyo == true) {
+                tween.rotation = Math.abs(object.rotation - tween.initialRotation) < 0.1?tween.targetRotation:tween.initialRotation;
+                tween.initialRotation = object.rotation;
+            }
+        }
         if (Reflect.hasField(tween, "alpha") == true) {
             object.alpha = tween.initialAlpha + ((tween.alpha - tween.initialAlpha) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration));
             if (applyYoyo == true) {
