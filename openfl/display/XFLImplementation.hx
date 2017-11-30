@@ -67,7 +67,7 @@ class XFLImplementation {
 		return null;
 	}
 
-    public function getXFLTextArea(name: String) : TextField {
+    public function getXFLTextArea(name: String) : TextArea {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, TextArea);
 		return null;

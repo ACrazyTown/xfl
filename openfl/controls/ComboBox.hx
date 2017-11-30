@@ -1,12 +1,13 @@
 package openfl.controls;
 
+import openfl.core.UIComponent;
 import openfl.data.DataProvider;
 import openfl.display.XFLSprite;
 
 /**
  * Combo box grid
  */
-class ComboBox extends XFLSprite {
+class ComboBox extends UIComponent {
 
     public var selectedIndex: Int;
     public var dataProvider: DataProvider;

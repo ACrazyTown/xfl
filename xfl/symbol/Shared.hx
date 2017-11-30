@@ -86,7 +86,7 @@ class Shared {
 		*/
 	}
 
-    public static function createFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>): Void {
+    public static function createFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, children: Array<DisplayObject>): Void {
 		var currentLayer: Int = 0;
 		for (layer in layers) {
 			// TODO: a.drewke, handle hit area correctly
@@ -107,6 +107,7 @@ class Shared {
 							if (symbol != null) {
 								symbol.visible = false;
 								container.addChild(symbol);
+								children.push(symbol);
 							}
 						} else 
 						if (Std.is(element, DOMBitmapInstance)) {
@@ -115,6 +116,7 @@ class Shared {
 								bitmap.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 								bitmap.visible = false;
 								container.addChild(bitmap);
+								children.push(bitmap);
 							}
 						} else 
 						if (Std.is(element, DOMComponentInstance)) {
@@ -129,6 +131,7 @@ class Shared {
 								component.name = component.name;
 								component.visible = false;
 								container.addChild(component);
+								children.push(component);
 							}
 						} else 
 						if (Std.is(element, DOMShape)) {
@@ -136,12 +139,14 @@ class Shared {
 							shape.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 							shape.visible = false;
 							container.addChild(shape);
+							children.push(shape);
 						} else 
 						if (Std.is(element, DOMRectangle)) {
 							var rectangle: Rectangle = Symbols.createRectangle(xfl, cast element);
 							rectangle.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 							rectangle.visible = false;
 							container.addChild(rectangle);
+							children.push(rectangle);
 						} else 
 						if (Std.is(element, DOMDynamicText)) {
 							var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
@@ -153,6 +158,7 @@ class Shared {
 							if (text != null) {
 								text.visible = false;
 								container.addChild(text);
+								children.push(text);
 							}
 						} else 
 						if (Std.is(element, DOMStaticText)) {
@@ -161,6 +167,7 @@ class Shared {
 								text.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 								text.visible = false;
 								container.addChild(text);
+								children.push(text);
 							}
 						} else {
 							trace("createFrames(): Unhandled frame element of type '" + Type.getClassName(Type.getClass(element)) + '"');
@@ -321,21 +328,26 @@ class Shared {
 			}
 			if (maskDisplayObjects.length > 0) {
 				var maskDisplayObjectCount = 0;
+				var i: Int = 0;
 				for (maskDisplayObject in maskDisplayObjects) {
-					if (Std.is(maskDisplayObject, Shape) == true) {
+					maskDisplayObject.visible = false;
+					// if (Std.is(maskDisplayObject, Shape) == true) {
 						maskDisplayObjectCount++;
-						maskDisplayObject.visible = false;
-						container.mask = maskDisplayObject;
-					}
+						trace("enableFrame(): '" + container.name + "': mask display object #" + (i++));
+						Utils.dumpDisplayObject(maskDisplayObject);
+						// container.mask = maskDisplayObject;
+					// }
 				}
+				/*
 				if (maskDisplayObjectCount > 1) {
-					trace(container.name + ": " + layer.type + ": " + layer.name + ": Have multipe masks: " + maskDisplayObjects);
+					trace("enableFrame(): '" + container.name + "': " + layer.type + ": " + layer.name + ": Have multipe masks: " + maskDisplayObjects);
 					var i: Int = 0;
 					for (maskDisplayObject in maskDisplayObjects) {
-						trace(container.name + ": mask display object #" + (i++));
+						trace("enableFrame(): '" + container.name + "': mask display object #" + (i++));
 						Utils.dumpDisplayObject(maskDisplayObject);
 					}
 				}
+				*/
 			}
 			currentLayer++;
 		}

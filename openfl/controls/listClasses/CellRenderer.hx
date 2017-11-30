@@ -36,7 +36,7 @@ class CellRenderer extends LabelButton implements ICellRenderer {
         drawBackground();
     }
 
-    public function setStyle(key: String, style: Dynamic) : Void {
+    override public function setStyle(key: String, style: Dynamic) : Void {
         if (Std.is(style, DisplayObject) == true) {
             var displayObject: DisplayObject = cast(style, DisplayObject);
             displayObject.x = 0.0;

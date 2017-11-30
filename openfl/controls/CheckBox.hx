@@ -1,12 +1,13 @@
 package openfl.controls;
 
+import openfl.core.UIComponent;
 import openfl.display.XFLSprite;
 import openfl.text.TextField;
 
 /**
  * Check box grid
  */
-class CheckBox extends XFLSprite {
+class CheckBox extends UIComponent {
 
     public var label: String;
     public var textField: TextField;

@@ -30,7 +30,7 @@ class HeaderRenderer extends LabelButton {
         drawBackground();
     }
 
-    public function setStyle(key: String, style: Dynamic) {
+    override public function setStyle(key: String, style: Dynamic) {
         styles.set(key, style);
         setMouseState("mouseUp");
     }

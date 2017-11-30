@@ -2,6 +2,7 @@ package openfl.controls;
 
 import xfl.XFL;
 import xfl.dom.DOMTimeline;
+import openfl.core.UIComponent;
 import openfl.display.XFLMovieClip;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
@@ -10,7 +11,7 @@ import openfl.geom.Point;
 /**
  * Slider
  */
-class Slider extends XFLMovieClip {
+class Slider extends UIComponent {
 
     public var direction: String;
     public var maximum(default,set) : Float = 100.0;
@@ -19,7 +20,6 @@ class Slider extends XFLMovieClip {
     public var snapInterval : Float = 1.0;
     public var liveDragging : Bool = false;
     public var tickInterval: Float = 0.0;
-    public var disabled: Bool = false;
     private var mouseDown: Bool = false;
 
     private var state: String = "up";
@@ -27,10 +27,9 @@ class Slider extends XFLMovieClip {
     /**
      * Public constructor
      **/
-    public function new(xfl: XFL = null, timeline: DOMTimeline = null)
+    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false)
     {
-        super(xfl, timeline);
-        gotoAndStop(1);
+        super(xfl, timeline, parametersAreLocked);
         addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
         addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
         addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);

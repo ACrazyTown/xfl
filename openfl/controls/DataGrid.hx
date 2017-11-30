@@ -5,6 +5,7 @@ import openfl.controls.dataGridClasses.DataGridColumn;
 import openfl.controls.listClasses.CellRenderer;
 import openfl.controls.listClasses.ICellRenderer;
 import openfl.controls.listClasses.ListData;
+import openfl.core.UIComponent;
 import openfl.data.DataProvider;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -16,7 +17,7 @@ import openfl.text.TextFormat;
 /**
  * Data grid
  */
-class DataGrid extends Sprite {
+class DataGrid extends UIComponent {
 
     public var columns : Array<DataGridColumn>;
 
@@ -32,9 +33,6 @@ class DataGrid extends Sprite {
     public var rowHeight(default, set): Float;
 
     public var length: Int;
-
-    private var _width: Float;
-    private var _height: Float;
 
     private var displayObjects: Array<DisplayObject>;
 
@@ -63,7 +61,7 @@ class DataGrid extends Sprite {
      * @param key - key
      * @param value - value
      */
-    public function setStyle(key: String, value: Dynamic): Void {
+    override public function setStyle(key: String, value: Dynamic): Void {
         styles.set(key, value);
         setupRendererClasses();
     }
@@ -236,24 +234,10 @@ class DataGrid extends Sprite {
         }
     }
 
-    override private function get_width(): Float {
-        return _width;
-    }
-
-    override private function set_width(width: Float): Float {
+    override public function setSize(_width: Float, _height: Float): Void {
+        super.setSize(_width, _height);
         setColumnWidth(width);
-        _width = width;
         createCells();
-        return _width;
-    }
-
-    override private function get_height(): Float {
-        return _height;
-    }
-
-    override private function set_height(height: Float): Float {
-        _height = height;
-        return _height;
     }
 
     private function onMouseEventMove(event: MouseEvent) : Void {

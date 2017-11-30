@@ -4,6 +4,7 @@ import xfl.XFL;
 import xfl.dom.DOMTimeline;
 import xfl.symbol.Sprite;
 import openfl.controls.Slider;
+import openfl.controls.TextArea;
 import openfl.display.XFLElement;
 import openfl.text.TextField;
 
@@ -17,8 +18,8 @@ class XFLSprite implements XFLElement extends Sprite {
     /**
      * Public constructor
      **/
-	public function new(xfl: XFL = null, timeline: DOMTimeline = null) {
-		super(xfl, timeline);
+	public function new(xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false) {
+		super(xfl, timeline, parametersAreLocked);
         xflImplementation = new XFLImplementation(this);
     }
 
@@ -50,7 +51,7 @@ class XFLSprite implements XFLElement extends Sprite {
 		return xflImplementation.getXFLTextField(name);
 	}
 
-    public function getXFLTextArea(name: String) : TextField {
+    public function getXFLTextArea(name: String) : TextArea {
 		return xflImplementation.getXFLTextArea(name);
 	}
 

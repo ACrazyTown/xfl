@@ -4,6 +4,7 @@ import xfl.XFL;
 import xfl.dom.DOMTimeline;
 import xfl.symbol.MovieClip;
 import openfl.controls.Slider;
+import openfl.controls.TextArea;
 import openfl.display.DisplayObject;
 import openfl.display.XFLElement;
 import openfl.display.XFLSprite;
@@ -16,8 +17,8 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 
 	private var xflImplementation: XFLImplementation;
 
-	public function new(xfl: XFL = null, timeline: DOMTimeline = null) {
-		super(xfl, timeline);
+	public function new(xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false) {
+		super(xfl, timeline, parametersAreLocked);
 		xflImplementation = new XFLImplementation(this);
 	}
 
@@ -49,7 +50,7 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 		return xflImplementation.getXFLTextField(name);
 	}
 
-    public function getXFLTextArea(name: String) : TextField {
+    public function getXFLTextArea(name: String) : TextArea {
 		return xflImplementation.getXFLTextArea(name);
 	}
 

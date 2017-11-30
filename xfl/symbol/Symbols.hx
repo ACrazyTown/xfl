@@ -1,6 +1,17 @@
 package xfl.symbol;
 
+import com.slipshift.engine.helpers.Utils;
 import openfl.Assets;
+import openfl.core.UIComponent;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+import openfl.display.XFLMovieClip;
+import openfl.display.XFLSprite;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 import xfl.dom.DOMBitmapInstance;
 import xfl.dom.DOMComponentInstance;
 import xfl.dom.DOMDynamicText;
@@ -9,14 +20,6 @@ import xfl.dom.DOMRectangle;
 import xfl.dom.DOMStaticText;
 import xfl.dom.DOMSymbolInstance;
 import xfl.dom.DOMSymbolItem;
-import openfl.display.DisplayObject;
-import openfl.display.Bitmap;
-import openfl.display.BitmapData;
-import openfl.display.XFLMovieClip;
-import openfl.display.XFLSprite;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-import openfl.text.TextFormatAlign;
 
 class Symbols {
 
@@ -161,7 +164,7 @@ class Symbols {
 					if (movieClip != null) loadedByCustomLoader = true;
 				}
 				if (movieClip == null) {
-					movieClip = new XFLMovieClip(xfl, symbolItem.timeline);
+					movieClip = new XFLMovieClip(xfl, symbolItem.timeline, symbolItem.parametersAreLocked);
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -203,7 +206,7 @@ class Symbols {
 					if (sprite != null) loadedByCustomLoader = true;
 				}
 				if (sprite == null) {
-					sprite = new XFLSprite(xfl, symbolItem.timeline);
+					sprite = new XFLSprite(xfl, symbolItem.timeline, symbolItem.parametersAreLocked);
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -240,6 +243,7 @@ class Symbols {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				symbolItem = document.symbols.get(instance.libraryItemName);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
+				trace("createOther(): creating other from '" + className + "'");
 				other = Type.createInstance(
 					classType, 
 					[
@@ -247,7 +251,8 @@ class Symbols {
 							symbolItem.timeline.name:
 							instance.name,
 						xfl, 
-						symbolItem.timeline
+						symbolItem.timeline,
+						symbolItem.parametersAreLocked
 					]
 				);
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
@@ -285,9 +290,9 @@ class Symbols {
 				var symbolItem = document.symbols.get(instance.libraryItemName);
 				var className: String = symbolItem.linkageClassName;
 				if (StringTools.startsWith(className, "fl.")) className = "openfl." + className.substr("fl.".length);
-				trace("createComponent(): " + className);
+				trace("createComponent(): creating component from '" + className + "'");
 				var classType: Class<Dynamic> = Type.resolveClass(className);
-				component = Type.createInstance(classType, [xfl, symbolItem.timeline]);
+				component = Type.createInstance(classType, [instance.name, xfl, symbolItem.timeline, symbolItem.parametersAreLocked]);
 				if (instance.name != null && instance.name != "") {
 					component.name = instance.name;
 				}
@@ -322,6 +327,45 @@ class Symbols {
 		if (component != null) {
 			if (instance.matrix != null) {
 				component.transform.matrix = instance.matrix;
+			}
+		}
+		if (Std.is(component, DisplayObjectContainer) == true) {
+			var container = cast(component, DisplayObjectContainer);
+			var containerWidth = container.width;
+			var containerHeight = container.height;
+			var containerScaleX = container.scaleX;
+			var containerScaleY = container.scaleY;
+			container.scaleX = 1.0;
+			container.scaleY = 1.0;
+			var parametersAreBlocked: Bool = false;
+			var children: Array<DisplayObject> = null;
+			if (Std.is(component, XFLSprite) == true) {
+				var xflSprite: XFLSprite = cast(component, XFLSprite);
+				children = xflSprite.children;
+				parametersAreBlocked = xflSprite.parametersAreLocked;
+			} else
+			if (Std.is(component, XFLMovieClip) == true) {
+				var xflMovieClip: XFLMovieClip = cast(component, XFLMovieClip);
+				children = xflMovieClip.children;
+				parametersAreBlocked = xflMovieClip.parametersAreLocked;
+			}
+			for (childIdx in 0...container.numChildren) {
+				var child: DisplayObject = container.getChildAt(childIdx);
+				if (children != null && children.indexOf(child) == -1) {
+					child.x = child.x / containerScaleX;
+					child.y = child.y / containerScaleY;
+					child.width = child.width / containerScaleX;
+					child.height = child.height / containerScaleY;
+				} else 
+				if (parametersAreBlocked == false) {
+					child.x = child.x * containerScaleX;
+					child.y = child.y * containerScaleY;
+					child.width = child.width * containerScaleX;
+					child.height = child.height * containerScaleY;
+				}
+			}
+			if (Std.is(component, UIComponent) == true) {
+				cast(component, UIComponent).setSize(containerWidth * containerScaleX, containerHeight * containerScaleY);
 			}
 		}
 		return component;

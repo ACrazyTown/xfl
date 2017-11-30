@@ -12,21 +12,27 @@ class MovieClip extends xfl.display.MovieClip {
 
 	private static var clips: Array <MovieClip> = new Array <MovieClip>();
 
+	public var children: Array<DisplayObject>;
+
+	public var parametersAreLocked: Bool;
+
 	private var lastFrame: Int;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
 	private var xfl: XFL;
 
-	public function new(xfl: XFL, timeline: DOMTimeline) {
+	public function new(xfl: XFL, timeline: DOMTimeline, parametersAreLocked: Bool = false) {
 		super();
 		this.xfl = xfl;
+		this.parametersAreLocked = parametersAreLocked;
 		currentLabels = [];
-		Lib.current.stage.addEventListener(Event.ENTER_FRAME, stage_onEnterFrame);
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		lastFrame = -1;
 		currentFrame = timeline != null?timeline.currentFrame:1;
-		layers = new Array<DOMLayer>();
+		layers = [];
+		children = [];
 		totalFrames = Shared.init(layers, timeline, currentLabels);
-		Shared.createFrames(this.xfl, this, layers);
+		Shared.createFrames(this.xfl, this, layers, children);
 		update();
 		if (totalFrames > 1) {
 			play();
@@ -133,7 +139,7 @@ class MovieClip extends xfl.display.MovieClip {
 		}
 	}
 
-	private static function stage_onEnterFrame(event: Event): Void {
+	private static function onEnterFrame(event: Event): Void {
 		for (clip in clips) {
 			clip.enterFrame();
 		}

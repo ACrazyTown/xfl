@@ -9,6 +9,7 @@ class DOMSymbolItem {
 	public var linkageBaseClass: String;
 	public var linkageClassName: String;
 	public var linkageExportForAS: Bool;
+	public var parametersAreLocked: Bool;
 	public var name: String;
 	public var timeline: DOMTimeline;
 
@@ -26,6 +27,7 @@ class DOMSymbolItem {
 		symbolItem.linkageBaseClass = xml.has.linkageBaseClass == true?xml.att.linkageBaseClass:null;
 		if (xml.has.linkageExportForAS) symbolItem.linkageExportForAS = (xml.att.linkageExportForAS == "true");
 		if (xml.has.linkageClassName) symbolItem.linkageClassName = xml.att.linkageClassName;
+		symbolItem.parametersAreLocked = xml.has.parametersAreLocked == true && xml.att.parametersAreLocked == "true";
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "timeline":
