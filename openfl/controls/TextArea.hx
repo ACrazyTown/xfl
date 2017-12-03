@@ -109,8 +109,7 @@ class TextArea extends UIComponent {
     }
 
     private function updateTextField(): Void {
-        // TODO: a.drewke use scrollbar width here instead of 20
-        textField.width = width - 20;
+        textField.width = width - (scrollBar != null?scrollBar.scrollBarWidth:0.0);
         textField.height = textField.textHeight;
     }
 

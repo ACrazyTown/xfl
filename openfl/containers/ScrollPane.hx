@@ -58,19 +58,17 @@ class ScrollPane extends UIComponent {
     private function set_source(_source: DisplayObject): DisplayObject {
         if (this._source != null) removeChild(this._source);
         this._source = _source;
-        this._source.x = 0.0;
-        this._source.y = 0.0;
         addChild(this._source);
         update();
         return this._source;
     }
 
     public function get_scrollY(): Float {
-        return source.y;
+        return -source.y;
     }
 
     public function set_scrollY(scrollY: Float): Float {
-        source.y = scrollY;
+        source.y = -scrollY;
         if (source.y > 0.0) source.y = 0.0;
         if (source.y < -(source.height - _height)) source.y = -(source.height - _height);
         return source.y;
