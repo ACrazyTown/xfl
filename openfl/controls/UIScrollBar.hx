@@ -209,8 +209,6 @@ class UIScrollBar extends UIComponent {
         layoutChild(getXFLMovieClip("ScrollThumb_downSkin"), "scrollthumb");
 
         setScrollThumbPosition();
-
-        Utils.dumpDisplayObject(this);
     }
 
     private function onScrollArrowMouseEvent(event: MouseEvent) : Void {
