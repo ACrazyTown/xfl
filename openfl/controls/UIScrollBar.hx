@@ -40,15 +40,19 @@ class UIScrollBar extends UIComponent {
         removeChild(getXFLMovieClip("ScrollTrack_skin"));
 
         var tmp: Float = 0.0;
+        _scrollBarWidth = 0.0;
         _scrollBarWidth = getXFLMovieClip("ScrollTrack_skin").width;
+        scrollArrowUpHeight = 0.0;
         scrollArrowUpHeight = (tmp = getXFLMovieClip("ScrollArrowUp_upSkin").height) > scrollArrowUpHeight?tmp:scrollArrowUpHeight;
         scrollArrowUpHeight = (tmp = getXFLMovieClip("ScrollArrowUp_overSkin").height) > scrollArrowUpHeight?tmp:scrollArrowUpHeight;
         scrollArrowUpHeight = (tmp = getXFLMovieClip("ScrollArrowUp_downSkin").height) > scrollArrowUpHeight?tmp:scrollArrowUpHeight;
         scrollArrowUpHeight = (tmp = getXFLMovieClip("ScrollArrowUp_disabledSkin").height) > scrollArrowUpHeight?tmp:scrollArrowUpHeight;
+        scrollArrowDownHeight = 0.0;
         scrollArrowDownHeight = (tmp = getXFLMovieClip("ScrollArrowDown_upSkin").height) > scrollArrowDownHeight?tmp:scrollArrowDownHeight;
         scrollArrowDownHeight = (tmp = getXFLMovieClip("ScrollArrowDown_overSkin").height) > scrollArrowDownHeight?tmp:scrollArrowDownHeight;
         scrollArrowDownHeight = (tmp = getXFLMovieClip("ScrollArrowDown_downSkin").height) > scrollArrowDownHeight?tmp:scrollArrowDownHeight;
         scrollArrowDownHeight = (tmp = getXFLMovieClip("ScrollArrowDown_disabledSkin").height) > scrollArrowDownHeight?tmp:scrollArrowDownHeight;
+        scrollThumbSkinHeight = 0.0;
         scrollThumbSkinHeight = (tmp = getXFLMovieClip("ScrollThumb_upSkin").height) > scrollThumbSkinHeight?tmp:scrollThumbSkinHeight;
         scrollThumbSkinHeight = (tmp = getXFLMovieClip("ScrollThumb_overSkin").height) > scrollThumbSkinHeight?tmp:scrollThumbSkinHeight;
         scrollThumbSkinHeight = (tmp = getXFLMovieClip("ScrollThumb_downSkin").height) > scrollThumbSkinHeight?tmp:scrollThumbSkinHeight;
@@ -314,12 +318,13 @@ class UIScrollBar extends UIComponent {
     }
 
     private function onScrollTrackMouseDown(event: MouseEvent): Void {
-        var scrollTrackSkinY = getXFLDisplayObject("ScrollTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
-        if (scrollTrackSkinY < getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y) {
+        var scrollTrackMouseY = getXFLDisplayObject("ScrollTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
+        var thumbableHeight = scrollTrackHeight - scrollThumbSkinHeight;
+        scrollTrackMouseY*= scrollTrackHeight / thumbableHeight;
+        if (scrollTrackMouseY < getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y) {
             _scrollTarget.scrollY = _scrollTarget.scrollY - 10;
             setScrollThumbPosition();
-        } else
-        if (scrollTrackSkinY > getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y + scrollThumbSkinHeight) {
+        } else {
             _scrollTarget.scrollY = _scrollTarget.scrollY + 10;
             setScrollThumbPosition();
         }

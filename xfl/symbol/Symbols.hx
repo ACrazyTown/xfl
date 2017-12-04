@@ -186,10 +186,13 @@ class Symbols {
 			if (loadedByCustomLoader == true) {
 				xfl.customSymbolLoader.onMovieClipLoaded(xfl, symbolItem, movieClip);
 			}
+			/*
+			// TODO: a.drewke
 			movieClip.cacheAsBitmap = instance.cacheAsBitmap;
 			if (instance.exportAsBitmap) {
 				movieClip.flatten();
 			}
+			*/
 		}
 		return movieClip;
 	}
@@ -228,10 +231,13 @@ class Symbols {
 			if (loadedByCustomLoader == true) {
 				xfl.customSymbolLoader.onSpriteLoaded(xfl, symbolItem, sprite);
 			}
+			/*
+			// TODO: a.drewke
 			sprite.cacheAsBitmap = instance.cacheAsBitmap;
 			if (instance.exportAsBitmap) {
 				sprite.flatten();
 			}
+			*/
 		}
 		return sprite;
 	}
@@ -272,9 +278,9 @@ class Symbols {
 			if (instance.color != null) {	
 				other.transform.colorTransform = instance.color;
 			}
-			other.cacheAsBitmap = instance.cacheAsBitmap;
 			/*
 			// TODO: a.drewke
+			other.cacheAsBitmap = instance.cacheAsBitmap;
 			if (instance.exportAsBitmap) {
 				other.flatten();
 			}
