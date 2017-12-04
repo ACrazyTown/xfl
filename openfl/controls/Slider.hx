@@ -20,7 +20,6 @@ class Slider extends UIComponent {
     public var snapInterval : Float = 1.0;
     public var liveDragging : Bool = false;
     public var tickInterval: Float = 0.0;
-    private var mouseDown: Bool = false;
 
     private var state: String = "up";
 
@@ -31,7 +30,6 @@ class Slider extends UIComponent {
     {
         super(xfl, timeline, parametersAreLocked);
         addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
-        addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
         addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
         getXFLDisplayObject("SliderTrack_skin").x = 0.0;
         getXFLDisplayObject("SliderTrack_skin").y = 0.0;
@@ -59,28 +57,35 @@ class Slider extends UIComponent {
         switch(event.type) {
             case MouseEvent.MOUSE_OVER:
                 newState = "over";
-            case MouseEvent.MOUSE_UP:
-                mouseDown = false;
-                stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
-                newState = "up";
             case MouseEvent.MOUSE_DOWN:
-                mouseDown = true;
+                stage.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
                 stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
                 newState = "down";
+            default:
+                trace("onMouseEvent(): unsupported mouse event type '" + event.type + "'");
         }
         setState(newState);
     }
 
     private function onMouseEventMove(event: MouseEvent) : Void {
         if (disabled == true) {
+            stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
             stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
             state = "up";
             return;
         }
-        state = "down";
-        var localPoint = getXFLDisplayObject("SliderTrack_skin").globalToLocal(new Point(event.stageX, event.stageY));
-        value = minimum + ((localPoint.x / getXFLDisplayObject("SliderTrack_skin").width) * (maximum - minimum));
-        dispatchEvent(new Event(Event.CHANGE));
+        switch(event.type) {
+            case MouseEvent.MOUSE_UP:
+                stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
+                stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
+                state = "up";
+            case MouseEvent.MOUSE_MOVE:
+                var localPoint: Point = getXFLDisplayObject("SliderTrack_skin").globalToLocal(new Point(event.stageX, event.stageY));
+                value = minimum + ((localPoint.x / getXFLDisplayObject("SliderTrack_skin").width) * (maximum - minimum));
+                dispatchEvent(new Event(Event.CHANGE));
+            default:
+                trace("onMouseEventMove(): unsupported mouse event type '" + event.type + "'");
+        }
     }
 
     private function set_minimum(newValue: Float): Float {
