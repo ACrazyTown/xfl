@@ -2,7 +2,7 @@
 
 1.1 What is it?
 
-	XFL is a leightweight implementation of Adobe Flash XFL and related things and GSAP library for Haxe/OpenFL.
+	XFL is a leightweight implementation of Adobe Flash XFL and related things and GSAP library tweens for Haxe/OpenFL.
 
 1.2 Why?
 
