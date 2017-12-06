@@ -5,7 +5,7 @@ import haxe.xml.Fast;
 class Matrix extends openfl.geom.Matrix {
 	
 	public static function parse(xml:Fast): Matrix {
-		var matrix = new Matrix ();
+		var matrix = new Matrix();
 		if (xml.has.a) matrix.a = Std.parseFloat (xml.att.a);
 		if (xml.has.b) matrix.b = Std.parseFloat (xml.att.b);
 		if (xml.has.c) matrix.c = Std.parseFloat (xml.att.c);

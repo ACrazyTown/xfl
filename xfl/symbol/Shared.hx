@@ -1,6 +1,5 @@
 package xfl.symbol;
 
-import com.slipshift.engine.helpers.Utils;
 import xfl.XFL;
 import xfl.dom.DOMFrame;
 import xfl.dom.DOMBitmapInstance;
@@ -334,7 +333,6 @@ class Shared {
 					// if (Std.is(maskDisplayObject, Shape) == true) {
 						maskDisplayObjectCount++;
 						trace("enableFrame(): '" + container.name + "': mask display object #" + (i++));
-						Utils.dumpDisplayObject(maskDisplayObject);
 						// container.mask = maskDisplayObject;
 					// }
 				}
@@ -344,7 +342,6 @@ class Shared {
 					var i: Int = 0;
 					for (maskDisplayObject in maskDisplayObjects) {
 						trace("enableFrame(): '" + container.name + "': mask display object #" + (i++));
-						Utils.dumpDisplayObject(maskDisplayObject);
 					}
 				}
 				*/

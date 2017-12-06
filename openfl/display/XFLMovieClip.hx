@@ -3,6 +3,8 @@ package openfl.display;
 import xfl.XFL;
 import xfl.dom.DOMTimeline;
 import xfl.symbol.MovieClip;
+import openfl.controls.CheckBox;
+import openfl.controls.RadioButton;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.display.DisplayObject;
@@ -56,6 +58,14 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 
     public function getXFLSlider(name: String) : Slider {
 		return xflImplementation.getXFLSlider(name);
+	}
+
+    public function getXFLCheckBox(name: String) : CheckBox {
+		return xflImplementation.getXFLCheckBox(name);
+	}
+
+    public function getXFLRadioButton(name: String) : RadioButton {
+		return xflImplementation.getXFLRadioButton(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {

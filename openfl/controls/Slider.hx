@@ -1,12 +1,12 @@
 package openfl.controls;
 
-import xfl.XFL;
-import xfl.dom.DOMTimeline;
 import openfl.core.UIComponent;
 import openfl.display.XFLMovieClip;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
+import xfl.XFL;
+import xfl.dom.DOMTimeline;
 
 /**
  * Slider
@@ -23,9 +23,6 @@ class Slider extends UIComponent {
 
     private var state: String = "up";
 
-    /**
-     * Public constructor
-     **/
     public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false)
     {
         super(xfl, timeline, parametersAreLocked);

@@ -1,5 +1,7 @@
 package openfl.controls;
 
+import xfl.XFL;
+import xfl.dom.DOMTimeline;
 import openfl.core.UIComponent;
 import openfl.data.DataProvider;
 import openfl.display.XFLSprite;
@@ -13,11 +15,9 @@ class ComboBox extends UIComponent {
     public var dataProvider: DataProvider;
     public var selectedItem: Dynamic;
 
-    /**
-     * Public constructor
-     **/
-    public function new() {
-        super();
+    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false)
+    {
+        super(xfl, timeline, parametersAreLocked);
     }
 
     public function move(x: Int, y: Int): Void {

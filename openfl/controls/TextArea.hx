@@ -1,6 +1,5 @@
 package openfl.controls;
 
-import com.slipshift.engine.helpers.Utils;
 import openfl.controls.UIScrollBar;
 import openfl.containers.ScrollPane;
 import openfl.core.UIComponent;
@@ -30,9 +29,6 @@ class TextArea extends UIComponent {
     private var scrollPane: ScrollPane;
     private var textField: TextField;
 
-    /**
-     * Public constructor
-     **/
     public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreBlocked: Bool = false)
     {
         super(xfl, timeline, parametersAreBlocked);

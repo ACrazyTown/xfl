@@ -1,5 +1,7 @@
 package openfl.display;
 
+import openfl.controls.CheckBox;
+import openfl.controls.RadioButton;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.events.Event;
@@ -76,6 +78,18 @@ class XFLImplementation {
     public function getXFLSlider(name: String) : Slider {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, Slider);
+		return null;
+	}
+
+    public function getXFLCheckBox(name: String) : CheckBox {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, CheckBox);
+		return null;
+	}
+
+    public function getXFLRadioButton(name: String) : RadioButton {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, RadioButton);
 		return null;
 	}
 

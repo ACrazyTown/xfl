@@ -1,6 +1,5 @@
 package xfl.symbol;
 
-import com.slipshift.engine.helpers.Utils;
 import openfl.Assets;
 import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
@@ -27,6 +26,7 @@ class Symbols {
 		var shape = new Shape(instance);
 		if (instance.matrix != null) {
 			shape.transform.matrix = instance.matrix;
+			trace("createShape(): " + shape.name + ": " + instance.matrix);
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// shape.cacheAsBitmap = true;
@@ -37,6 +37,7 @@ class Symbols {
 		var rectangle = new Rectangle(instance);
 		if (instance.matrix != null) {
 			rectangle.transform.matrix = instance.matrix;
+			trace("createRectangle(): " + rectangle.name + ": " + instance.matrix);
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// rectangle.cacheAsBitmap = true;
@@ -61,6 +62,7 @@ class Symbols {
  		bitmap = new Bitmap(bitmapData);
 		if (instance.matrix != null) {
 			bitmap.transform.matrix = instance.matrix;
+			trace("createBitmap(): bitmap: " + instance.matrix);
 		}
 		return bitmap;
 	}
@@ -77,6 +79,7 @@ class Symbols {
 		}
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
+			trace("createDynamicText(): " + textField.name + ": " + instance.matrix);
 		}
 		textField.x+= instance.left;
 		var format = new TextFormat();
@@ -110,6 +113,7 @@ class Symbols {
 		}
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
+			trace("createStaticText(): " + textField.name + ": " + instance.matrix);
 		}
 		textField.x+= instance.left;
 		var format = new TextFormat();
@@ -179,6 +183,7 @@ class Symbols {
 		if (movieClip != null) {
 			if (instance.matrix != null) {
 				movieClip.transform.matrix = instance.matrix;
+				trace("createMovieClip(): " + movieClip.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				movieClip.transform.colorTransform = instance.color;
@@ -224,6 +229,7 @@ class Symbols {
 		if (sprite != null) {
 			if (instance.matrix != null) {
 				sprite.transform.matrix = instance.matrix;
+				trace("createSprite(): " + sprite.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				sprite.transform.colorTransform = instance.color;
@@ -274,6 +280,7 @@ class Symbols {
 		if (other != null) {
 			if (instance.matrix != null) {
 				other.transform.matrix = instance.matrix;
+				trace("createOther(): " + other.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				other.transform.colorTransform = instance.color;
@@ -319,8 +326,11 @@ class Symbols {
 							case "Number": 
 								Reflect.setProperty(component, variable.variable, Std.parseFloat(variable.defaultValue));
 								instanceVariablesLeft.remove(variable.variable);
+							case "String":
+								Reflect.setProperty(component, variable.variable, variable.defaultValue);
+								instanceVariablesLeft.remove(variable.variable);
 							default:
-								trace("createComponent(): unknown variable type '" + variable.type + "'");
+								trace("createComponent(): unknown variable type '" + variable.type + "': " + variable);
 						}
 					}
 				}
@@ -332,6 +342,7 @@ class Symbols {
 		}
 		if (component != null) {
 			if (instance.matrix != null) {
+				trace("createComponent(): " + component.name + ": " + instance.matrix);
 				component.transform.matrix = instance.matrix;
 			}
 		}

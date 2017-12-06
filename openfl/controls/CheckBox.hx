@@ -1,11 +1,14 @@
 package openfl.controls;
 
+import com.slipshift.engine.helpers.Utils;
 import openfl.core.UIComponent;
 import openfl.display.XFLSprite;
 import openfl.text.TextField;
+import xfl.XFL;
+import xfl.dom.DOMTimeline;
 
 /**
- * Check box grid
+ * Check box
  */
 class CheckBox extends UIComponent {
 
@@ -13,12 +16,11 @@ class CheckBox extends UIComponent {
     public var textField: TextField;
     public var selected: Bool;
 
-    /**
-     * Public constructor
-     **/
-    public function new()
+    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false)
     {
-        super();
+        super(xfl, timeline, parametersAreLocked);
+        trace("CheckBox::new()");
+        Utils.dumpDisplayObject(this);
     }
 
 }

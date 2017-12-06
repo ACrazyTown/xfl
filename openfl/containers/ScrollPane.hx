@@ -1,6 +1,5 @@
 package openfl.containers;
 
-import com.slipshift.engine.helpers.Utils;
 import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
