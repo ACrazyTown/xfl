@@ -18,12 +18,15 @@ class UIComponent extends XFLSprite {
     private var _scrolling: Bool;
     private var _scrollY: Float;
 
+    private var styles: Map<String, Dynamic>;
+
     public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreBlocked: Bool = false)
     {
         super(xfl, timeline, parametersAreBlocked);
 
         // defaults
         _disabled = false;
+        styles = new Map<String, Dynamic>();
 
         // size
         // TODO: a.drewke
@@ -59,10 +62,15 @@ class UIComponent extends XFLSprite {
         return _height;
     }
 
+    private function draw(): Void {
+    }
+
     public function drawFocus(draw: Bool): Void {
     }
 
     public function setStyle(style: String, value: Dynamic): Void {
+        styles.set(style, value);
+        draw();
     }
 
     public function setSize(_width: Float, _height: Float): Void {

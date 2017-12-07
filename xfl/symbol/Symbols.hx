@@ -26,7 +26,7 @@ class Symbols {
 		var shape = new Shape(instance);
 		if (instance.matrix != null) {
 			shape.transform.matrix = instance.matrix;
-			trace("createShape(): " + shape.name + ": " + instance.matrix);
+			// trace("createShape(): " + shape.name + ": " + instance.matrix);
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// shape.cacheAsBitmap = true;
@@ -37,7 +37,7 @@ class Symbols {
 		var rectangle = new Rectangle(instance);
 		if (instance.matrix != null) {
 			rectangle.transform.matrix = instance.matrix;
-			trace("createRectangle(): " + rectangle.name + ": " + instance.matrix);
+			// trace("createRectangle(): " + rectangle.name + ": " + instance.matrix);
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// rectangle.cacheAsBitmap = true;
@@ -56,13 +56,13 @@ class Symbols {
 			}
 		}
 		if (bitmapData == null) {
-			trace("createBitmap(): " + instance.libraryItemName + ": not found");
+			// trace("createBitmap(): " + instance.libraryItemName + ": not found");
 			bitmapData = new BitmapData(1, 1, false, 0xFFFFFF);
 		}
  		bitmap = new Bitmap(bitmapData);
 		if (instance.matrix != null) {
 			bitmap.transform.matrix = instance.matrix;
-			trace("createBitmap(): bitmap: " + instance.matrix);
+			// trace("createBitmap(): bitmap: " + instance.matrix);
 		}
 		return bitmap;
 	}
@@ -79,7 +79,7 @@ class Symbols {
 		}
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
-			trace("createDynamicText(): " + textField.name + ": " + instance.matrix);
+			// trace("createDynamicText(): " + textField.name + ": " + instance.matrix);
 		}
 		textField.x+= instance.left;
 		var format = new TextFormat();
@@ -113,7 +113,7 @@ class Symbols {
 		}
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
-			trace("createStaticText(): " + textField.name + ": " + instance.matrix);
+			// trace("createStaticText(): " + textField.name + ": " + instance.matrix);
 		}
 		textField.x+= instance.left;
 		var format = new TextFormat();
@@ -183,7 +183,7 @@ class Symbols {
 		if (movieClip != null) {
 			if (instance.matrix != null) {
 				movieClip.transform.matrix = instance.matrix;
-				trace("createMovieClip(): " + movieClip.name + ": " + instance.matrix);
+				// trace("createMovieClip(): " + movieClip.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				movieClip.transform.colorTransform = instance.color;
@@ -229,7 +229,7 @@ class Symbols {
 		if (sprite != null) {
 			if (instance.matrix != null) {
 				sprite.transform.matrix = instance.matrix;
-				trace("createSprite(): " + sprite.name + ": " + instance.matrix);
+				// trace("createSprite(): " + sprite.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				sprite.transform.colorTransform = instance.color;
@@ -255,7 +255,7 @@ class Symbols {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				symbolItem = document.symbols.get(instance.libraryItemName);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
-				trace("createOther(): creating other from '" + className + "'");
+				// trace("createOther(): creating other from '" + className + "'");
 				other = Type.createInstance(
 					classType, 
 					[
@@ -280,7 +280,7 @@ class Symbols {
 		if (other != null) {
 			if (instance.matrix != null) {
 				other.transform.matrix = instance.matrix;
-				trace("createOther(): " + other.name + ": " + instance.matrix);
+				// trace("createOther(): " + other.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				other.transform.colorTransform = instance.color;
@@ -315,7 +315,7 @@ class Symbols {
 				}
 				var instanceFields: Array<String> = Type.getInstanceFields(classType);
 				for (variable in instance.variables) {
-					if (instanceFields.indexOf(variable.variable) != -1) {
+					if (instanceFields.indexOf(variable.variable) != -1 || instanceFields.indexOf("set_" + variable.variable) != -1) {
 						switch(variable.type) {
 							case "List":
 								Reflect.setProperty(component, variable.variable, variable.defaultValue);
@@ -369,6 +369,7 @@ class Symbols {
 			for (childIdx in 0...container.numChildren) {
 				var child: DisplayObject = container.getChildAt(childIdx);
 				if (children != null && children.indexOf(child) == -1) {
+					trace("xyz: " + child.name);
 					child.x = child.x / containerScaleX;
 					child.y = child.y / containerScaleY;
 					child.width = child.width / containerScaleX;

@@ -11,18 +11,14 @@ class HeaderRenderer extends LabelButton {
 
     public var column: Int;
 
-    private var styleName: String;
-    private var styles: Map<String, Dynamic>;
-
     /**
      * Public constructor
      **/
     public function new()
     {
         super();
-        styleName = "upSkin";
         column = -1;
-        styles = new Map<String, DisplayObject>();
+        setMouseState("up");
     }
 
     public function init() {
@@ -31,8 +27,8 @@ class HeaderRenderer extends LabelButton {
     }
 
     override public function setStyle(key: String, style: Dynamic) {
-        styles.set(key, style);
-        setMouseState("mouseUp");
+        super.setStyle(key, style);
+        draw();
     }
 
     private function drawLayout() : Void
@@ -46,31 +42,6 @@ class HeaderRenderer extends LabelButton {
     public static function getStyleDefinition() : Dynamic
     {
         return null;
-    }
-
-    public function setMouseState(mouseState: String): Void {
-        var style: DisplayObject = null;
-        style = styles.get(styleName);
-        if (style != null) removeChild(style);
-        switch(mouseState) {
-            case MouseEvent.MOUSE_OVER:
-                styleName = "overSkin";
-            case MouseEvent.MOUSE_OUT:
-                styleName = "upSkin";
-            case MouseEvent.MOUSE_DOWN:
-                styleName = "downSkin";
-            case MouseEvent.MOUSE_UP:
-                styleName = "upSkin";
-        }
-        style = styles.get(styleName);
-        if (style != null) {
-            style.x = 0;
-            style.y = 0;
-            style.width = width;
-            style.height = height;
-            style.visible = true;
-            addChildAt(style, 0);
-        }
     }
 
 }

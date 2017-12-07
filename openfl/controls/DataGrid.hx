@@ -21,7 +21,6 @@ class DataGrid extends UIComponent {
 
     public var columns : Array<DataGridColumn>;
 
-    private var styles : Map<String, Dynamic>;
     private var rendererStyles : Map<String, Dynamic>;
 
     public var sortableColumns : Bool;
@@ -43,7 +42,6 @@ class DataGrid extends UIComponent {
     {
         displayObjects = new Array<DisplayObject>();
         columns = new Array<DataGridColumn>();
-        styles = new Map<String, Dynamic>();
         rendererStyles = new Map<String, Dynamic>();
         super();
         _width = 0;
@@ -54,16 +52,7 @@ class DataGrid extends UIComponent {
         height = 0;
         rowHeight = 0.0;
         mouseChildren = true;
-    }
-
-    /**
-     * Set style
-     * @param key - key
-     * @param value - value
-     */
-    override public function setStyle(key: String, value: Dynamic): Void {
-        styles.set(key, value);
-        setupRendererClasses();
+        draw();
     }
 
     /**
@@ -73,6 +62,7 @@ class DataGrid extends UIComponent {
      */
     public function setRendererStyle(key: String, value: Dynamic): Void {
         rendererStyles.set(key, value);
+        draw();
     }
 
     /**
@@ -84,14 +74,7 @@ class DataGrid extends UIComponent {
         column.dataField = dataField;
         column.headerText = dataField;
         columns.push(column);
-        setupRendererClasses();
-    }
-
-    private function setupRendererClasses() {
-        for (column in columns) {
-            column.headerRenderer = styles.get("headerRenderer") != null?cast(styles.get("headerRenderer"), Class<Dynamic>):null;
-            column.cellRenderer = styles.get("cellRenderer") != null?cast(styles.get("cellRenderer"), Class<Dynamic>):null;
-        }
+        draw();
     }
 
     /**
@@ -115,14 +98,21 @@ class DataGrid extends UIComponent {
     private function set_dataProvider(dataProvider: DataProvider): DataProvider {
         _dataProvider = dataProvider;
         setColumnWidth(_width);
-        createCells();
+        draw();
         return _dataProvider;
     }
 
-    private function createCells() {
+    override private function draw() {
         for (displayObject in displayObjects) {
             removeChild(displayObject);
         }
+        var headerRenderer: Class<Dynamic> = styles.get("headerRenderer") != null?cast(styles.get("headerRenderer"), Class<Dynamic>):null;
+        var cellRenderer: Class<Dynamic> = styles.get("cellRenderer") != null?cast(styles.get("cellRenderer"), Class<Dynamic>):null;
+        for (column in columns) {
+            column.headerRenderer = headerRenderer;
+            column.cellRenderer = cellRenderer;
+        }
+        if (headerRenderer == null || cellRenderer == null) return;
         displayObjects = new Array<DisplayObject>();
         var _x: Float = 0.0;
         var columnIdx: Int = 0;
@@ -138,8 +128,7 @@ class DataGrid extends UIComponent {
             headerRenderer.label = column.headerText;
             headerRenderer.x = _x;
             headerRenderer.y = 0.0;
-            headerRenderer.width = column.width;
-            headerRenderer.height = headerRenderer.height;
+            headerRenderer.setSize(column.width, headerRenderer.textField.height);
             headerRenderer.init();
             headerRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEventMove);
             headerRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEventMove);
@@ -172,8 +161,7 @@ class DataGrid extends UIComponent {
                     cellRenderer.label = column.itemToLabel(rowData);
                     cellRenderer.x = _x;
                     cellRenderer.y = 0.0;
-                    cellRenderer.width = column.width;
-                    cellRenderer.height = cellRenderer.height;
+                    cellRenderer.setSize(column.width, cellRenderer.textField.height);
                     if (cellRenderer.height < rowHeight) cellRenderer.height = rowHeight;
                     cellRenderer.data = rowData;
                     cellRenderer.listData = listData;
@@ -209,7 +197,7 @@ class DataGrid extends UIComponent {
 
     private function set_rowHeight(rowHeight: Float): Float {
         this.rowHeight = rowHeight;
-        createCells();
+        draw();
         return rowHeight;
     }
 
@@ -232,24 +220,27 @@ class DataGrid extends UIComponent {
                 column.width*= _width / columnsWidth;
             }
         }
+        draw();
     }
 
     override public function setSize(_width: Float, _height: Float): Void {
         super.setSize(_width, _height);
         setColumnWidth(width);
-        createCells();
+        draw();
     }
 
     private function onMouseEventMove(event: MouseEvent) : Void {
         if (Std.is(cast(event.target, DisplayObject), HeaderRenderer) == true) {
+            var mouseHeaderRenderer: HeaderRenderer = cast(event.target, HeaderRenderer);
             for (columnIdx in 0...columns.length) {
-                cast(displayObjects[columnIdx], HeaderRenderer).setMouseState(event.type);
+                cast(displayObjects[columnIdx], HeaderRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
             }
         }
         if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
-            var cell: CellRenderer = cast(event.target, CellRenderer);
+            var mouseCellRenderer: CellRenderer = cast(event.target, CellRenderer);
             for (columnIdx in 0...columns.length) {
-                cast(displayObjects[(cell.listData.index * columns.length) + columnIdx], CellRenderer).setMouseState(event.type);
+                var cellColumnRenderer: CellRenderer = cast(displayObjects[(mouseCellRenderer.listData.index * columns.length) + columnIdx], CellRenderer);
+                cellColumnRenderer.setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
             }
         }
     }
