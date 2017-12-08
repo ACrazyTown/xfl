@@ -10,20 +10,17 @@ class Sprite extends xfl.display.Sprite {
 
 	public var children: Array<DisplayObject>;
 
-	public var parametersAreLocked: Bool;
+	public var xflSymbolArguments: XFLSymbolArguments;
 
-	private static var clips: Array <MovieClip>;
-
-	public function new(xfl: XFL, timeline: DOMTimeline, parametersAreLocked: Bool = false) {
+	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this.parametersAreLocked = parametersAreLocked;
-		clips = new Array<MovieClip>();
+		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, false);
 		var labels: Array<FrameLabel> = [];
 		var layers: Array<DOMLayer> = [];
 		children = [];
-		Shared.init(layers, timeline, labels);
-		Shared.createFrames(xfl, this, layers, children);
-		Shared.enableFrame(xfl, this, layers, timeline != null?timeline.currentFrame:1);
+		Shared.init(layers, this.xflSymbolArguments.timeline, labels);
+		Shared.createFrames(this.xflSymbolArguments.xfl, this, layers, children);
+		Shared.enableFrame(this.xflSymbolArguments.xfl, this, layers, this.xflSymbolArguments.timeline != null?this.xflSymbolArguments.timeline.currentFrame:1);
 	}
 
 	public function flatten(): Void {

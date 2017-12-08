@@ -8,6 +8,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import xfl.XFL;
+import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
 
 /**
@@ -33,8 +34,9 @@ class UIScrollBar extends UIComponent {
 
     private var scrollThumbMouseMoveYRelative: Float;
 
-    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreBlocked: Bool = false) {
-        super(xfl, timeline, parametersAreBlocked);
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null) {
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.UIScrollBar"));
+
         removeChild(getXFLMovieClip("ScrollTrack_skin"));
         removeChild(getXFLMovieClip("ScrollTrack_skin"));
         removeChild(getXFLMovieClip("ScrollTrack_skin"));

@@ -6,6 +6,8 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Rectangle;
 import openfl.events.MouseEvent;
+import xfl.XFL;
+import xfl.XFLAssets;
 
 /**
  * Scrollpane
@@ -26,9 +28,9 @@ class ScrollPane extends UIComponent {
     /**
      * Public constructor
      **/
-    public function new()
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
-        super();
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.containers.ScrollPane"));
         var maskSprite: Sprite = new Sprite();
         maskSprite.visible = false;
         addChild(maskSprite);

@@ -1,9 +1,11 @@
 package openfl.display;
 
 import openfl.controls.CheckBox;
+import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
+import openfl.controls.TextInput;
 import openfl.events.Event;
 import openfl.text.TextField;
 
@@ -75,9 +77,21 @@ class XFLImplementation {
 		return null;
 	}
 
+    public function getXFLTextInput(name: String) : TextInput {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, TextInput);
+		return null;
+	}
+
     public function getXFLSlider(name: String) : Slider {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, Slider);
+		return null;
+	}
+
+    public function getXFLComboBox(name: String) : ComboBox {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, ComboBox);
 		return null;
 	}
 

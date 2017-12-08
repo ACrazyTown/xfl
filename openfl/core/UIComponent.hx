@@ -20,16 +20,15 @@ class UIComponent extends XFLSprite {
 
     private var styles: Map<String, Dynamic>;
 
-    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreBlocked: Bool = false)
+    public function new(name: String, xlfSymbolArguments: XFLSymbolArguments = null)
     {
-        super(xfl, timeline, parametersAreBlocked);
+        super(xlfSymbolArguments);
 
         // defaults
         _disabled = false;
         styles = new Map<String, Dynamic>();
 
         // size
-        // TODO: a.drewke
         if (getXFLDisplayObject("Component_avatar") == null) return;
         _width = getXFLDisplayObject("Component_avatar").width;
         _height = getXFLDisplayObject("Component_avatar").height;

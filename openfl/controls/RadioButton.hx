@@ -1,6 +1,7 @@
 package openfl.controls;
 
 import xfl.XFL;
+import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
 import openfl.controls.LabelButton;
 import openfl.display.XFLSprite;
@@ -18,10 +19,10 @@ class RadioButton extends LabelButton {
 
     private var _groupName: String;
 
-    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false)
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         // TODO: clean up group and its radiobuttons if removed
-        super(xfl, timeline, parametersAreLocked);
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.RadioButton"));
         _selected = false;
         toggle = true;
 

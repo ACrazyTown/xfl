@@ -11,6 +11,7 @@ import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import xfl.XFL;
+import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
 
 /**
@@ -29,9 +30,9 @@ class TextArea extends UIComponent {
     private var scrollPane: ScrollPane;
     private var textField: TextField;
 
-    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreBlocked: Bool = false)
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
-        super(xfl, timeline, parametersAreBlocked);
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextArea"));
         for (i in 0...numChildren) {
             var child: DisplayObject = getChildAt(i);
             if (Std.is(child, UIScrollBar) == true) {

@@ -1,5 +1,6 @@
 package xfl;
 
+import xfl.XFL;
 import openfl.display.BitmapData;
 import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
@@ -10,14 +11,26 @@ import openfl.media.Sound;
  */
 class XFLAssets {
 
-    private static var xfl: XFL;
+    private static var instance: XFLAssets = null;
+
+    private var xfl: XFL;
+
+    public static function getInstance(): XFLAssets {
+        if (instance == null) {
+            instance = new XFLAssets();
+        }
+        return instance;
+    }
+
+    public function setup(paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
+        xfl = new XFL(paths, customSymbolLoader);
+    }
 
     /**
-     *  Constructor
-     *  @param paths
+     * Private constructor
      */
-    public function new(paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
-        xfl = new XFL(paths, customSymbolLoader);
+    private function new() {
+        this.xfl = null;
     }
 
     /**
@@ -25,8 +38,17 @@ class XFLAssets {
      *  @param asset name
      *  @return haxe.xml.Fast
      */
-    public static function getXFLAsset(assetName: String) : haxe.xml.Fast {
+    public function getXFLAsset(assetName: String) : haxe.xml.Fast {
         return new haxe.xml.Fast(Xml.parse(openfl.Assets.getText(assetName)).firstElement());
+    }
+
+    /**
+     *  Get XFL symbol arguments
+     *  @param asset name
+     *  @return XFLSymbolArguments
+     */
+    public function createXFLSymbolArguments(assetName: String): XFLSymbolArguments {
+        return xfl.createSymbolArguments(assetName);
     }
 
     /**

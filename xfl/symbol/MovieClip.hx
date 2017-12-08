@@ -14,25 +14,28 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public var children: Array<DisplayObject>;
 
-	public var parametersAreLocked: Bool;
+	public var xflSymbolArguments: XFLSymbolArguments;
 
 	private var lastFrame: Int;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
-	private var xfl: XFL;
 
-	public function new(xfl: XFL, timeline: DOMTimeline, parametersAreLocked: Bool = false) {
+	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this.xfl = xfl;
-		this.parametersAreLocked = parametersAreLocked;
+		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, false);
 		currentLabels = [];
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		lastFrame = -1;
-		currentFrame = timeline != null?timeline.currentFrame:1;
+		currentFrame = this.xflSymbolArguments.timeline != null?this.xflSymbolArguments.timeline.currentFrame:1;
 		layers = [];
 		children = [];
-		totalFrames = Shared.init(layers, timeline, currentLabels);
-		Shared.createFrames(this.xfl, this, layers, children);
+		totalFrames = Shared.init(layers, this.xflSymbolArguments.timeline, currentLabels);
+		Shared.createFrames(
+			this.xflSymbolArguments.xfl, 
+			this, 
+			layers, 
+			children
+		);
 		update();
 		if (totalFrames > 1) {
 			play();
@@ -133,8 +136,8 @@ class MovieClip extends xfl.display.MovieClip {
 
 	private function update(): Void {
 		if (currentFrame != lastFrame) {
-			Shared.disableFrames(xfl, this, layers, lastFrame);
-			Shared.enableFrame(xfl, this, layers, currentFrame);
+			Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame);
+			Shared.enableFrame(xflSymbolArguments.xfl, this, layers, currentFrame);
 			lastFrame = currentFrame;
 		}
 	}

@@ -13,6 +13,8 @@ import openfl.display.Shape;
 import openfl.events.MouseEvent;
 import openfl.events.ListEvent;
 import openfl.text.TextFormat;
+import xfl.XFL;
+import xfl.XFLAssets;
 
 /**
  * Data grid
@@ -38,12 +40,12 @@ class DataGrid extends UIComponent {
     /**
      * Public constructor
      **/
-    public function new()
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.ComboBox"));
         displayObjects = new Array<DisplayObject>();
         columns = new Array<DataGridColumn>();
         rendererStyles = new Map<String, Dynamic>();
-        super();
         _width = 0;
         _height = 0;
         x = 0;

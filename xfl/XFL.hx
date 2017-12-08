@@ -5,15 +5,27 @@ import xfl.dom.DOMBitmapItem;
 import xfl.dom.DOMDocument;
 import xfl.dom.DOMSoundItem;
 import xfl.dom.DOMSymbolItem;
+import xfl.dom.DOMTimeline;
 import openfl.display.BitmapData;
 import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
 import openfl.media.Sound;
 
+class XFLSymbolArguments {
+	public var xfl: XFL;
+	public var timeline: DOMTimeline;
+	public var parametersAreLocked: Bool;
+	public function new(xfl: XFL, timeline: DOMTimeline, parametersAreLocked: Bool) {
+		this.xfl = xfl;
+		this.timeline = timeline;
+		this.parametersAreLocked = parametersAreLocked;
+	}
+}
+
 class XFL {
 
-	public var documents: Array<DOMDocument>;
 	public var paths: Array<String>;
+	public var documents: Array<DOMDocument>;
 	public var customSymbolLoader: XFLCustomSymbolLoader;
 
 	public function new (paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
@@ -34,15 +46,13 @@ class XFL {
 						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
 						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
-						if (bitmapData != null) break;
+						if (bitmapData != null) return bitmapData;
 					}
 				}
 			}
 		}
-		if (bitmapData == null) {
-			trace("getBitmapData(): bitmap data not found: " + name);
-		}
-		return bitmapData;
+		trace("getBitmapData(): bitmap data not found: " + name);
+		return null;
 	}
 
 	public function getSound(name:String): Sound {
@@ -54,71 +64,66 @@ class XFL {
 						var soundItem: DOMSoundItem = cast(medium, DOMSoundItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + soundItem.href;
 						if (Assets.exists(assetUrl) == true) sound = Assets.getSound(assetUrl);
-						if (sound != null) break;
+						if (sound != null) return sound;
 					}
 				}
 			}
 		}
-		if (sound == null) {
-			trace("getSound(): sound not found: " + name);
-		}
+		trace("getSound(): sound not found: " + name);
 		return sound;
 	}
 
-	public function createMovieClip (name: String): XFLMovieClip {
-		var timeline = null;
+	private function getSymbolItem(name: String): DOMSymbolItem {
 		for (document in documents) {
 			for (symbolItem in document.symbols) {
 				if (symbolItem.linkageClassName == name && symbolItem.linkageExportForAS == true) {
 					if (Std.is(symbolItem, DOMSymbolItem)) {
-						if (customSymbolLoader != null) {
-							var movieClip: XFLMovieClip = customSymbolLoader.createMovieClip(this, symbolItem);
-							if (movieClip != null) {
-								customSymbolLoader.onMovieClipLoaded(this, symbolItem, movieClip);
-								return movieClip;
-							}
-						}
-						timeline = symbolItem.timeline;
-						break;
+						return symbolItem;
 					}
 				}
 			}
-			if (timeline != null) break;
 		}
+		trace("getSymbolItem(): symbol not found: " + name);
+		return null;
+	}
 
-		if (timeline != null) {
-			return new XFLMovieClip(this, timeline);
+	public function createSymbolArguments(name: String): XFLSymbolArguments {
+		var symbolItem: DOMSymbolItem = getSymbolItem(name);
+		if (symbolItem != null && Std.is(symbolItem, DOMSymbolItem)) {
+			return new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked);
 		}
+		trace("createSymbolArguments(): symbol not found: " + name);
+		return null;
+	}
 
+	public function createMovieClip (name: String): XFLMovieClip {
+		var symbolItem: DOMSymbolItem = getSymbolItem(name);
+		if (symbolItem != null && Std.is(symbolItem, DOMSymbolItem)) {
+			if (customSymbolLoader != null) {
+				var movieClip: XFLMovieClip = customSymbolLoader.createMovieClip(this, symbolItem);
+				if (movieClip != null) {
+					customSymbolLoader.onMovieClipLoaded(this, symbolItem, movieClip);
+					return movieClip;
+				}
+			}
+			return new XFLMovieClip(new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked));
+		}
 		trace("createMovieClip(): movie clip not found: " + name);
 		return null;
 	}
 
 	public function createSprite (name: String): XFLSprite {
-		var timeline = null;
-		for (document in documents) {
-			for (symbolItem in document.symbols) {
-				if (symbolItem.linkageClassName == name && symbolItem.linkageExportForAS == true) {
-					if (Std.is(symbolItem, DOMSymbolItem)) {
-						if (customSymbolLoader != null) {
-							var sprite: XFLSprite = customSymbolLoader.createSprite(this, symbolItem);
-							if (sprite != null) {
-								customSymbolLoader.onSpriteLoaded(this, symbolItem, sprite);
-								return sprite;
-							}
-						}
-						timeline = symbolItem.timeline;
-						break;
-					}
+		var symbolItem: DOMSymbolItem = getSymbolItem(name);
+		if (symbolItem != null && Std.is(symbolItem, DOMSymbolItem)) {
+			if (customSymbolLoader != null) {
+				var sprite: XFLSprite = customSymbolLoader.createSprite(this, symbolItem);
+				if (sprite != null) {
+					customSymbolLoader.onSpriteLoaded(this, symbolItem, sprite);
+					return sprite;
 				}
 			}
-			if (timeline != null) break;
+			return new XFLSprite(new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked));
 		}
-
-		if (timeline != null) {
-			return new XFLSprite(this, timeline);
-		}
-
 		trace("createSprite(): sprite not found: " + name);
 		return null;
 	}

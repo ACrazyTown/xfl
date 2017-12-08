@@ -6,6 +6,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import xfl.XFL;
+import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
 
 /**
@@ -23,9 +24,9 @@ class Slider extends UIComponent {
 
     private var state: String = "up";
 
-    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false)
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
-        super(xfl, timeline, parametersAreLocked);
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.Slider"));
         addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
         addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
         getXFLDisplayObject("SliderTrack_skin").x = 0.0;

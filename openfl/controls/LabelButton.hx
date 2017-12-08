@@ -27,8 +27,8 @@ class LabelButton extends UIComponent {
     private var currentIcon: DisplayObject;
     private var currentSkin: DisplayObject;
 
-    public function new(name: String = null, xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false) {
-        super(name, xfl, timeline, parametersAreLocked);
+    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null) {
+        super(name, xflSymbolArguments);
         _textPadding = 5.0;
         _textField = new TextField();
         _textField.text = "label";

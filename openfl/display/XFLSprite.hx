@@ -4,9 +4,11 @@ import xfl.XFL;
 import xfl.dom.DOMTimeline;
 import xfl.symbol.Sprite;
 import openfl.controls.CheckBox;
+import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
+import openfl.controls.TextInput;
 import openfl.display.XFLElement;
 import openfl.text.TextField;
 
@@ -20,8 +22,8 @@ class XFLSprite implements XFLElement extends Sprite {
     /**
      * Public constructor
      **/
-	public function new(xfl: XFL = null, timeline: DOMTimeline = null, parametersAreLocked: Bool = false) {
-		super(xfl, timeline, parametersAreLocked);
+	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
+		super(xflSymbolArguments);
         xflImplementation = new XFLImplementation(this);
     }
 
@@ -57,8 +59,16 @@ class XFLSprite implements XFLElement extends Sprite {
 		return xflImplementation.getXFLTextArea(name);
 	}
 
+    public function getXFLTextInput(name: String) : TextInput {
+		return xflImplementation.getXFLTextInput(name);
+	}
+
     public function getXFLSlider(name: String) : Slider {
 		return xflImplementation.getXFLSlider(name);
+	}
+
+	public function getXFLComboBox(name: String) : ComboBox {
+		return xflImplementation.getXFLComboBox(name);
 	}
 
     public function getXFLCheckBox(name: String) : CheckBox {

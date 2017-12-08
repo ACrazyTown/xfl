@@ -19,6 +19,7 @@ import xfl.dom.DOMRectangle;
 import xfl.dom.DOMStaticText;
 import xfl.dom.DOMSymbolInstance;
 import xfl.dom.DOMSymbolItem;
+import xfl.XFL;
 
 class Symbols {
 
@@ -168,7 +169,7 @@ class Symbols {
 					if (movieClip != null) loadedByCustomLoader = true;
 				}
 				if (movieClip == null) {
-					movieClip = new XFLMovieClip(xfl, symbolItem.timeline, symbolItem.parametersAreLocked);
+					movieClip = new XFLMovieClip(new XFLSymbolArguments(xfl, symbolItem.timeline, symbolItem.parametersAreLocked));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -214,7 +215,7 @@ class Symbols {
 					if (sprite != null) loadedByCustomLoader = true;
 				}
 				if (sprite == null) {
-					sprite = new XFLSprite(xfl, symbolItem.timeline, symbolItem.parametersAreLocked);
+					sprite = new XFLSprite(new XFLSymbolArguments(xfl, symbolItem.timeline, symbolItem.parametersAreLocked));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -262,9 +263,11 @@ class Symbols {
 						(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
 							symbolItem.timeline.name:
 							instance.name,
-						xfl, 
-						symbolItem.timeline,
-						symbolItem.parametersAreLocked
+						new XFLSymbolArguments(
+							xfl, 
+							symbolItem.timeline,
+							symbolItem.parametersAreLocked
+						)
 					]
 				);
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
@@ -305,7 +308,7 @@ class Symbols {
 				if (StringTools.startsWith(className, "fl.")) className = "openfl." + className.substr("fl.".length);
 				trace("createComponent(): creating component from '" + className + "'");
 				var classType: Class<Dynamic> = Type.resolveClass(className);
-				component = Type.createInstance(classType, [instance.name, xfl, symbolItem.timeline, symbolItem.parametersAreLocked]);
+				component = Type.createInstance(classType, [instance.name, new XFLSymbolArguments(xfl, symbolItem.timeline, symbolItem.parametersAreLocked)]);
 				if (instance.name != null && instance.name != "") {
 					component.name = instance.name;
 				}
@@ -359,12 +362,12 @@ class Symbols {
 			if (Std.is(component, XFLSprite) == true) {
 				var xflSprite: XFLSprite = cast(component, XFLSprite);
 				children = xflSprite.children;
-				parametersAreBlocked = xflSprite.parametersAreLocked;
+				parametersAreBlocked = xflSprite.xflSymbolArguments.parametersAreLocked;
 			} else
 			if (Std.is(component, XFLMovieClip) == true) {
 				var xflMovieClip: XFLMovieClip = cast(component, XFLMovieClip);
 				children = xflMovieClip.children;
-				parametersAreBlocked = xflMovieClip.parametersAreLocked;
+				parametersAreBlocked = xflMovieClip.xflSymbolArguments.parametersAreLocked;
 			}
 			for (childIdx in 0...container.numChildren) {
 				var child: DisplayObject = container.getChildAt(childIdx);

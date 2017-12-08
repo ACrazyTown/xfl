@@ -1,6 +1,11 @@
 package openfl.display;
 
+import openfl.controls.CheckBox;
+import openfl.controls.ComboBox;
+import openfl.controls.RadioButton;
 import openfl.controls.Slider;
+import openfl.controls.TextArea;
+import openfl.controls.TextInput;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.text.TextField;
@@ -21,7 +26,12 @@ interface XFLElement {
     public function getXFLDisplayObject(name: String) : DisplayObject;
     public function getXFLDisplayObjectContainer(name: String) : DisplayObjectContainer;
     public function getXFLTextField(name: String) : TextField;
+    public function getXFLTextArea(name: String) : TextArea;
+    public function getXFLTextInput(name: String) : TextInput;
     public function getXFLSlider(name: String) : Slider;
+    public function getXFLComboBox(name: String) : ComboBox;
+    public function getXFLCheckBox(name: String) : CheckBox;
+    public function getXFLRadioButton(name: String) : RadioButton;
 
     // values
     public function addValue(key: String, value: String): Void;
