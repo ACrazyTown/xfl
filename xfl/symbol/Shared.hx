@@ -184,7 +184,7 @@ class Shared {
 		}
     }
 
-	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int) {
+	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int, invisibleObjects: Array<DisplayObject>) {
 		container.mask = null;
 		var currentLayer: Int = 0;
 		for (layer in layers) {
@@ -200,42 +200,49 @@ class Shared {
 							if (Std.is(element, DOMSymbolInstance)) {
 								var movieClip: DisplayObject = container.getChildByName(cast(element, DOMSymbolInstance).name);
 								if (movieClip != null && layer.visible == true) {
+									if (movieClip.visible == false) invisibleObjects.push(movieClip);
 									movieClip.visible = false;
 								}
 							} else 
 							if (Std.is(element, DOMBitmapInstance)) {
 								var bitmap: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (bitmap != null && layer.visible == true) {
+									if (bitmap.visible == false) invisibleObjects.push(bitmap);
 									bitmap.visible = false;
 								}
 							} else
 							if (Std.is(element, DOMComponentInstance)) {
 								var component: DisplayObject = container.getChildByName(cast(element, DOMComponentInstance).name);
 								if (component != null && layer.visible == true) {
+									if (component.visible == false) invisibleObjects.push(component);
 									component.visible = false;
 								}
 							} else 
 							if (Std.is(element, DOMShape)) {
 								var shape: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (shape != null && layer.visible == true) {
+									if (shape.visible == false) invisibleObjects.push(shape);
 									shape.visible = false;
 								}
 							} else 
 							if (Std.is(element, DOMRectangle)) {
 								var rectangle: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (rectangle != null && layer.visible == true) {
+									if (rectangle.visible == false) invisibleObjects.push(rectangle);
 									rectangle.visible = false;
 								}
 							} else 
 							if (Std.is(element, DOMDynamicText)) {
 								var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
 								if (text != null && layer.visible == true) {
+									if (text.visible == false) invisibleObjects.push(text);
 									text.visible = false;
 								}
 							} else 
 							if (Std.is(element, DOMStaticText)) {
 								var text: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (text != null && layer.visible == true) {
+									if (text.visible == false) invisibleObjects.push(text);
 									text.visible  = false;
 								}
 							} else {
@@ -255,7 +262,7 @@ class Shared {
 		}
 	}
 
-    public static function enableFrame(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int): Void {
+    public static function enableFrame(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int, invisibleObjects: Array<DisplayObject>): Void {
 		var currentLayer: Int = 0;
 		container.mask = null;
 		for (layer in layers) {
@@ -272,45 +279,45 @@ class Shared {
 							if (Std.is(element, DOMSymbolInstance)) {
 								var movieClip: DisplayObject = container.getChildByName(cast(element, DOMSymbolInstance).name);
 								if (movieClip != null && layer.visible == true) {
-									movieClip.visible = true;
+									movieClip.visible = invisibleObjects == null || invisibleObjects.indexOf(movieClip) == -1;
 								}
 							} else 
 							if (Std.is(element, DOMBitmapInstance)) {
 								var bitmap: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (bitmap != null && layer.visible == true) {
-									bitmap.visible = true;
+									bitmap.visible = invisibleObjects == null || invisibleObjects.indexOf(bitmap) == -1;
 								}
 							} else 
 							if (Std.is(element, DOMComponentInstance)) {
 								var component: DisplayObject = container.getChildByName(cast(element, DOMComponentInstance).name);
 								if (component != null && layer.visible == true) {
-									component.visible = true;
+									component.visible = invisibleObjects == null || invisibleObjects.indexOf(component) == -1;
 								}
 							} else 
 							if (Std.is(element, DOMShape)) {
 								var shape: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (shape != null && layer.visible == true) {
-									shape.visible = true;
+									shape.visible = invisibleObjects == null || invisibleObjects.indexOf(shape) == -1;
 								}
 								if (layer.type == "mask") maskDisplayObjects.push(shape);
 							} else 
 							if (Std.is(element, DOMRectangle)) {
 								var rectangle: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (rectangle != null && layer.visible == true) {
-									rectangle.visible = true;
+									rectangle.visible = invisibleObjects == null || invisibleObjects.indexOf(rectangle) == -1;
 								}
 								if (layer.type == "mask") maskDisplayObjects.push(rectangle);
 							} else 
 							if (Std.is(element, DOMDynamicText)) {
 								var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
 								if (text != null && layer.visible == true) {
-									text.visible = true;
+									text.visible = invisibleObjects == null || invisibleObjects.indexOf(text) == -1;
 								}
 							} else 
 							if (Std.is(element, DOMStaticText)) {
 								var text: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (text != null && layer.visible == true) {
-									text.visible = true;
+									text.visible = invisibleObjects == null || invisibleObjects.indexOf(text) == -1;
 								}
 							}  else {
 								trace("enableFrame(): Unhandled frame element of type '" + Type.getClassName(Type.getClass(element)) + '"');

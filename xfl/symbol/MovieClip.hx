@@ -19,6 +19,7 @@ class MovieClip extends xfl.display.MovieClip {
 	private var lastFrame: Int;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
+	private var invisibleObjects: Array<DisplayObject>;
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
@@ -30,6 +31,7 @@ class MovieClip extends xfl.display.MovieClip {
 		layers = [];
 		children = [];
 		totalFrames = Shared.init(layers, this.xflSymbolArguments.timeline, currentLabels);
+		invisibleObjects = [];
 		Shared.createFrames(
 			this.xflSymbolArguments.xfl, 
 			this, 
@@ -136,8 +138,9 @@ class MovieClip extends xfl.display.MovieClip {
 
 	private function update(): Void {
 		if (currentFrame != lastFrame) {
-			Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame);
-			Shared.enableFrame(xflSymbolArguments.xfl, this, layers, currentFrame);
+			invisibleObjects.splice(0, invisibleObjects.length);
+			Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame, invisibleObjects);
+			Shared.enableFrame(xflSymbolArguments.xfl, this, layers, currentFrame, invisibleObjects);
 			lastFrame = currentFrame;
 		}
 	}
