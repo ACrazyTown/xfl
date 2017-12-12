@@ -42,7 +42,7 @@ class DataGrid extends UIComponent {
      **/
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
-        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.ComboBox"));
+        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid"));
         displayObjects = new Array<DisplayObject>();
         columns = new Array<DataGridColumn>();
         rendererStyles = new Map<String, Dynamic>();
@@ -86,7 +86,7 @@ class DataGrid extends UIComponent {
     }
 
     public function getCellRendererAt(row: Int, column: Int): ICellRenderer {
-        return cast(getChildAt(row * columns.length + column), ICellRenderer);
+        return cast(displayObjects[columns.length + (row * columns.length + column)], ICellRenderer);
     }
 
     public function getItemAt(rowIdx: Int): Dynamic {

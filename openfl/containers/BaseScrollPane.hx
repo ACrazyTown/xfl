@@ -1,6 +1,5 @@
 package openfl.containers;
 
-import com.slipshift.engine.helpers.Utils;
 import openfl.core.UIComponent;
 import openfl.controls.ScrollBar;
 import openfl.display.DisplayObject;
@@ -34,7 +33,6 @@ class BaseScrollPane extends UIComponent {
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments);
-        Utils.dumpDisplayObject(this);
         scrollBar = getXFLScrollBar("ScrollBar");
         if (scrollBar != null) {
             scrollBar.visible = true;
