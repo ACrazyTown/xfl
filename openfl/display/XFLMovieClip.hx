@@ -6,6 +6,9 @@ import xfl.symbol.MovieClip;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
+import openfl.controls.List;
+import openfl.controls.ScrollBar;
+import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
@@ -76,6 +79,18 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 
 	public function getXFLRadioButton(name: String) : RadioButton {
 		return xflImplementation.getXFLRadioButton(name);
+	}
+
+	public function getXFLList(name: String) : List {
+		return xflImplementation.getXFLList(name);
+	}
+
+	public function getXFLScrollBar(name: String) : ScrollBar {
+		return xflImplementation.getXFLScrollBar(name);
+	}
+
+	public function getXFLUIScrollBar(name: String) : UIScrollBar {
+		return xflImplementation.getXFLUIScrollBar(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {

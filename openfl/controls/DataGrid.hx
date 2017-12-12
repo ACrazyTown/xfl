@@ -181,19 +181,21 @@ class DataGrid extends UIComponent {
             }
         }
         var _y: Float = 0.0;
-        for (i in 0...Std.int(numChildren / columns.length)) {
-            var cellHeight: Float = 0.0;
-            for (j in 0...columns.length) {
-                var cell: DisplayObject = displayObjects[(i * columns.length) + j];
-                if (cell.height > cellHeight) cellHeight = cell.height;
+        if (displayObjects.length > 0) {
+            for (i in 0...Std.int(displayObjects.length / columns.length)) {
+                var cellHeight: Float = 0.0;
+                for (j in 0...columns.length) {
+                    var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    if (cell.height > cellHeight) cellHeight = cell.height;
+                }
+                if (i > 0 && rowHeight > cellHeight) cellHeight = rowHeight;
+                for (j in 0...columns.length) {
+                    var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    cell.y = _y;
+                    cell.height = cellHeight;
+                }
+                _y+= cellHeight;
             }
-            if (i > 0 && rowHeight > cellHeight) cellHeight = rowHeight;
-            for (j in 0...columns.length) {
-                var cell: DisplayObject = displayObjects[(i * columns.length) + j];
-                cell.y = _y;
-                cell.height = cellHeight;
-            }
-            _y+= cellHeight;
         }
     }
 

@@ -142,15 +142,21 @@ class Symbols {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				var symbolItem: DOMSymbolItem = document.symbols.get(instance.libraryItemName);
 				// have a movie clip by default
-				if (symbolItem.linkageBaseClass == null || symbolItem.linkageBaseClass == "") {
+				if ((symbolItem.linkageBaseClass == null || symbolItem.linkageBaseClass == "") &&
+					(symbolItem.linkageClassName == null || StringTools.startsWith(symbolItem.linkageClassName, "fl.controls.") == false)
+				) {
 					return createMovieClip(xfl, instance);
 				}
-				// handle sprites and others
-				switch (symbolItem.linkageBaseClass) {
+				// otherwise determine class name
+				var className: String = symbolItem.linkageBaseClass; 
+				if (className == null || className == "") {
+					className = StringTools.replace(symbolItem.linkageClassName, "fl.controls.", "openfl.controls.");
+				}
+				switch (className) {
 					case "flash.display.Sprite":
 						return createSprite(xfl, instance);
 					default:
-						return createOther(xfl, instance, symbolItem.linkageBaseClass);
+						return createOther(xfl, instance, className);
 				}
 			}
 		}
@@ -178,6 +184,7 @@ class Symbols {
 				if (instance.name != null && instance.name != "") {
 					movieClip.name = instance.name;
 				}
+				// trace("createSprite(): creating movie clip: '" + movieClip.name + "'");
 				break;
 			}
 		}
@@ -224,6 +231,7 @@ class Symbols {
 				if (instance.name != null && instance.name != "") {
 					sprite.name = instance.name;
 				}
+				// trace("createSprite(): creating sprite: '" + sprite.name + "'");
 				break;
 			}
 		}
@@ -257,12 +265,14 @@ class Symbols {
 				symbolItem = document.symbols.get(instance.libraryItemName);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
 				// trace("createOther(): creating other from '" + className + "'");
+				var otherName: String = 
+					(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
+						symbolItem.timeline.name:
+						instance.name;
 				other = Type.createInstance(
 					classType, 
 					[
-						(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
-							symbolItem.timeline.name:
-							instance.name,
+						otherName,
 						new XFLSymbolArguments(
 							xfl, 
 							symbolItem.timeline,
@@ -270,13 +280,7 @@ class Symbols {
 						)
 					]
 				);
-				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
-				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
-					instance.name = symbolItem.timeline.name;
-				}
-				if (instance.name != null && instance.name != "") {
-					other.name = instance.name;
-				}
+				other.name = otherName;
 				break;
 			}
 		}
@@ -306,12 +310,24 @@ class Symbols {
 				var symbolItem = document.symbols.get(instance.libraryItemName);
 				var className: String = symbolItem.linkageClassName;
 				if (StringTools.startsWith(className, "fl.")) className = "openfl." + className.substr("fl.".length);
-				trace("createComponent(): creating component from '" + className + "'");
+				// trace("createComponent(): creating component from '" + className + "'");
 				var classType: Class<Dynamic> = Type.resolveClass(className);
-				component = Type.createInstance(classType, [instance.name, new XFLSymbolArguments(xfl, symbolItem.timeline, symbolItem.parametersAreLocked)]);
-				if (instance.name != null && instance.name != "") {
-					component.name = instance.name;
-				}
+				var componentName: String = 
+					(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
+						symbolItem.timeline.name:
+						instance.name;
+				component = Type.createInstance(
+					classType, 
+					[
+						componentName, 
+						new XFLSymbolArguments(
+							xfl, 
+							symbolItem.timeline, 
+							symbolItem.parametersAreLocked
+						)
+					]
+				);
+				component.name = componentName;
 				var instanceVariablesLeft: Array<String> = [];
 				for (variable in instance.variables) {
 					instanceVariablesLeft.push(variable.variable);
@@ -372,7 +388,6 @@ class Symbols {
 			for (childIdx in 0...container.numChildren) {
 				var child: DisplayObject = container.getChildAt(childIdx);
 				if (children != null && children.indexOf(child) == -1) {
-					trace("xyz: " + child.name);
 					child.x = child.x / containerScaleX;
 					child.y = child.y / containerScaleY;
 					child.width = child.width / containerScaleX;

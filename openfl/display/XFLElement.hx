@@ -3,6 +3,9 @@ package openfl.display;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
+import openfl.controls.List;
+import openfl.controls.ScrollBar;
+import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
@@ -16,7 +19,7 @@ import openfl.text.TextField;
 interface XFLElement {
 
     // display object container
-    public function addChild (child:DisplayObject):DisplayObject;
+    public function addChild(child: DisplayObject): DisplayObject;
 
     // XFL elements
     public function getXFLElementUntyped(name: String) : Dynamic;
@@ -32,6 +35,9 @@ interface XFLElement {
     public function getXFLComboBox(name: String) : ComboBox;
     public function getXFLCheckBox(name: String) : CheckBox;
     public function getXFLRadioButton(name: String) : RadioButton;
+    public function getXFLList(name: String) : List;
+    public function getXFLScrollBar(name: String): ScrollBar;
+    public function getXFLUIScrollBar(name: String): UIScrollBar;
 
     // values
     public function addValue(key: String, value: String): Void;

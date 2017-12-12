@@ -2,8 +2,11 @@ package openfl.display;
 
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
+import openfl.controls.List;
 import openfl.controls.RadioButton;
 import openfl.controls.Slider;
+import openfl.controls.ScrollBar;
+import openfl.controls.UIScrollBar;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
 import openfl.events.Event;
@@ -104,6 +107,24 @@ class XFLImplementation {
     public function getXFLRadioButton(name: String) : RadioButton {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, RadioButton);
+		return null;
+	}
+
+    public function getXFLList(name: String) : List {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, List);
+		return null;
+	}
+
+    public function getXFLScrollBar(name: String) : ScrollBar {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, ScrollBar);
+		return null;
+	}
+
+    public function getXFLUIScrollBar(name: String) : UIScrollBar {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, UIScrollBar);
 		return null;
 	}
 

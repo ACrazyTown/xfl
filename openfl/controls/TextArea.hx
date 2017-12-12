@@ -1,8 +1,8 @@
 package openfl.controls;
 
-import openfl.controls.UIScrollBar;
-import openfl.containers.ScrollPane;
+import openfl.containers.BaseScrollPane;
 import openfl.core.UIComponent;
+import openfl.controls.ScrollBar;
 import openfl.display.DisplayObject;
 import openfl.display.Shape;
 import openfl.display.XFLSprite;
@@ -26,21 +26,14 @@ class TextArea extends UIComponent {
     public var text(get, set): String;
     public var editable: Bool;
 
-    private var scrollBar: UIScrollBar;
-    private var scrollPane: ScrollPane;
+    private var scrollBar: ScrollBar;
+    private var scrollPane: BaseScrollPane;
     private var textField: TextField;
 
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextArea"));
-        for (i in 0...numChildren) {
-            var child: DisplayObject = getChildAt(i);
-            if (Std.is(child, UIScrollBar) == true) {
-                scrollBar = cast(child, UIScrollBar);
-                break;
-            }
-        }
-        scrollPane = new ScrollPane();
+        scrollPane = new BaseScrollPane();
         textField = new TextField();
         textField.name = "textfield";
         textField.x = 0;
@@ -49,13 +42,11 @@ class TextArea extends UIComponent {
         textField.multiline = true;
         textField.wordWrap = true;
         scrollPane.source = textField;
-        // TODO: a.drewke
-        if (scrollBar != null) {
-            scrollBar.visible = true;
-            scrollBar.x = 0.0;
-            scrollBar.y = 0.0;
-            scrollBar.scrollTarget = scrollPane;
-        }
+        scrollBar = getXFLScrollBar("UIScrollBar");
+        scrollBar.visible = true;
+        scrollBar.x = 0.0;
+        scrollBar.y = 0.0;
+        scrollBar.scrollTarget = scrollPane;
         addChild(scrollPane);
         updateTextField();
         layoutChildren();
@@ -98,9 +89,7 @@ class TextArea extends UIComponent {
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
         scrollPane.setSize(_width, _height);
-        if (scrollBar != null) {
-            scrollBar.setSize(width, height);
-        }
+        scrollBar.setSize(width, height);
         updateTextField();
         layoutChildren();
     }
