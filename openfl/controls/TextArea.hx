@@ -22,6 +22,7 @@ class TextArea extends UIComponent {
     public var maxVerticalScrollPosition: Float;
     public var verticalScrollPosition: Float;
 
+    public var maxChars(get, set): Int;
     public var htmlText(get, set): String;
     public var text(get, set): String;
     public var editable: Bool;
@@ -64,6 +65,14 @@ class TextArea extends UIComponent {
         } else {
             trace("setStyle(): '" + style + "', " + value);
         }
+    }
+
+    public function get_maxChars(): Int {
+        return textField.maxChars;
+    }
+
+    public function set_maxChars(maxChars: Int): Int {
+        return textField.maxChars = maxChars;
     }
 
     public function set_htmlText(_htmlText: String): String {
