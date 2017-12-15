@@ -97,6 +97,9 @@ class XFLTween {
 
     public static function delayedCall(duration: Float, onComplete: Void->Void, onCompleteParams: Array<Dynamic> = null) {
         var tween : Dynamic = {};
+        tween.object = null;
+        tween.delay = Reflect.hasField(tween, "delay")?tween.delay:0.0;
+        tween.duration = duration;
         tween.timeInit = haxe.Timer.stamp() + tween.delay;
         tween.timeCurrent = tween.timeInit;
         tween.timeFinal = tween.timeInit + tween.duration;
@@ -325,6 +328,18 @@ class XFLTween {
             }
         }
         killTweensOf(object);
+    }
+
+    public static function killDelayedCallsTo(onComplete: Dynamic) {
+		for (tween in tweens) {
+            if (tween.object == null &&
+                Reflect.hasField(tween, "onComplete") == true && 
+                tween.onComplete == onComplete) {
+			    tweens.remove(tween);
+            }
+		}
+        if (tweens.length > 0) return;
+        openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
     }
 
     private static function addTween(tween: Dynamic): Void {

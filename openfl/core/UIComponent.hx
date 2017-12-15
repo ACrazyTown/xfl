@@ -29,9 +29,15 @@ class UIComponent extends XFLSprite {
         styles = new Map<String, Dynamic>();
 
         // size
+        _width = 0.0;
+        _height = 0.0;
+
+        // determine from component avarar if we have any
         if (getXFLDisplayObject("Component_avatar") == null) return;
         _width = getXFLDisplayObject("Component_avatar").width;
         _height = getXFLDisplayObject("Component_avatar").height;
+
+        // remove component avatar
         removeChild(getXFLDisplayObject("Component_avatar"));
     }
 
@@ -43,23 +49,41 @@ class UIComponent extends XFLSprite {
         return this._disabled = _disabled;
     }
 
-    override public function get_width(): Float {
-        return _width;
-    }
+    #if flash
+        @:getter(width) public function get_width(): Float {
+            return _width;
+        }
 
-    override public function set_width(_width: Float): Float {
-        setSize(_width, _height);
-        return _width;
-    }
+        @:setter(width) public function set_width(_width: Float) {
+            setSize(_width, _height);
+        }
 
-    override public function get_height(): Float {
-        return _height;
-    }
+        @:getter(height) public function get_height(): Float {
+            return _height;
+        }
 
-    override public function set_height(_height: Float): Float {
-        setSize(_width, _height);
-        return _height;
-    }
+        @:setter(height) public function set_height(_height: Float) {
+            setSize(_width, _height);
+        }
+    #else
+        public override function get_width(): Float {
+            return _width;
+        }
+
+        public override function set_width(_width: Float): Float {
+            setSize(_width, _height);
+            return _width;
+        }
+
+        public override function get_height(): Float {
+            return _height;
+        }
+
+        public override function set_height(_height: Float): Float {
+            setSize(_width, _height);
+            return _height;
+        }
+    #end
 
     private function draw(): Void {
     }

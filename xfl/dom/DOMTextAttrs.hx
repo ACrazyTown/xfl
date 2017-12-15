@@ -9,7 +9,7 @@ class DOMTextAttrs {
 	public var alpha: Float;
 	public var face: String;
 	public var fillColor: Int;
-	public var size: Float;
+	public var size: Null<Float>;
 
 	public function new() {
 	}

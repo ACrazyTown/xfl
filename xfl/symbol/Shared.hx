@@ -97,7 +97,7 @@ class Shared {
 				if (frame.tweenType == null || frame.tweenType == "") {
 					for (element in frame.elements) {
 						if (Std.is(element, DOMSymbolInstance)) {
-							var symbol: DisplayObject = container.getChildByName(cast(element, DOMSymbolInstance).name);
+							var symbol: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 							if (symbol != null) {
 								trace("createFrames(): movie clip with name '" + symbol.name + "' already exists");
 								continue;
@@ -120,7 +120,7 @@ class Shared {
 						} else 
 						if (Std.is(element, DOMComponentInstance)) {
 							var name: String = cast(element, DOMComponentInstance).name;
-							var component: DisplayObject = container.getChildByName(name);
+							var component: DisplayObject = name != null?container.getChildByName(name):null;
 							if (component != null) {
 								trace("createFrames(): component with name '" + component.name + "' already exists");
 								continue;
@@ -148,7 +148,7 @@ class Shared {
 							children.push(rectangle);
 						} else 
 						if (Std.is(element, DOMDynamicText)) {
-							var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
+							var text: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 							if (text != null) {
 								trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
 								continue;
@@ -198,7 +198,7 @@ class Shared {
 					if (frame.tweenType == null || frame.tweenType == "") {
 						for (element in frame.elements) {
 							if (Std.is(element, DOMSymbolInstance)) {
-								var movieClip: DisplayObject = container.getChildByName(cast(element, DOMSymbolInstance).name);
+								var movieClip: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 								if (movieClip != null && layer.visible == true) {
 									if (movieClip.visible == false) invisibleObjects.push(movieClip);
 									movieClip.visible = false;
@@ -212,7 +212,7 @@ class Shared {
 								}
 							} else
 							if (Std.is(element, DOMComponentInstance)) {
-								var component: DisplayObject = container.getChildByName(cast(element, DOMComponentInstance).name);
+								var component: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 								if (component != null && layer.visible == true) {
 									if (component.visible == false) invisibleObjects.push(component);
 									component.visible = false;
@@ -233,7 +233,7 @@ class Shared {
 								}
 							} else 
 							if (Std.is(element, DOMDynamicText)) {
-								var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
+								var text: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 								if (text != null && layer.visible == true) {
 									if (text.visible == false) invisibleObjects.push(text);
 									text.visible = false;
