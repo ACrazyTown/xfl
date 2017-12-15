@@ -37,7 +37,7 @@ class XFL {
 		}
 	}
 
-	public function getBitmapData (name:String): BitmapData {
+	public function getBitmapData(name:String): BitmapData {
 		var bitmapData: BitmapData = null;
 		for (document in documents) {
 			for (medium in document.media) {
@@ -52,6 +52,24 @@ class XFL {
 			}
 		}
 		trace("getBitmapData(): bitmap data not found: " + name);
+		return null;
+	}
+
+	public function getBitmapDataByPath(path: String): BitmapData {
+		var bitmapData: BitmapData = null;
+		for (document in documents) {
+			for (medium in document.media) {
+				if (medium.name == path) {
+					if (Std.is(medium, DOMBitmapItem) == true) {
+						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
+						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
+						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
+						if (bitmapData != null) return bitmapData;
+					}
+				}
+			}
+		}
+		trace("getBitmapDataByPath(): bitmap data not found: " + path);
 		return null;
 	}
 

@@ -6,11 +6,13 @@ import xfl.dom.DOMShapeBase;
 import xfl.fill.LinearGradient;
 import xfl.fill.SolidColor;
 import xfl.fill.RadialGradient;
+import xfl.fill.Bitmap;
 import xfl.stroke.SolidStroke;
 import openfl.display.GradientType;
 import openfl.display.Graphics;
 import openfl.display.GraphicsPath;
 import openfl.display.GraphicsPathWinding;
+import xfl.XFLAssets;
 
 class ShapeBase extends openfl.display.Shape {
 
@@ -125,6 +127,13 @@ class ShapeBase extends openfl.display.Shape {
 					g.beginGradientFill(GradientType.RADIAL, colors, alphas, ratios, data.matrix);
 				});
 				#end
+			} else
+			if (Std.is(fillStyle.data, Bitmap)) {
+				var bitmapData = XFLAssets.getInstance().getXFLBitmapDataAssetByPath(fillStyle.data.bitmapPath);
+				var matrix = fillStyle.data.matrix;
+				result.push(function (g:Graphics) {
+					g.beginBitmapFill(bitmapData, matrix);
+				});
 			}
 		}
 		return result;

@@ -21,6 +21,8 @@ class FillStyle {
 					fillStyle.data = LinearGradient.parse(element);
 				case "RadialGradient":
 					fillStyle.data = RadialGradient.parse(element);
+				case "BitmapFill":
+					fillStyle.data = Bitmap.parse(element);
 			}
 		}
 		return fillStyle;

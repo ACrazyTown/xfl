@@ -79,6 +79,15 @@ class XFLAssets {
     }
 
     /**
+     *  Get XFL bitmap asset by path
+     *  @param asset path
+     *  @return BitmapData
+     */
+    public function getXFLBitmapDataAssetByPath(assetPath: String) : BitmapData {
+        return xfl.getBitmapDataByPath(assetPath);
+    }
+
+    /**
      *  Get XFL sound asset
      *  @param asset name
      *  @return Sound
