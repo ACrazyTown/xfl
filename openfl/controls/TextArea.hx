@@ -62,6 +62,7 @@ class TextArea extends UIComponent {
             var textFormat: TextFormat = cast(value, TextFormat);
             textField.setTextFormat(textFormat);
             updateTextField();
+            validateNow();
         } else {
             trace("setStyle(): '" + style + "', " + value);
         }
@@ -78,6 +79,7 @@ class TextArea extends UIComponent {
     public function set_htmlText(_htmlText: String): String {
         textField.htmlText = _htmlText;
         updateTextField();
+        validateNow();
         return textField.htmlText;
     }
 
@@ -88,6 +90,7 @@ class TextArea extends UIComponent {
     public function set_text(_text: String): String {
         textField.text = _text;
         updateTextField();
+        validateNow();
         return textField.text;
     }
 

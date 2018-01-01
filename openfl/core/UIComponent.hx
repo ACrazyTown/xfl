@@ -54,6 +54,22 @@ class UIComponent extends XFLSprite {
     }
 
     #if flash
+        @:getter(scaleX) public function get_scaleX(): Float {
+            return 1.0;
+        }
+
+        @:setter(scaleX) public function set_scaleX(_scaleX: Float): Void {
+            setSize(_originalWidth * _scaleX, _height);
+        }
+
+        @:getter(scaleY) public function get_scaleY(): Float {
+            return 1.0;
+        }
+
+        @:setter(scaleY) function set_scaleY(_scaleY: Float): Void {
+            setSize(_width, _originalHeight * _scaleY);
+        }
+
         @:getter(width) public function get_width(): Float {
             return _width;
         }
@@ -121,6 +137,10 @@ class UIComponent extends XFLSprite {
     public function setSize(_width: Float, _height: Float): Void {
         this._width = _width;
         this._height = _height;
+    }
+
+    public function validateNow(): Void {
+        setSize(_width, _height);
     }
 
 }

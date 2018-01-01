@@ -130,6 +130,8 @@ class ScrollBar extends UIComponent {
         setScrollArrowUpState(scrollArrowUpState);
         setScrollArrowDownState(scrollArrowDownState);
         setScrollThumbState(scrollThumbState);
+        setSize(width, height);
+        setScrollThumbPosition();
     }
 
     public function get_scrollTarget(): BaseScrollPane {
@@ -170,11 +172,17 @@ class ScrollBar extends UIComponent {
     private function setScrollThumbPosition() {
         var thumbYPosition = 0.0;
         if (_scrollTarget != null && _scrollTarget.source != null) {
+            scrollThumbSkinHeight = scrollTrackHeight * (scrollTrackHeight / _scrollTarget.source.height);
+            if (scrollThumbSkinHeight > scrollTrackHeight) scrollThumbSkinHeight = scrollTrackHeight;
+            if (scrollThumbSkinHeight < 20.0) scrollThumbSkinHeight = 20.0;
             thumbYPosition = _scrollTarget.scrollY / (_scrollTarget.source.height - _scrollTarget.height);
+        } else {
+            scrollThumbSkinHeight = scrollTrackHeight;
         }
+        getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").height = scrollThumbSkinHeight;
         getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y = 
             scrollArrowUpHeight + 
-            (thumbYPosition * (height - scrollArrowUpHeight - scrollArrowDownHeight - scrollThumbSkinHeight));
+            (thumbYPosition * (scrollTrackHeight - scrollThumbSkinHeight));
         getXFLMovieClip("ScrollBar_thumbIcon").y = 
             getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y +
             ((scrollThumbSkinHeight - scrollThumbIconHeight) / 2.0);
@@ -202,7 +210,7 @@ class ScrollBar extends UIComponent {
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
 
-        scrollTrackHeight = height - scrollArrowUpHeight - scrollArrowDownHeight;
+        scrollTrackHeight = _height - scrollArrowUpHeight - scrollArrowDownHeight;
 
         layoutChild(getXFLMovieClip("ScrollArrowUp_upSkin"), "top");
         layoutChild(getXFLMovieClip("ScrollArrowUp_overSkin"), "top");
@@ -309,13 +317,11 @@ class ScrollBar extends UIComponent {
                 setScrollThumbState("up");
             case MouseEvent.MOUSE_MOVE:
                 var thumbableHeight = scrollTrackHeight - scrollThumbSkinHeight;
-                var thumbY: Float = getXFLDisplayObject("ScrollTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
-                thumbY*= scrollTrackHeight / thumbableHeight;
-                thumbY+= - scrollThumbMouseMoveYRelative;
+                var skinMouseY: Float = getXFLDisplayObject("ScrollTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
+                skinMouseY-= scrollThumbMouseMoveYRelative;
                 if (_scrollTarget != null && _scrollTarget.source != null) {
                      _scrollTarget.scrollY = 
-                        thumbY / thumbableHeight * 
-                        (_scrollTarget.source.height - _scrollTarget.height);
+                        (skinMouseY / thumbableHeight) * (_scrollTarget.source.height - _scrollTarget.height);
                     setScrollThumbPosition();
                 }
             default:

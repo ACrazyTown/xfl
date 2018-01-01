@@ -79,12 +79,6 @@ class DataGrid extends UIComponent {
         draw();
     }
 
-    /**
-     * Validate now
-     */
-    public function validateNow(): Void {
-    }
-
     public function getCellRendererAt(row: Int, column: Int): ICellRenderer {
         return cast(displayObjects[columns.length + (row * columns.length + column)], ICellRenderer);
     }
