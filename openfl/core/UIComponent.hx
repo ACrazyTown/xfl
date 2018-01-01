@@ -12,6 +12,8 @@ class UIComponent extends XFLSprite {
     public var disabled(get,set): Bool;
 
     private var _disabled: Bool;
+    private var _originalWidth: Float;
+    private var _originalHeight: Float;
     private var _width: Float;
     private var _height: Float;
 
@@ -34,8 +36,10 @@ class UIComponent extends XFLSprite {
 
         // determine from component avarar if we have any
         if (getXFLDisplayObject("Component_avatar") == null) return;
-        _width = getXFLDisplayObject("Component_avatar").width;
-        _height = getXFLDisplayObject("Component_avatar").height;
+        _originalWidth = getXFLDisplayObject("Component_avatar").width;
+        _originalHeight = getXFLDisplayObject("Component_avatar").height;
+        _width = _originalWidth;
+        _height = _originalHeight;
 
         // remove component avatar
         removeChild(getXFLDisplayObject("Component_avatar"));
@@ -66,6 +70,24 @@ class UIComponent extends XFLSprite {
             setSize(_width, _height);
         }
     #else
+        public override function get_scaleX(): Float {
+            return 1.0;
+        }
+
+        public override function set_scaleX(_scaleX: Float): Float {
+            setSize(_originalWidth * _scaleX, _height);
+            return 1.0;
+        }
+
+        public override function get_scaleY(): Float {
+            return 1.0;
+        }
+
+        public override function set_scaleY(_scaleY: Float): Float {
+            setSize(_width, _originalHeight * _scaleY);
+            return 1.0;
+        }
+
         public override function get_width(): Float {
             return _width;
         }

@@ -89,15 +89,16 @@ class MovieClip extends xfl.display.MovieClip {
 	}
 
 	public override function gotoAndPlay(frame: Dynamic, scene: String = null): Void {
+		stop();
 		currentFrame = getFrame(frame);
 		update();
 		play();
 	}
 
 	public override function gotoAndStop(frame: Dynamic, scene: String = null): Void {
+		stop();
 		currentFrame = getFrame(frame);
 		update();
-		stop();
 	}
 
 	public override function nextFrame(): Void {
@@ -139,7 +140,9 @@ class MovieClip extends xfl.display.MovieClip {
 	private function update(): Void {
 		if (currentFrame != lastFrame) {
 			invisibleObjects.splice(0, invisibleObjects.length);
-			Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame, invisibleObjects);
+			if (lastFrame != -1) {
+				Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame, invisibleObjects);
+			}
 			Shared.enableFrame(xflSymbolArguments.xfl, this, layers, currentFrame, invisibleObjects);
 			lastFrame = currentFrame;
 		}

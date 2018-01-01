@@ -8,6 +8,7 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
+import openfl.geom.Matrix;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
@@ -27,7 +28,6 @@ class Symbols {
 		var shape = new Shape(instance);
 		if (instance.matrix != null) {
 			shape.transform.matrix = instance.matrix;
-			// trace("createShape(): " + shape.name + ": " + instance.matrix);
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// shape.cacheAsBitmap = true;
@@ -38,7 +38,6 @@ class Symbols {
 		var rectangle = new Rectangle(instance);
 		if (instance.matrix != null) {
 			rectangle.transform.matrix = instance.matrix;
-			// trace("createRectangle(): " + rectangle.name + ": " + instance.matrix);
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// rectangle.cacheAsBitmap = true;
@@ -57,13 +56,12 @@ class Symbols {
 			}
 		}
 		if (bitmapData == null) {
-			// trace("createBitmap(): " + instance.libraryItemName + ": not found");
+			trace("createBitmap(): " + instance.libraryItemName + ": not found");
 			bitmapData = new BitmapData(1, 1, false, 0xFFFFFF);
 		}
  		bitmap = new Bitmap(bitmapData);
 		if (instance.matrix != null) {
 			bitmap.transform.matrix = instance.matrix;
-			// trace("createBitmap(): bitmap: " + instance.matrix);
 		}
 		return bitmap;
 	}
@@ -80,7 +78,6 @@ class Symbols {
 		}
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
-			// trace("createDynamicText(): " + textField.name + ": " + instance.matrix);
 		}
 		textField.x+= instance.left;
 		var format = new TextFormat();
@@ -114,7 +111,6 @@ class Symbols {
 		}
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
-			// trace("createStaticText(): " + textField.name + ": " + instance.matrix);
 		}
 		textField.x+= instance.left;
 		var format = new TextFormat();
@@ -184,14 +180,12 @@ class Symbols {
 				if (instance.name != null && instance.name != "") {
 					movieClip.name = instance.name;
 				}
-				// trace("createSprite(): creating movie clip: '" + movieClip.name + "'");
 				break;
 			}
 		}
 		if (movieClip != null) {
 			if (instance.matrix != null) {
 				movieClip.transform.matrix = instance.matrix;
-				// trace("createMovieClip(): " + movieClip.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				movieClip.transform.colorTransform = instance.color;
@@ -231,14 +225,12 @@ class Symbols {
 				if (instance.name != null && instance.name != "") {
 					sprite.name = instance.name;
 				}
-				// trace("createSprite(): creating sprite: '" + sprite.name + "'");
 				break;
 			}
 		}
 		if (sprite != null) {
 			if (instance.matrix != null) {
 				sprite.transform.matrix = instance.matrix;
-				// trace("createSprite(): " + sprite.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				sprite.transform.colorTransform = instance.color;
@@ -264,7 +256,6 @@ class Symbols {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				symbolItem = document.symbols.get(instance.libraryItemName);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
-				// trace("createOther(): creating other from '" + className + "'");
 				var otherName: String = 
 					(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
 						symbolItem.timeline.name:
@@ -287,7 +278,6 @@ class Symbols {
 		if (other != null) {
 			if (instance.matrix != null) {
 				other.transform.matrix = instance.matrix;
-				// trace("createOther(): " + other.name + ": " + instance.matrix);
 			}
 			if (instance.color != null) {	
 				other.transform.colorTransform = instance.color;
@@ -310,7 +300,6 @@ class Symbols {
 				var symbolItem = document.symbols.get(instance.libraryItemName);
 				var className: String = symbolItem.linkageClassName;
 				if (StringTools.startsWith(className, "fl.")) className = "openfl." + className.substr("fl.".length);
-				// trace("createComponent(): creating component from '" + className + "'");
 				var classType: Class<Dynamic> = Type.resolveClass(className);
 				var componentName: String = 
 					(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
@@ -361,8 +350,12 @@ class Symbols {
 		}
 		if (component != null) {
 			if (instance.matrix != null) {
-				trace("createComponent(): " + component.name + ": " + instance.matrix);
-				component.transform.matrix = instance.matrix;
+				var matrix: Matrix = instance.matrix.clone();
+				component.scaleX = matrix.a;
+				component.scaleY = matrix.d;
+				matrix.a = 1.0;
+				matrix.d = 1.0;
+				component.transform.matrix = matrix;
 			}
 		}
 		if (Std.is(component, DisplayObjectContainer) == true) {
