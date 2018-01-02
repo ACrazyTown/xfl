@@ -24,6 +24,8 @@ class XFLSymbolArguments {
 
 class XFL {
 
+	public static var BITMAPDATA_DISPOSEIMAGE: Bool = true;
+
 	public var paths: Array<String>;
 	public var documents: Array<DOMDocument>;
 	public var customSymbolLoader: XFLCustomSymbolLoader;
@@ -46,7 +48,10 @@ class XFL {
 						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
 						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
-						if (bitmapData != null) return bitmapData;
+						if (bitmapData != null) {
+							if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
+							return bitmapData;
+						}
 					}
 				}
 			}
@@ -64,7 +69,10 @@ class XFL {
 						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
 						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
-						if (bitmapData != null) return bitmapData;
+						if (bitmapData != null) {
+							if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
+							return bitmapData;
+						}
 					}
 				}
 			}
