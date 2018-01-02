@@ -184,7 +184,7 @@ class Shared {
 		}
     }
 
-	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int, invisibleObjects: Array<DisplayObject>) {
+	public static function disableFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int, invisibleObjects: Array<DisplayObject>, processedObjects: Array<DisplayObject>) {
 		container.mask = null;
 		var currentLayer: Int = 0;
 		for (layer in layers) {
@@ -200,6 +200,7 @@ class Shared {
 							if (Std.is(element, DOMSymbolInstance)) {
 								var movieClip: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 								if (movieClip != null) {
+									if (processedObjects.indexOf(movieClip) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -208,11 +209,13 @@ class Shared {
 										}
 										movieClip.visible = false;
 									}
+									processedObjects.push(movieClip);
 								}
 							} else 
 							if (Std.is(element, DOMBitmapInstance)) {
 								var bitmap: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (bitmap != null) {
+									if (processedObjects.indexOf(bitmap) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -221,11 +224,13 @@ class Shared {
 										}
 										bitmap.visible = false;
 									}
+									processedObjects.push(bitmap);
 								}
 							} else
 							if (Std.is(element, DOMComponentInstance)) {
 								var component: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 								if (component != null) {
+									if (processedObjects.indexOf(component) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -234,11 +239,13 @@ class Shared {
 										}
 										component.visible = false;
 									}
+									processedObjects.push(component);
 								}
 							} else 
 							if (Std.is(element, DOMShape)) {
 								var shape: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (shape != null) {
+									if (processedObjects.indexOf(shape) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -247,11 +254,13 @@ class Shared {
 										}
 										shape.visible = false;
 									}
+									processedObjects.push(shape);
 								}
 							} else 
 							if (Std.is(element, DOMRectangle)) {
 								var rectangle: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (rectangle != null) {
+									if (processedObjects.indexOf(rectangle) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -260,11 +269,13 @@ class Shared {
 										}
 										rectangle.visible = false;
 									}
+									processedObjects.push(rectangle);
 								}
 							} else 
 							if (Std.is(element, DOMDynamicText)) {
 								var text: DisplayObject = element.name != null?container.getChildByName(element.name):null;
 								if (text != null) {
+									if (processedObjects.indexOf(text) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -273,11 +284,13 @@ class Shared {
 										}
 										text.visible = false;
 									}
+									processedObjects.push(text);
 								}
 							} else 
 							if (Std.is(element, DOMStaticText)) {
 								var text: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
 								if (text != null) {
+									if (processedObjects.indexOf(text) != -1) continue;
 									if (layer.type == "mask") {
 									} else
 									if (layer.visible == true) {
@@ -286,6 +299,7 @@ class Shared {
 										}
 										text.visible  = false;
 									}
+									processedObjects.push(text);
 								}
 							} else {
 								trace("disableFrames(): Unhandled frame element of type '" + Type.getClassName(Type.getClass(element)) + '"');

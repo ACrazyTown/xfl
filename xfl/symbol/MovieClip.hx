@@ -19,7 +19,8 @@ class MovieClip extends xfl.display.MovieClip {
 	private var lastFrame: Int;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
-	private var invisibleObjects: Array<DisplayObject>;
+	private var dfInvisibleObjects: Array<DisplayObject>;
+	private var dfProcessedObjects: Array<DisplayObject>;
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
@@ -31,7 +32,8 @@ class MovieClip extends xfl.display.MovieClip {
 		layers = [];
 		children = [];
 		totalFrames = Shared.init(layers, this.xflSymbolArguments.timeline, currentLabels);
-		invisibleObjects = [];
+		dfInvisibleObjects = [];
+		dfProcessedObjects = [];
 		Shared.createFrames(
 			this.xflSymbolArguments.xfl, 
 			this, 
@@ -139,12 +141,13 @@ class MovieClip extends xfl.display.MovieClip {
 
 	private function update(): Void {
 		if (currentFrame != lastFrame) {
-			invisibleObjects.splice(0, invisibleObjects.length);
 			if (lastFrame != -1) {
-				Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame, invisibleObjects);
+				Shared.disableFrames(xflSymbolArguments.xfl, this, layers, lastFrame, dfInvisibleObjects, dfProcessedObjects);
 			}
-			Shared.enableFrame(xflSymbolArguments.xfl, this, layers, currentFrame, invisibleObjects);
+			Shared.enableFrame(xflSymbolArguments.xfl, this, layers, currentFrame, dfInvisibleObjects);
 			lastFrame = currentFrame;
+			dfInvisibleObjects.splice(0, dfInvisibleObjects.length);
+			dfProcessedObjects.splice(0, dfProcessedObjects.length);
 		}
 	}
 
