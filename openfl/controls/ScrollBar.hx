@@ -206,10 +206,7 @@ class ScrollBar extends UIComponent {
 
     private function setScrollThumbPosition() {
         var thumbYPosition = 0.0;
-        scrollThumbSkinHeight = 
-            scrollTrackHeight * 
-//                (scrollTrackHeight / ((visibleScrollRange == null?height:visibleScrollRange) + _maxScrollPosition - _minScrollPosition));
-                (visibleScrollRange == null?height:visibleScrollRange) / ((visibleScrollRange == null?height:visibleScrollRange) + _maxScrollPosition);
+        scrollThumbSkinHeight = scrollTrackHeight * (visibleScrollRange == null?height:visibleScrollRange) / ((visibleScrollRange == null?height:visibleScrollRange) + _maxScrollPosition);
         if (scrollThumbSkinHeight > scrollTrackHeight) scrollThumbSkinHeight = scrollTrackHeight;
         if (scrollThumbSkinHeight < 20.0) scrollThumbSkinHeight = 20.0;
         thumbYPosition = _scrollPosition / (_maxScrollPosition - _minScrollPosition);
