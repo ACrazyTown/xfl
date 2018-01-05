@@ -65,7 +65,6 @@ class BaseScrollPane extends UIComponent {
         }
         if (scrollBar != null) {
             if (getChildAt(numChildren - 1) != scrollBar) {
-                trace("abcabc");
                 addChildAt(scrollBar, numChildren - 1);
             }
             scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
