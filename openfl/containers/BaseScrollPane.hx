@@ -64,6 +64,10 @@ class BaseScrollPane extends UIComponent {
             maskSprite.graphics.endFill();
         }
         if (scrollBar != null) {
+            if (getChildAt(numChildren - 1) != scrollBar) {
+                trace("abcabc");
+                addChildAt(scrollBar, numChildren - 1);
+            }
             scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
             scrollBar.lineScrollSize = 10.0;
             scrollBar.pageScrollSize = height;
