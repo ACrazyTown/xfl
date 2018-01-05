@@ -6,6 +6,7 @@ import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Rectangle;
+import openfl.events.ScrollEvent;
 import openfl.events.MouseEvent;
 import xfl.XFL;
 import xfl.XFLAssets;
@@ -38,7 +39,7 @@ class BaseScrollPane extends UIComponent {
             scrollBar.visible = true;
             scrollBar.x = 0.0;
             scrollBar.y = 0.0;
-            scrollBar.scrollTarget = this;
+            scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
         }
         var maskSprite: Sprite = new Sprite();
         maskSprite.visible = false;
@@ -57,10 +58,16 @@ class BaseScrollPane extends UIComponent {
     public function update() : Void {
         var maskSprite: Sprite = cast(mask, Sprite);
         maskSprite.graphics.clear();
-        if (_width > 0.0 && _height > 0.0) {
+        if (width > 0.0 && height > 0.0) {
             maskSprite.graphics.beginFill(0x000000);
             maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
             maskSprite.graphics.endFill();
+        }
+        if (scrollBar != null) {
+            scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
+            scrollBar.lineScrollSize = 10.0;
+            scrollBar.pageScrollSize = height;
+            scrollBar.visible = _source != null && _source.height > height;
         }
     }
 
@@ -76,21 +83,27 @@ class BaseScrollPane extends UIComponent {
         return this._source;
     }
 
-    public function get_scrollY(): Float {
+    private function get_scrollY(): Float {
         return -source.y;
     }
 
-    public function set_scrollY(scrollY: Float): Float {
+    private function set_scrollY(scrollY: Float): Float {
+        if (source.height < height) return source.y = 0.0;
         source.y = -scrollY;
         if (source.y > 0.0) source.y = 0.0;
-        if (source.y < -(source.height - _height)) source.y = -(source.height - _height);
+        if (source.y < -(source.height - height)) source.y = -(source.height - height);
+        if (scrollBar != null) scrollBar.validateNow();
         return source.y;
     }
 
     private function onMouseWheel(event: MouseEvent): Void {
-        source.y+= event.delta;
-        if (source.y > 0.0) source.y = 0.0;
-        if (source.y < -(source.height - _height)) source.y = -(source.height - _height);
+        if (source.height < height) return;
+        scrollY = scrollY - event.delta;
+        if (scrollBar != null) scrollBar.scrollPosition = scrollY;
+    }
+
+    private function onScrollEvent(event: ScrollEvent): Void {
+        if (scrollBar != null) scrollY = scrollBar.scrollPosition;
     }
 
 }

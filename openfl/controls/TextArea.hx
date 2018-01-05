@@ -1,12 +1,13 @@
 package openfl.controls;
 
-import openfl.containers.BaseScrollPane;
 import openfl.core.UIComponent;
 import openfl.controls.ScrollBar;
 import openfl.display.DisplayObject;
 import openfl.display.Shape;
 import openfl.display.XFLSprite;
 import openfl.display.XFLMovieClip;
+import openfl.events.MouseEvent;
+import openfl.events.ScrollEvent;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
@@ -28,13 +29,11 @@ class TextArea extends UIComponent {
     public var editable: Bool;
 
     private var scrollBar: ScrollBar;
-    private var scrollPane: BaseScrollPane;
     private var textField: TextField;
 
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextArea"));
-        scrollPane = new BaseScrollPane();
         textField = new TextField();
         textField.name = "textfield";
         textField.x = 0;
@@ -42,15 +41,14 @@ class TextArea extends UIComponent {
         textField.type = TextFieldType.INPUT;
         textField.multiline = true;
         textField.wordWrap = true;
-        scrollPane.source = textField;
+        addChild(textField);
         scrollBar = getXFLScrollBar("UIScrollBar");
-        scrollBar.visible = true;
+        scrollBar.visible = false;
         scrollBar.x = 0.0;
         scrollBar.y = 0.0;
-        scrollBar.scrollTarget = scrollPane;
-        addChild(scrollPane);
-        updateTextField();
-        layoutChildren();
+        scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
+        addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+        validateNow();
     }
 
     override public function drawFocus(draw: Bool): Void {
@@ -61,7 +59,6 @@ class TextArea extends UIComponent {
         if (style == "textFormat") {
             var textFormat: TextFormat = cast(value, TextFormat);
             textField.setTextFormat(textFormat);
-            updateTextField();
             validateNow();
         } else {
             trace("setStyle(): '" + style + "', " + value);
@@ -78,7 +75,6 @@ class TextArea extends UIComponent {
 
     public function set_htmlText(_htmlText: String): String {
         textField.htmlText = _htmlText;
-        updateTextField();
         validateNow();
         return textField.htmlText;
     }
@@ -89,7 +85,6 @@ class TextArea extends UIComponent {
 
     public function set_text(_text: String): String {
         textField.text = _text;
-        updateTextField();
         validateNow();
         return textField.text;
     }
@@ -100,15 +95,23 @@ class TextArea extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
-        scrollPane.setSize(_width, _height);
+        textField.width = width;
+        textField.height = height;
         scrollBar.setSize(width, height);
         updateTextField();
+        updateScrollBar();
         layoutChildren();
     }
 
     private function updateTextField(): Void {
         textField.width = width - (scrollBar != null?scrollBar.scrollBarWidth:0.0);
-        textField.height = textField.textHeight;
+    }
+
+    private function updateScrollBar(): Void {
+        scrollBar.visibleScrollRange = textField.bottomScrollV - textField.scrollV + 1;
+        scrollBar.pageScrollSize = textField.numLines / scrollBar.visibleScrollRange;
+        scrollBar.maxScrollPosition = textField.numLines - scrollBar.visibleScrollRange;
+        scrollBar.visible = scrollBar.maxScrollPosition > 0.0;
     }
 
     private function layoutChildren() {
@@ -130,4 +133,12 @@ class TextArea extends UIComponent {
         if (getXFLDisplayObject("focusRectSkin") != null) getXFLDisplayObject("focusRectSkin").height = height;
     }
 
+    private function onScrollEvent(event: ScrollEvent): Void {
+        textField.scrollV = Std.int(scrollBar.scrollPosition) + 1;
+    }
+
+    private function onMouseWheel(event: MouseEvent): Void {
+        textField.scrollV = textField.scrollV - event.delta;
+        if (scrollBar != null) scrollBar.scrollPosition = textField.scrollV - 1;
+    }
 }

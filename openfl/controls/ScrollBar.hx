@@ -7,6 +7,7 @@ import openfl.display.DisplayObjectContainer;
 import openfl.display.XFLMovieClip;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.events.ScrollEvent;
 import openfl.geom.Point;
 import xfl.XFL;
 import xfl.XFLAssets;
@@ -17,7 +18,12 @@ import xfl.dom.DOMTimeline;
  */
 class ScrollBar extends UIComponent {
 
-    public var scrollTarget(get, set): BaseScrollPane;
+    public var scrollPosition(get, set): Float;
+    public var minScrollPosition(get, set): Float;
+    public var maxScrollPosition(get, set): Float;
+    public var lineScrollSize: Float;
+    public var pageScrollSize: Float;
+    public var visibleScrollRange: Null<Float>;
 
     public var scrollBarWidth(get, never): Float;
 
@@ -28,7 +34,9 @@ class ScrollBar extends UIComponent {
     private var scrollThumbSkinHeight: Float;
     private var scrollThumbIconHeight: Float;
 
-    private var _scrollTarget: BaseScrollPane;
+    private var _scrollPosition: Float;
+    private var _minScrollPosition: Float;
+    private var _maxScrollPosition: Float;
     private var scrollThumbState: String = "up";
     private var scrollArrowUpState: String = "up";
     private var scrollArrowDownState: String = "up";
@@ -37,6 +45,9 @@ class ScrollBar extends UIComponent {
 
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null) {
         super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.ScrollBar"));
+        lineScrollSize = 1;
+        pageScrollSize = 10;
+        visibleScrollRange = null;
         var scrollTrackSkinCount = 0;
         for (i in 0...numChildren) {
             if (getChildAt(i).name == "ScrollTrack_skin") scrollTrackSkinCount++;
@@ -127,6 +138,10 @@ class ScrollBar extends UIComponent {
         getXFLMovieClip("ScrollThumb_overSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollThumbMouseEvent);
         getXFLMovieClip("ScrollThumb_downSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollThumbMouseEvent);
 
+        _scrollPosition = 0.0;
+        _minScrollPosition = 0.0;
+        _maxScrollPosition = 0.0;
+
         setScrollArrowUpState(scrollArrowUpState);
         setScrollArrowDownState(scrollArrowDownState);
         setScrollThumbState(scrollThumbState);
@@ -134,14 +149,34 @@ class ScrollBar extends UIComponent {
         setScrollThumbPosition();
     }
 
-    public function get_scrollTarget(): BaseScrollPane {
-        return this._scrollTarget;
+    public function get_scrollPosition(): Float {
+        return this._scrollPosition;
     }
 
-    public function set_scrollTarget(_scrollTarget: BaseScrollPane): BaseScrollPane {
-        this._scrollTarget = _scrollTarget;
+    public function set_scrollPosition(_scrollPosition: Float): Float {
+        this._scrollPosition = _scrollPosition;
         setScrollThumbPosition();
-        return this._scrollTarget;
+        return this._scrollPosition;
+    }
+
+    public function get_minScrollPosition(): Float {
+        return this._minScrollPosition;
+    }
+
+    public function set_minScrollPosition(_minScrollPosition: Float): Float {
+        this._minScrollPosition = _minScrollPosition;
+        setScrollThumbPosition();
+        return this._minScrollPosition;
+    }
+
+    public function get_maxScrollPosition(): Float {
+        return this._maxScrollPosition;
+    }
+
+    public function set_maxScrollPosition(_maxScrollPosition: Float): Float {
+        this._maxScrollPosition = _maxScrollPosition;
+        setScrollThumbPosition();
+        return this._maxScrollPosition;
     }
 
     public function get_scrollBarWidth(): Float {
@@ -171,14 +206,13 @@ class ScrollBar extends UIComponent {
 
     private function setScrollThumbPosition() {
         var thumbYPosition = 0.0;
-        if (_scrollTarget != null && _scrollTarget.source != null) {
-            scrollThumbSkinHeight = scrollTrackHeight * (scrollTrackHeight / _scrollTarget.source.height);
-            if (scrollThumbSkinHeight > scrollTrackHeight) scrollThumbSkinHeight = scrollTrackHeight;
-            if (scrollThumbSkinHeight < 20.0) scrollThumbSkinHeight = 20.0;
-            thumbYPosition = _scrollTarget.scrollY / (_scrollTarget.source.height - _scrollTarget.height);
-        } else {
-            scrollThumbSkinHeight = scrollTrackHeight;
-        }
+        scrollThumbSkinHeight = 
+            scrollTrackHeight * 
+//                (scrollTrackHeight / ((visibleScrollRange == null?height:visibleScrollRange) + _maxScrollPosition - _minScrollPosition));
+                (visibleScrollRange == null?height:visibleScrollRange) / ((visibleScrollRange == null?height:visibleScrollRange) + _maxScrollPosition);
+        if (scrollThumbSkinHeight > scrollTrackHeight) scrollThumbSkinHeight = scrollTrackHeight;
+        if (scrollThumbSkinHeight < 20.0) scrollThumbSkinHeight = 20.0;
+        thumbYPosition = _scrollPosition / (_maxScrollPosition - _minScrollPosition);
         getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").height = scrollThumbSkinHeight;
         getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y = 
             scrollArrowUpHeight + 
@@ -273,17 +307,17 @@ class ScrollBar extends UIComponent {
     }
 
     public function onEnterFrameScrollUp(event: Event): Void {
-        if (_scrollTarget != null) {
-            _scrollTarget.scrollY = _scrollTarget.scrollY - 2.0;
-            setScrollThumbPosition();
-        }
+        _scrollPosition = _scrollPosition - lineScrollSize;
+        if (_scrollPosition < _minScrollPosition) _scrollPosition = _minScrollPosition;
+        dispatchEvent(new ScrollEvent(ScrollEvent.SCROLL));
+        setScrollThumbPosition();
     }
 
     public function onEnterFrameScrollDown(event: Event): Void {
-        if (_scrollTarget != null) {
-            _scrollTarget.scrollY = _scrollTarget.scrollY + 2.0;
-            setScrollThumbPosition();
-        }
+        _scrollPosition = _scrollPosition + lineScrollSize;
+        if (_scrollPosition > _maxScrollPosition) _scrollPosition = _maxScrollPosition;
+        dispatchEvent(new ScrollEvent(ScrollEvent.SCROLL));
+        setScrollThumbPosition();
     }
 
     private function onScrollThumbMouseEvent(event: MouseEvent): Void {
@@ -319,11 +353,12 @@ class ScrollBar extends UIComponent {
                 var thumbableHeight = scrollTrackHeight - scrollThumbSkinHeight;
                 var skinMouseY: Float = getXFLDisplayObject("ScrollTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
                 skinMouseY-= scrollThumbMouseMoveYRelative;
-                if (_scrollTarget != null && _scrollTarget.source != null) {
-                     _scrollTarget.scrollY = 
-                        (skinMouseY / thumbableHeight) * (_scrollTarget.source.height - _scrollTarget.height);
-                    setScrollThumbPosition();
-                }
+                _scrollPosition = 
+                    (skinMouseY / thumbableHeight) * (_maxScrollPosition - _minScrollPosition);
+                if (_scrollPosition < _minScrollPosition) _scrollPosition = _minScrollPosition;
+                if (_scrollPosition > _maxScrollPosition) _scrollPosition = _maxScrollPosition;
+                dispatchEvent(new ScrollEvent(ScrollEvent.SCROLL));
+                setScrollThumbPosition();
             default:
                 trace("onScrollThumbMouseMove(): unsupported mouse event type '" + event.type + "'");
         }
@@ -334,10 +369,14 @@ class ScrollBar extends UIComponent {
         var thumbableHeight = scrollTrackHeight - scrollThumbSkinHeight;
         scrollTrackMouseY*= scrollTrackHeight / thumbableHeight;
         if (scrollTrackMouseY < getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").y) {
-            _scrollTarget.scrollY = _scrollTarget.scrollY - 10;
+            _scrollPosition = _scrollPosition - pageScrollSize;
+            if (_scrollPosition < _minScrollPosition) _scrollPosition = _minScrollPosition;
+            dispatchEvent(new ScrollEvent(ScrollEvent.SCROLL));
             setScrollThumbPosition();
         } else {
-            _scrollTarget.scrollY = _scrollTarget.scrollY + 10;
+            _scrollPosition = _scrollPosition + pageScrollSize;
+            if (_scrollPosition > _maxScrollPosition) _scrollPosition = _maxScrollPosition;
+            dispatchEvent(new ScrollEvent(ScrollEvent.SCROLL));
             setScrollThumbPosition();
         }
     }

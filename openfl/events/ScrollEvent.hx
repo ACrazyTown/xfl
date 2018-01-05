@@ -1,16 +1,12 @@
 package openfl.events;
 
+import openfl.events.Event;
+
 /**
  * Scroll event
  */
-class ScrollEvent {
+class ScrollEvent extends Event {
 
     public static inline var SCROLL = "scroll";
 
-    /**
-     * Public constructor
-     **/
-    public function new()
-    {
-    }
 }
