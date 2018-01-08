@@ -121,7 +121,7 @@ class DataGrid extends UIComponent {
                 headerRenderer.textField.setTextFormat(headerTextFormat);
                 headerRenderer.textField.defaultTextFormat = headerTextFormat;
             }
-            headerRenderer.label = column.headerText;
+            headerRenderer.label = StringTools.ltrim(StringTools.rtrim(column.headerText));
             headerRenderer.x = _x;
             headerRenderer.y = 0.0;
             headerRenderer.setSize(column.width, headerRenderer.textField.height);
@@ -154,7 +154,7 @@ class DataGrid extends UIComponent {
                         cellRenderer.textField.setTextFormat(cellTextFormat);
                         cellRenderer.textField.defaultTextFormat = cellTextFormat;
                     }
-                    cellRenderer.label = column.itemToLabel(rowData);
+                    cellRenderer.label = StringTools.ltrim(StringTools.rtrim(column.itemToLabel(rowData)));
                     cellRenderer.x = _x;
                     cellRenderer.y = 0.0;
                     cellRenderer.setSize(column.width, cellRenderer.textField.height);
