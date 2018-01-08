@@ -125,7 +125,6 @@ class DataGrid extends UIComponent {
             headerRenderer.x = _x;
             headerRenderer.y = 0.0;
             headerRenderer.setSize(column.width, headerRenderer.textField.height);
-            headerRenderer.init();
             headerRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEventMove);
             headerRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEventMove);
             headerRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
@@ -161,7 +160,6 @@ class DataGrid extends UIComponent {
                     if (cellRenderer.height < rowHeight) cellRenderer.height = rowHeight;
                     cellRenderer.data = rowData;
                     cellRenderer.listData = listData;
-                    cellRenderer.init();
                     cellRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEventMove);
                     cellRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEventMove);
                     cellRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
@@ -187,6 +185,11 @@ class DataGrid extends UIComponent {
                     var cell: DisplayObject = displayObjects[(i * columns.length) + j];
                     cell.y = _y;
                     cell.height = cellHeight;
+                    if (i == 0) {
+                        cast(cell, HeaderRenderer).init();
+                    } else {
+                        cast(cell, CellRenderer).init();
+                    }
                 }
                 _y+= cellHeight;
             }
