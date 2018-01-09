@@ -30,19 +30,20 @@ class UIComponent extends XFLSprite {
         _disabled = false;
         styles = new Map<String, Dynamic>();
 
-        // size
-        _width = 0.0;
-        _height = 0.0;
-
         // determine from component avarar if we have any
-        if (getXFLDisplayObject("Component_avatar") == null) return;
-        _originalWidth = getXFLDisplayObject("Component_avatar").width;
-        _originalHeight = getXFLDisplayObject("Component_avatar").height;
-        _width = _originalWidth;
-        _height = _originalHeight;
-
-        // remove component avatar
-        removeChild(getXFLDisplayObject("Component_avatar"));
+        if (getXFLDisplayObject("Component_avatar") == null) {
+            _originalWidth = 0.0;
+            _originalHeight = 0.0;
+            _width = 0.0;
+            _height = 0.0;
+        } else {
+            _originalWidth = getXFLDisplayObject("Component_avatar").width;
+            _originalHeight = getXFLDisplayObject("Component_avatar").height;
+            _width = _originalWidth;
+            _height = _originalHeight;
+            // remove component avatar
+            removeChild(getXFLDisplayObject("Component_avatar"));
+        }
     }
 
     public function get_disabled(): Bool {

@@ -42,7 +42,7 @@ class DataGrid extends UIComponent {
      **/
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
-        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid"));
+        super(name, xflSymbolArguments/* != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid")*/);
         displayObjects = new Array<DisplayObject>();
         columns = new Array<DataGridColumn>();
         rendererStyles = new Map<String, Dynamic>();
