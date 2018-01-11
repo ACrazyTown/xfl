@@ -4,22 +4,26 @@ import haxe.xml.Fast;
 
 class DOMLayer {
 
+	public var index: Int;
 	public var name: String;
-	public var animationType: String;
 	public var visible: Bool;
+	public var animationType: String;
 	public var frames: Array<DOMFrame>;
 	public var type: String;
+	public var parentLayerIndex: Int;
 
 	public function new() {
 		frames = new Array <DOMFrame> ();
 	}
 
-	public static function parse(xml: Fast): DOMLayer {
+	public static function parse(index: Int, xml: Fast): DOMLayer {
 		var layer = new DOMLayer();
+		layer.index = index;
 		layer.name = xml.has.name == true?xml.att.name:null;
+		layer.visible = xml.has.visible == false || xml.att.visible == "true";
 		if (xml.has.animationType) layer.animationType = xml.att.animationType;
 		if (xml.has.layerType) layer.type = xml.att.layerType;
-		layer.visible = true;
+		layer.parentLayerIndex = xml.has.parentLayerIndex == true?Std.parseInt(xml.att.parentLayerIndex):-1;
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "frames":

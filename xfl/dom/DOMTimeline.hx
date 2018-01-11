@@ -13,6 +13,7 @@ class DOMTimeline {
 	}
 
 	public static function parse(xml: Fast): DOMTimeline {
+		var layerIndex: Int = 0;
 		var timeline = new DOMTimeline();
 		if (xml.has.name) timeline.name = xml.att.name;
 		timeline.currentFrame = xml.has.currentFrame == true?Std.parseInt(xml.att.currentFrame):1;
@@ -20,7 +21,7 @@ class DOMTimeline {
 			switch (element.name) {
 				case "layers":
 					for (layer in element.elements) {
-						timeline.layers.push(DOMLayer.parse(layer));
+						timeline.layers.push(DOMLayer.parse(layerIndex++, layer));
 					}
 			}
 		}
