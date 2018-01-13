@@ -520,7 +520,7 @@ class Shared {
     }
 
     public static function removeFrames(parent: DisplayObjectContainer) {
-        for (i in 0...parent.numChildren) {
+        while (parent.numChildren > 0) {
             var child: DisplayObject = parent.getChildAt(0);
             if (Std.is(child, MovieClip)) {
                 cast(child, MovieClip).stop();
