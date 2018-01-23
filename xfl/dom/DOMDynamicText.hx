@@ -23,7 +23,7 @@ class DOMDynamicText {
 		dynamicText.height = Std.parseFloat (xml.att.height);
 		dynamicText.width = Std.parseFloat (xml.att.width);
 		if (xml.has.name) dynamicText.name = xml.att.name;
-		if (xml.has.isSelectable) dynamicText.isSelectable = (xml.att.isSelectable == "yes");
+		dynamicText.isSelectable = xml.has.isSelectable == false || xml.att.isSelectable == "true";
 		dynamicText.multiLine = xml.has.lineType == true && xml.att.lineType == "multiline";
 		dynamicText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0;
 		for (element in xml.elements) {

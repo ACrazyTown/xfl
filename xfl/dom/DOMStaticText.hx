@@ -23,7 +23,7 @@ class DOMStaticText {
 		staticText.width = Std.parseFloat(xml.att.width);
 		staticText.multiLine = xml.has.lineType == true && xml.att.lineType == "multiline";
 		staticText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0;
-		if (xml.has.isSelectable) staticText.isSelectable = (xml.att.isSelectable == "yes");
+		staticText.isSelectable = xml.has.isSelectable == false || xml.att.isSelectable == "true";
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":

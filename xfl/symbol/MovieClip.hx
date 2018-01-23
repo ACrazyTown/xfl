@@ -41,9 +41,6 @@ class MovieClip extends xfl.display.MovieClip {
 			children
 		);
 		update();
-		if (totalFrames > 1) {
-			play();
-		}
 	}
 
 	private inline function applyTween(start: Float, end: Float, ratio: Float): Float {
@@ -58,6 +55,7 @@ class MovieClip extends xfl.display.MovieClip {
 				break;
 			} else
 			if (parent == null) {
+				trace("enterFrame(): stopping and removing clip: " + name);
 				stop();
 				return;
 			}
@@ -112,6 +110,9 @@ class MovieClip extends xfl.display.MovieClip {
 	}
 
 	public override function play(): Void {
+		if (parent == null) {
+			trace("play(): do not play clip without parent: " + name);
+		}
 		if (!playing && totalFrames > 1) {
 			playing = true;
 			clips.push(this);

@@ -6,6 +6,7 @@ import openfl.display.DisplayObject;
 import openfl.display.Shape;
 import openfl.display.XFLSprite;
 import openfl.display.XFLMovieClip;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.ScrollEvent;
 import openfl.text.TextFormat;
@@ -30,6 +31,7 @@ class TextArea extends UIComponent {
 
     private var scrollBar: ScrollBar;
     private var textField: TextField;
+    private var textFieldNumLinesLast: Int;
 
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
@@ -41,6 +43,8 @@ class TextArea extends UIComponent {
         textField.type = TextFieldType.INPUT;
         textField.multiline = true;
         textField.wordWrap = true;
+        textField.addEventListener(Event.CHANGE, textFieldChangeHandler);
+        textFieldNumLinesLast = textField.numLines;
         addChild(textField);
         scrollBar = getXFLScrollBar("UIScrollBar");
         scrollBar.visible = false;
@@ -108,7 +112,8 @@ class TextArea extends UIComponent {
     }
 
     private function updateScrollBar(): Void {
-        scrollBar.visibleScrollRange = textField.bottomScrollV - textField.scrollV + 1;
+        textFieldNumLinesLast = textField.numLines;
+        scrollBar.visibleScrollRange = textField.bottomScrollV;
         scrollBar.pageScrollSize = textField.numLines / scrollBar.visibleScrollRange;
         scrollBar.maxScrollPosition = textField.numLines - scrollBar.visibleScrollRange;
         scrollBar.visible = scrollBar.maxScrollPosition > 0.0;
@@ -141,4 +146,22 @@ class TextArea extends UIComponent {
         textField.scrollV = textField.scrollV - event.delta;
         if (scrollBar != null) scrollBar.scrollPosition = textField.scrollV - 1;
     }
+
+    private function textFieldChangeHandler(e : Event) : Void {
+        if (textFieldNumLinesLast != textField.numLines) {
+            updateTextField();
+            updateScrollBar();
+            var maxScrollPosition: Int = Std.int(scrollBar.maxScrollPosition);
+            var cursorLine = 1;
+            for (i in 0...textField.caretIndex) {
+                if (textField.text.charAt(i) == "\n") cursorLine++;
+            }
+            if (scrollBar.maxScrollPosition > 0.0 &&
+                cursorLine >= textField.scrollV + textField.bottomScrollV) {
+                scrollBar.scrollPosition++;
+                textField.scrollV++;
+            }
+        }
+    }
+
 }
