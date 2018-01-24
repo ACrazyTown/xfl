@@ -25,6 +25,8 @@ class XFLSymbolArguments {
 class XFL {
 
 	public static var BITMAPDATA_DISPOSEIMAGE: Bool = true;
+	public static var BITMAPDATA_USECACHE: Bool = false;
+	public static var SOUND_USECACHE: Bool = false;
 
 	public var paths: Array<String>;
 	public var documents: Array<DOMDocument>;
@@ -47,7 +49,7 @@ class XFL {
 					if (Std.is(medium, DOMBitmapItem) == true) {
 						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
-						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
+						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
 						if (bitmapData != null) {
 							if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
 							return bitmapData;
@@ -68,7 +70,7 @@ class XFL {
 					if (Std.is(medium, DOMBitmapItem) == true) {
 						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
-						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
+						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
 						if (bitmapData != null) {
 							if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
 							return bitmapData;
@@ -89,7 +91,7 @@ class XFL {
 					if (Std.is(medium, DOMSoundItem) == true) {
 						var soundItem: DOMSoundItem = cast(medium, DOMSoundItem);
 						var assetUrl: String = document.path + "/LIBRARY/" + soundItem.href;
-						if (Assets.exists(assetUrl) == true) sound = Assets.getSound(assetUrl);
+						if (Assets.exists(assetUrl) == true) sound = Assets.getSound(assetUrl, SOUND_USECACHE);
 						if (sound != null) return sound;
 					}
 				}
