@@ -159,23 +159,12 @@ class TextArea extends UIComponent {
         if (scrollBar != null) scrollBar.scrollPosition = textField.scrollV - 1;
     }
 
-    private function getTextFieldCursorLine(): Int {
-        // TODO: a.drewke, 
-        //  actually this wont work with wrapped long paragraphs, would need a function from
-        //  OpenFL to know at which line the cursor is
-        var cursorLine = 1;
-        for (i in 0...textField.caretIndex) {
-            if (textField.text.charAt(i) == "\n") cursorLine++;
-        }
-        return cursorLine;
-    }
-
     private function textFieldChangeHandler(e : Event) : Void {
         if (textFieldNumLinesLast != textField.numLines) {
             updateTextField();
             updateScrollBar();
             var maxScrollPosition: Int = Std.int(scrollBar.maxScrollPosition);
-            var cursorLine = getTextFieldCursorLine();
+            var cursorLine = textField.getLineIndexOfChar(textField.caretIndex) + 1;
             if (scrollBar.maxScrollPosition > 0.0 &&
                 cursorLine >= textField.scrollV + textField.bottomScrollV) {
                 scrollBar.scrollPosition++;
