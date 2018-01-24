@@ -78,8 +78,14 @@ class TextArea extends UIComponent {
     }
 
     public function set_htmlText(_htmlText: String): String {
+        var atEnd = textField.scrollV == textField.maxScrollV;
         textField.htmlText = _htmlText;
         validateNow();
+        if (atEnd == true &&
+            scrollBar.maxScrollPosition > 0.0) {
+            scrollBar.scrollPosition = scrollBar.maxScrollPosition;
+            textField.scrollV = textField.maxScrollV;
+        }
         return textField.htmlText;
     }
 
@@ -88,8 +94,14 @@ class TextArea extends UIComponent {
     }
 
     public function set_text(_text: String): String {
+        var atEnd = textField.scrollV == textField.maxScrollV;
         textField.text = _text;
         validateNow();
+        if (atEnd == true &&
+            scrollBar.maxScrollPosition > 0.0) {
+            scrollBar.scrollPosition = scrollBar.maxScrollPosition;
+            textField.scrollV = textField.maxScrollV;
+        }
         return textField.text;
     }
 
@@ -147,15 +159,23 @@ class TextArea extends UIComponent {
         if (scrollBar != null) scrollBar.scrollPosition = textField.scrollV - 1;
     }
 
+    private function getTextFieldCursorLine(): Int {
+        // TODO: a.drewke, 
+        //  actually this wont work with wrapped long paragraphs, would need a function from
+        //  OpenFL to know at which line the cursor is
+        var cursorLine = 1;
+        for (i in 0...textField.caretIndex) {
+            if (textField.text.charAt(i) == "\n") cursorLine++;
+        }
+        return cursorLine;
+    }
+
     private function textFieldChangeHandler(e : Event) : Void {
         if (textFieldNumLinesLast != textField.numLines) {
             updateTextField();
             updateScrollBar();
             var maxScrollPosition: Int = Std.int(scrollBar.maxScrollPosition);
-            var cursorLine = 1;
-            for (i in 0...textField.caretIndex) {
-                if (textField.text.charAt(i) == "\n") cursorLine++;
-            }
+            var cursorLine = getTextFieldCursorLine();
             if (scrollBar.maxScrollPosition > 0.0 &&
                 cursorLine >= textField.scrollV + textField.bottomScrollV) {
                 scrollBar.scrollPosition++;
