@@ -156,8 +156,10 @@ class DataGrid extends UIComponent {
                     cellRenderer.label = StringTools.ltrim(StringTools.rtrim(column.itemToLabel(rowData)));
                     cellRenderer.x = _x;
                     cellRenderer.y = 0.0;
-                    cellRenderer.setSize(column.width, cellRenderer.textField.height);
-                    if (cellRenderer.height < rowHeight) cellRenderer.height = rowHeight;
+                    var cellHeight: Float = cellRenderer.textField.height;
+                    if (cellHeight > rowHeight) rowHeight = cellHeight;
+                    if (cellHeight < rowHeight) cellHeight = rowHeight;
+                    cellRenderer.setSize(column.width, cellHeight);
                     cellRenderer.data = rowData;
                     cellRenderer.listData = listData;
                     cellRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEventMove);
