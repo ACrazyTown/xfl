@@ -120,7 +120,7 @@ class TextArea extends UIComponent {
     }
 
     private function updateTextField(): Void {
-        textField.width = width - (scrollBar != null?scrollBar.scrollBarWidth:0.0);
+        textField.width = width - (scrollBar != null?scrollBar.width:0.0);
     }
 
     private function updateScrollBar(): Void {

@@ -37,7 +37,7 @@ class BaseScrollPane extends UIComponent {
         _scrollBar = getXFLScrollBar("ScrollBar");
         if (_scrollBar != null) {
             _scrollBar.visible = true;
-            _scrollBar.x = 0.0;
+            _scrollBar.x = width - _scrollBar.width;
             _scrollBar.y = 0.0;
             _scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
         }
@@ -51,7 +51,11 @@ class BaseScrollPane extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) : Void {
         super.setSize(_width, _height);
-        if (_scrollBar != null) _scrollBar.setSize(width, height);
+        if (_scrollBar != null) {
+            _scrollBar.x = _width - _scrollBar.width;
+            _scrollBar.y = 0.0;
+            _scrollBar.setSize(_scrollBar.width, _height);
+        }
         update();
     }
 

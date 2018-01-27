@@ -25,8 +25,6 @@ class ScrollBar extends UIComponent {
     public var pageScrollSize: Float;
     public var visibleScrollRange: Null<Float>;
 
-    public var scrollBarWidth(get, never): Float;
-
     private var _scrollBarWidth: Float;
     private var scrollArrowUpHeight: Float;
     private var scrollArrowDownHeight: Float;
@@ -57,8 +55,7 @@ class ScrollBar extends UIComponent {
         }
 
         var tmp: Float = 0.0;
-        _scrollBarWidth = 0.0;
-        _scrollBarWidth = getXFLMovieClip("ScrollTrack_skin").width;
+        width = getXFLMovieClip("ScrollTrack_skin").width;
         scrollArrowUpHeight = 0.0;
         scrollArrowUpHeight = (tmp = getXFLMovieClip("ScrollArrowUp_upSkin").height) > scrollArrowUpHeight?tmp:scrollArrowUpHeight;
         scrollArrowUpHeight = (tmp = getXFLMovieClip("ScrollArrowUp_overSkin").height) > scrollArrowUpHeight?tmp:scrollArrowUpHeight;
@@ -179,10 +176,6 @@ class ScrollBar extends UIComponent {
         return this._maxScrollPosition;
     }
 
-    public function get_scrollBarWidth(): Float {
-        return _scrollBarWidth;
-    }
-
     private function setScrollArrowUpState(scrollArrowUpState: String) {
         getXFLDisplayObject("ScrollArrowUp_" + this.scrollArrowUpState + "Skin").visible = false;
         this.scrollArrowUpState = scrollArrowUpState;
@@ -227,7 +220,7 @@ class ScrollBar extends UIComponent {
         child.x = width - child.width;
         switch (alignToVertical) {
             case "scrollthumb":
-                child.x = width - scrollBarWidth + ((scrollBarWidth - child.width) / 2.0);
+                child.x = (width - child.width) / 2.0;
             case "scrolltrack":
                 child.y = scrollArrowUpHeight;
                 child.height = scrollTrackHeight;
