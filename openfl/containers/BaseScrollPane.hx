@@ -19,14 +19,14 @@ class BaseScrollPane extends UIComponent {
     public var source(get, set): DisplayObject;
     public var scrollY(get, set): Float;
 
+    public var verticalScrollPosition(get, set): Float;
+    public var verticalScrollBar(get, never): ScrollBar;
+
     public var horizontalScrollPolicy: String;
     public var verticalScrollPolicy: String;
 
-    public var verticalScrollPosition: Int;
-    public var verticalScrollBar: Dynamic;
-
     private var _source: DisplayObject;
-    private var scrollBar: ScrollBar;
+    private var _scrollBar: ScrollBar;
 
     /**
      * Public constructor
@@ -34,12 +34,12 @@ class BaseScrollPane extends UIComponent {
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments);
-        scrollBar = getXFLScrollBar("ScrollBar");
-        if (scrollBar != null) {
-            scrollBar.visible = true;
-            scrollBar.x = 0.0;
-            scrollBar.y = 0.0;
-            scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
+        _scrollBar = getXFLScrollBar("ScrollBar");
+        if (_scrollBar != null) {
+            _scrollBar.visible = true;
+            _scrollBar.x = 0.0;
+            _scrollBar.y = 0.0;
+            _scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
         }
         var maskSprite: Sprite = new Sprite();
         maskSprite.visible = false;
@@ -51,7 +51,7 @@ class BaseScrollPane extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) : Void {
         super.setSize(_width, _height);
-        if (scrollBar != null) scrollBar.setSize(width, height);
+        if (_scrollBar != null) _scrollBar.setSize(width, height);
         update();
     }
 
@@ -63,14 +63,14 @@ class BaseScrollPane extends UIComponent {
             maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
             maskSprite.graphics.endFill();
         }
-        if (scrollBar != null) {
-            if (getChildAt(numChildren - 1) != scrollBar) {
-                addChildAt(scrollBar, numChildren - 1);
+        if (_scrollBar != null) {
+            if (getChildAt(numChildren - 1) != _scrollBar) {
+                addChildAt(_scrollBar, numChildren - 1);
             }
-            scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
-            scrollBar.lineScrollSize = 10.0;
-            scrollBar.pageScrollSize = height;
-            scrollBar.visible = _source != null && _source.height > height;
+            _scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
+            _scrollBar.lineScrollSize = 10.0;
+            _scrollBar.pageScrollSize = height;
+            _scrollBar.visible = _source != null && _source.height > height;
         }
     }
 
@@ -95,18 +95,30 @@ class BaseScrollPane extends UIComponent {
         source.y = -scrollY;
         if (source.y > 0.0) source.y = 0.0;
         if (source.y < -(source.height - height)) source.y = -(source.height - height);
-        if (scrollBar != null) scrollBar.validateNow();
+        if (_scrollBar != null) _scrollBar.validateNow();
         return source.y;
+    }
+
+    private function get_verticalScrollBar(): ScrollBar {
+        return _scrollBar;
+    }
+
+    private function get_verticalScrollPosition(): Float {
+        return _scrollBar.scrollPosition;
+    }
+
+    private function set_verticalScrollPosition(scrollPosition: Float): Float {
+        return _scrollBar.scrollPosition = scrollPosition;
     }
 
     private function onMouseWheel(event: MouseEvent): Void {
         if (source.height < height) return;
         scrollY = scrollY - event.delta;
-        if (scrollBar != null) scrollBar.scrollPosition = scrollY;
+        if (_scrollBar != null) _scrollBar.scrollPosition = scrollY;
     }
 
     private function onScrollEvent(event: ScrollEvent): Void {
-        if (scrollBar != null) scrollY = scrollBar.scrollPosition;
+        if (_scrollBar != null) scrollY = _scrollBar.scrollPosition;
     }
 
 }
