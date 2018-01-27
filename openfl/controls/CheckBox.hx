@@ -57,7 +57,6 @@ class CheckBox extends LabelButton {
     }
 
     override public function setSize(_width: Float, _height: Float): Void {
-        trace("setSize(): " + _width + ", " + _height);
         super.setSize(_width, _height);
         layoutChildren();
     }
