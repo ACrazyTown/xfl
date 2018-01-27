@@ -3,6 +3,7 @@ package openfl.controls;
 import openfl.core.UIComponent;
 import openfl.display.Sprite;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
@@ -139,7 +140,10 @@ class LabelButton extends UIComponent {
             case MouseEvent.MOUSE_OUT:
                 setMouseState("out");
             case MouseEvent.MOUSE_UP:
-                if (toggle == true) _selected = !_selected;
+                if (toggle == true) {
+                    _selected = !_selected;
+                    dispatchEvent(new Event(Event.CHANGE));
+                }
                 setMouseState("up");
             case MouseEvent.MOUSE_DOWN:
                 setMouseState("down");
