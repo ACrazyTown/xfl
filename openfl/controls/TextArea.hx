@@ -48,7 +48,7 @@ class TextArea extends UIComponent {
         addChild(textField);
         scrollBar = getXFLScrollBar("UIScrollBar");
         scrollBar.visible = false;
-        scrollBar.x = 0.0;
+        scrollBar.x = width - scrollBar.width;
         scrollBar.y = 0.0;
         scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -111,9 +111,10 @@ class TextArea extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
-        textField.width = width;
+        textField.width = width - scrollBar.width;
         textField.height = height;
-        scrollBar.setSize(width, height);
+        scrollBar.x = width - scrollBar.width;
+        scrollBar.height = height;
         updateTextField();
         updateScrollBar();
         layoutChildren();
