@@ -130,6 +130,10 @@ class UIComponent extends XFLSprite {
     public function drawFocus(draw: Bool): Void {
     }
 
+    public function getStyle(style: String): Dynamic {
+        return styles.get(style);
+    }
+
     public function setStyle(style: String, value: Dynamic): Void {
         styles.set(style, value);
         draw();

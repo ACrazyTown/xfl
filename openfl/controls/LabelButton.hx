@@ -101,7 +101,8 @@ class LabelButton extends UIComponent {
 
     override private function draw() {
         if (currentIcon != null) currentIcon.visible = false;
-        var newIcon: DisplayObject = styles.get((_selected == true?"selected" + mouseState.charAt(0).toUpperCase() + mouseState.substr(1).toLowerCase():mouseState) + "Icon");
+        var styleName: String = (_selected == true?"selected" + mouseState.charAt(0).toUpperCase() + mouseState.substr(1).toLowerCase():mouseState) + "Icon";
+        var newIcon: DisplayObject = styles.get(styleName);
         if (newIcon != null) {
             newIcon.visible = true;
             currentIcon = newIcon;

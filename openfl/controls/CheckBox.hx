@@ -20,6 +20,21 @@ class CheckBox extends LabelButton {
         _selected = false;
         toggle = true;
 
+        var maxWidth: Float = 0;
+        var maxHeight: Float = 0;
+        if (getXFLMovieClip("CheckBox_upIcon").width > maxWidth) maxWidth = getXFLMovieClip("CheckBox_upIcon").width;
+        if (getXFLMovieClip("CheckBox_overIcon").width > maxWidth) maxWidth = getXFLMovieClip("CheckBox_overIcon").width;
+        if (getXFLMovieClip("CheckBox_downIcon").width > maxWidth) maxWidth = getXFLMovieClip("CheckBox_downIcon").width;
+        if (getXFLMovieClip("CheckBox_selectedUpIcon").width > maxWidth) maxWidth = getXFLMovieClip("CheckBox_selectedUpIcon").width;
+        if (getXFLMovieClip("CheckBox_selectedDownIcon").width > maxWidth) maxWidth = getXFLMovieClip("CheckBox_selectedDownIcon").width;
+        if (getXFLMovieClip("CheckBox_selectedDisabledIcon").width > maxWidth) maxWidth = getXFLMovieClip("CheckBox_selectedDisabledIcon").width;
+        if (getXFLMovieClip("CheckBox_upIcon").height > maxHeight) maxHeight = getXFLMovieClip("CheckBox_upIcon").height;
+        if (getXFLMovieClip("CheckBox_overIcon").height > maxHeight) maxHeight = getXFLMovieClip("CheckBox_overIcon").height;
+        if (getXFLMovieClip("CheckBox_downIcon").height > maxHeight) maxHeight = getXFLMovieClip("CheckBox_downIcon").height;
+        if (getXFLMovieClip("CheckBox_selectedUpIcon").height > maxHeight) maxHeight = getXFLMovieClip("CheckBox_selectedUpIcon").height;
+        if (getXFLMovieClip("CheckBox_selectedDownIcon").height > maxHeight) maxHeight = getXFLMovieClip("CheckBox_selectedDownIcon").height;
+        if (getXFLMovieClip("CheckBox_selectedDisabledIcon").height > maxHeight) maxHeight = getXFLMovieClip("CheckBox_selectedDisabledIcon").height;
+
         setStyle("upIcon", getXFLMovieClip("CheckBox_upIcon"));
         setStyle("overIcon", getXFLMovieClip("CheckBox_overIcon"));
         setStyle("downIcon", getXFLMovieClip("CheckBox_downIcon"));
@@ -36,12 +51,13 @@ class CheckBox extends LabelButton {
         getXFLMovieClip("CheckBox_selectedDownIcon").visible = false;
         getXFLMovieClip("CheckBox_selectedDisabledIcon").visible = false;
 
-        layoutChildren();
+        setSize(maxWidth, maxHeight);
 
         setMouseState("up");
     }
 
     override public function setSize(_width: Float, _height: Float): Void {
+        trace("setSize(): " + _width + ", " + _height);
         super.setSize(_width, _height);
         layoutChildren();
     }
