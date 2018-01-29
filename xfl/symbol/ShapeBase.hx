@@ -16,18 +16,19 @@ import xfl.XFLAssets;
 
 class ShapeBase extends openfl.display.Shape {
 
-	private var commands: Array<RenderCommand>;
-	private var fillStyles: Array<RenderCommand>;
-	private var lineStyles: Array<RenderCommand>;
 
     private function new() {
         super();
-	    commands = [];
-	    fillStyles = [];
-	    lineStyles = [];
     }
 
-	private function flushCommands(edges: Array<RenderCommand>, fills: Array<ShapeEdge>) {
+	private function flushCommands(
+		edges: Array<RenderCommand>, 
+		fills: Array<ShapeEdge>,
+		fillStyles: Array<RenderCommand>,
+		lineStyles: Array<RenderCommand>
+		) {
+		//
+		var commands: Array<RenderCommand> = [];
 		var graphicsPathCommands: Array<GraphicsPathCommand> = new Array<GraphicsPathCommand>();
 		var left = fills.length;
 		while (left > 0) {
@@ -82,6 +83,9 @@ class ShapeBase extends openfl.display.Shape {
 			commands.push(function(gfx: Graphics) {
 				gfx.lineStyle();
 			});
+		}
+		for (command in commands) {
+			command(this.graphics);
 		}
 	}
 
@@ -155,12 +159,6 @@ class ShapeBase extends openfl.display.Shape {
 			}
 		}
 		return result;
-	}
-
-	public function render(graphics: Graphics) {
-		for (command in commands) {
-			command(graphics);
-		}
 	}
 
 }

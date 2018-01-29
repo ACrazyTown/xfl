@@ -6,15 +6,11 @@ import openfl.display.Graphics;
 
 class Shape extends ShapeBase {
 
-	public var domShape: DOMShape;
-
 	public function new(domShape: DOMShape) {
 		super();
-		this.domShape = domShape;
 		for (edge in domShape.edges) {
-			commands = [];
-			fillStyles = readFillStyles(domShape);
-			lineStyles = readLineStyles(domShape);
+			var fillStyles: Array<RenderCommand> = readFillStyles(domShape);
+			var lineStyles: Array<RenderCommand> = readLineStyles(domShape);
 			var penX = 0.0;
 			var penY = 0.0;
 			var currentFill0 = -1;
@@ -111,10 +107,7 @@ class Shape extends ShapeBase {
 					}
 				}
 			}
-			flushCommands(edges, fills);
-			for (command in commands) {
-				command(this.graphics);
-			}
+			flushCommands(edges, fills, fillStyles, lineStyles);
 		}
 	}
 
