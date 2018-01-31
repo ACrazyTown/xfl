@@ -20,6 +20,16 @@ class DOMSymbolItem {
 		return parse(new Fast(Xml.parse(Assets.getText(path + "/" + file)).firstElement()));
 	}
 
+	public static function loadIndex(path: String, file: String): DOMItemIndex {
+		var xml: Fast = new Fast(Xml.parse(Assets.getText(path + "/" + file)).firstElement());
+		var index: DOMItemIndex = new DOMItemIndex();
+		index.name = xml.att.name;
+		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
+		index.item = null;
+		index.fileName = file;
+		return index;
+	}
+
 	public static function parse(xml: Fast): DOMSymbolItem {
 		var symbolItem = new DOMSymbolItem();
 		symbolItem.name = xml.att.name;

@@ -8,17 +8,17 @@ class DOMDocument {
 
 	public var path: String;
 	public var height: Int;
-	public var media: StringMap <Dynamic>;
-	public var symbols: StringMap <DOMSymbolItem>;
-	public var timelines: Array <DOMTimeline>;
+	public var media: StringMap<DOMItemIndex>;
+	public var symbols: StringMap<DOMItemIndex>;
+	// public var timelines: Array <DOMTimeline>;
 	public var width: Int;
 	public var xflVersion: Float;
 
 	public function new(path: String) {
 		this.path = path;
-		media = new StringMap<DOMBitmapItem>();
-		symbols = new StringMap<DOMSymbolItem>();
-		timelines = new Array<DOMTimeline>();
+		media = new StringMap<DOMItemIndex>();
+		symbols = new StringMap<DOMItemIndex>();
+		// timelines = new Array<DOMTimeline>();
 	}
 
 	public static function load(path: String, file: String): DOMDocument {
@@ -36,31 +36,35 @@ class DOMDocument {
 					for (medium in element.elements) {
 						switch (medium.name) {
 							case "DOMBitmapItem":
-								var bitmapItem : DOMBitmapItem = DOMBitmapItem.parse(medium);
-								if (document.media.exists(bitmapItem.name)) {
-									trace("Media with key '" + bitmapItem.name + "' already exists");
+								var bitmapItemIndex: DOMItemIndex = DOMBitmapItem.parseIndex(medium);
+								bitmapItemIndex.item = DOMBitmapItem.parse(medium);
+								if (document.media.exists(bitmapItemIndex.name)) {
+									trace("Media with key '" + bitmapItemIndex.name + "' already exists");
 								}
-								document.media.set(bitmapItem.name, bitmapItem);
+								document.media.set(bitmapItemIndex.name, bitmapItemIndex);
 							case "DOMSoundItem":
-								var soundItem : DOMSoundItem = DOMSoundItem.parse(medium);
-								if (document.media.exists(soundItem.name)) {
-									trace("Media with key '" + soundItem.name + "' already exists");
+								var soundItemIndex: DOMItemIndex = DOMSoundItem.parseIndex(medium);
+								soundItemIndex.item = DOMSoundItem.parse(medium);
+								if (document.media.exists(soundItemIndex.name)) {
+									trace("Media with key '" + soundItemIndex.name + "' already exists");
 								}
-								document.media.set(soundItem.name, soundItem);
+								document.media.set(soundItemIndex.name, soundItemIndex);
 						}
 					}
 				case "symbols":
 					for (symbol in element.elements) {
-						var symbolItem : DOMSymbolItem = DOMSymbolItem.load(path + "/LIBRARY", symbol.att.href);
-						if (document.symbols.exists(symbolItem.name)) {
-							trace("Symbol with key '" + symbolItem.name + "' already exists");
+						var symbolItemIndex : DOMItemIndex = DOMSymbolItem.loadIndex(path + "/LIBRARY", symbol.att.href);
+						if (document.symbols.exists(symbolItemIndex.name)) {
+							trace("Symbol with key '" + symbolItemIndex.name + "' already exists");
 						}
-						document.symbols.set(symbolItem.name, symbolItem);
+						document.symbols.set(symbolItemIndex.name, symbolItemIndex);
 					}
 				case "timelines":
+					/*
 					for (timeline in element.elements) {
 						document.timelines.push(DOMTimeline.parse(timeline));
-					}				
+					}
+					*/				
 			}
 		}
 		return document;

@@ -45,15 +45,13 @@ class XFL {
 		var bitmapData: BitmapData = null;
 		for (document in documents) {
 			for (medium in document.media) {
-				if (medium.linkageClassName == name && medium.linkageExportForAS == true) {
-					if (Std.is(medium, DOMBitmapItem) == true) {
-						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
-						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
-						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
-						if (bitmapData != null) {
-							if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
-							return bitmapData;
-						}
+				if (medium.linkageClassName == name) {
+					var bitmapItem: DOMBitmapItem = medium.item;
+					var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
+					if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
+					if (bitmapData != null) {
+						if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
+						return bitmapData;
 					}
 				}
 			}
@@ -67,14 +65,12 @@ class XFL {
 		for (document in documents) {
 			for (medium in document.media) {
 				if (medium.name == path) {
-					if (Std.is(medium, DOMBitmapItem) == true) {
-						var bitmapItem: DOMBitmapItem = cast(medium, DOMBitmapItem);
-						var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
-						if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
-						if (bitmapData != null) {
-							if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
-							return bitmapData;
-						}
+					var bitmapItem: DOMBitmapItem = medium.item;
+					var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.href;
+					if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
+					if (bitmapData != null) {
+						if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
+						return bitmapData;
 					}
 				}
 			}
@@ -87,13 +83,11 @@ class XFL {
 		var sound: Sound = null;
 		for (document in documents) {
 			for (medium in document.media) {
-				if (medium.linkageClassName == name && medium.linkageExportForAS == true) {
-					if (Std.is(medium, DOMSoundItem) == true) {
-						var soundItem: DOMSoundItem = cast(medium, DOMSoundItem);
-						var assetUrl: String = document.path + "/LIBRARY/" + soundItem.href;
-						if (Assets.exists(assetUrl) == true) sound = Assets.getSound(assetUrl, SOUND_USECACHE);
-						if (sound != null) return sound;
-					}
+				if (medium.linkageClassName == name) {
+					var soundItem: DOMSoundItem = medium.item;
+					var assetUrl: String = document.path + "/LIBRARY/" + soundItem.href;
+					if (Assets.exists(assetUrl) == true) sound = Assets.getSound(assetUrl, SOUND_USECACHE);
+					if (sound != null) return sound;
 				}
 			}
 		}
@@ -103,11 +97,9 @@ class XFL {
 
 	private function getSymbolItem(name: String): DOMSymbolItem {
 		for (document in documents) {
-			for (symbolItem in document.symbols) {
-				if (symbolItem.linkageClassName == name && symbolItem.linkageExportForAS == true) {
-					if (Std.is(symbolItem, DOMSymbolItem)) {
-						return symbolItem;
-					}
+			for (symbol in document.symbols) {
+				if (symbol.linkageClassName == name) {
+					return DOMSymbolItem.load(document.path + "/LIBRARY", symbol.fileName);
 				}
 			}
 		}
@@ -117,7 +109,7 @@ class XFL {
 
 	public function createSymbolArguments(name: String): XFLSymbolArguments {
 		var symbolItem: DOMSymbolItem = getSymbolItem(name);
-		if (symbolItem != null && Std.is(symbolItem, DOMSymbolItem)) {
+		if (symbolItem != null) {
 			return new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked);
 		}
 		trace("createSymbolArguments(): symbol not found: " + name);
@@ -126,7 +118,7 @@ class XFL {
 
 	public function createMovieClip (name: String): XFLMovieClip {
 		var symbolItem: DOMSymbolItem = getSymbolItem(name);
-		if (symbolItem != null && Std.is(symbolItem, DOMSymbolItem)) {
+		if (symbolItem != null) {
 			if (customSymbolLoader != null) {
 				var movieClip: XFLMovieClip = customSymbolLoader.createMovieClip(this, symbolItem);
 				if (movieClip != null) {
@@ -142,7 +134,7 @@ class XFL {
 
 	public function createSprite (name: String): XFLSprite {
 		var symbolItem: DOMSymbolItem = getSymbolItem(name);
-		if (symbolItem != null && Std.is(symbolItem, DOMSymbolItem)) {
+		if (symbolItem != null) {
 			if (customSymbolLoader != null) {
 				var sprite: XFLSprite = customSymbolLoader.createSprite(this, symbolItem);
 				if (sprite != null) {

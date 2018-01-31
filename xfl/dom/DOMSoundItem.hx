@@ -17,6 +17,15 @@ class DOMSoundItem {
 	public function new () {
 	}
 
+	public static function parseIndex(xml: Fast): DOMItemIndex {
+		var index: DOMItemIndex = new DOMItemIndex();
+		index.name = xml.att.name;
+		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
+		index.item = null;
+		index.fileName = null;
+		return index;
+	}
+
 	public static function parse (xml:Fast): DOMSoundItem {
 		var soundItem = new DOMSoundItem();		
 		soundItem.name = xml.att.name;

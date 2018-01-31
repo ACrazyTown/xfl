@@ -12,6 +12,7 @@ import openfl.geom.Matrix;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
+import xfl.dom.DOMBitmapItem;
 import xfl.dom.DOMBitmapInstance;
 import xfl.dom.DOMComponentInstance;
 import xfl.dom.DOMDynamicText;
@@ -49,7 +50,7 @@ class Symbols {
 		var bitmapData = null;
 		for (document in xfl.documents) {
 			if (document.media.exists(instance.libraryItemName)) {
-				var bitmapItem = document.media.get(instance.libraryItemName);
+				var bitmapItem: DOMBitmapItem = document.media.get(instance.libraryItemName).item;
 				var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.name;
 				if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
 				if (bitmapData != null) break;
@@ -136,7 +137,7 @@ class Symbols {
 	public static function createSymbol(xfl: XFL, instance: DOMSymbolInstance): DisplayObject {
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				var symbolItem: DOMSymbolItem = document.symbols.get(instance.libraryItemName);
+				var symbolItem: DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				// have a movie clip by default
 				if ((symbolItem.linkageBaseClass == null || symbolItem.linkageBaseClass == "") &&
 					(symbolItem.linkageClassName == null || StringTools.startsWith(symbolItem.linkageClassName, "fl.controls.") == false)
@@ -165,7 +166,7 @@ class Symbols {
 		var loadedByCustomLoader = false;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				symbolItem = document.symbols.get(instance.libraryItemName);
+				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				if (xfl.customSymbolLoader != null) {
 					movieClip = xfl.customSymbolLoader.createMovieClip(xfl, symbolItem);
 					if (movieClip != null) loadedByCustomLoader = true;
@@ -210,7 +211,7 @@ class Symbols {
 		var loadedByCustomLoader = false;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				symbolItem = document.symbols.get(instance.libraryItemName);
+				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				if (xfl.customSymbolLoader != null) {
 					sprite = xfl.customSymbolLoader.createSprite(xfl, symbolItem);
 					if (sprite != null) loadedByCustomLoader = true;
@@ -254,7 +255,7 @@ class Symbols {
 		var other: Sprite = null;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				symbolItem = document.symbols.get(instance.libraryItemName);
+				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				var classType: Class<Dynamic> = Type.resolveClass(className);
 				var otherName: String = 
 					(instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != ""?
@@ -297,7 +298,7 @@ class Symbols {
 		var component: DisplayObject = null;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
-				var symbolItem = document.symbols.get(instance.libraryItemName);
+				var symbolItem: DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				var className: String = symbolItem.linkageClassName;
 				if (StringTools.startsWith(className, "fl.")) className = "openfl." + className.substr("fl.".length);
 				var classType: Class<Dynamic> = Type.resolveClass(className);

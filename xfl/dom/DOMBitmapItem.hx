@@ -18,8 +18,17 @@ class DOMBitmapItem {
 	public function new () {
 	}
 
-	public static function parse (xml:Fast):DOMBitmapItem {
-		var bitmapItem = new DOMBitmapItem ();		
+	public static function parseIndex(xml: Fast): DOMItemIndex {
+		var index: DOMItemIndex = new DOMItemIndex();
+		index.name = xml.att.name;
+		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
+		index.item = null;
+		index.fileName = null;
+		return index;
+	}
+
+	public static function parse(xml:Fast): DOMBitmapItem {
+		var bitmapItem = new DOMBitmapItem();		
 		bitmapItem.name = xml.att.name;
 		bitmapItem.itemID = xml.att.itemID;
 		if (xml.has.linkageClassName) bitmapItem.linkageClassName = xml.att.linkageClassName;
