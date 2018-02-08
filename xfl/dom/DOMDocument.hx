@@ -2,7 +2,7 @@ package xfl.dom;
 
 import haxe.xml.Fast;
 import haxe.ds.StringMap;
-import openfl.Assets;
+import xfl.XFLAssets;
 
 class DOMDocument {
 
@@ -22,7 +22,7 @@ class DOMDocument {
 	}
 
 	public static function load(path: String, file: String): DOMDocument {
-		return parse(new Fast(Xml.parse(Assets.getText(path + "/" + file)).firstElement()), path);
+		return parse(XFLAssets.getInstance().getXFLXMLAsset(path + "/" + file), path);
 	}
 
 	public static function parse(xml: Fast, path: String) : DOMDocument {

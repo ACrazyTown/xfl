@@ -1,6 +1,7 @@
 package xfl.dom;
 
 import openfl.Assets;
+import xfl.XFLAssets;
 import haxe.xml.Fast;
 
 class DOMSymbolItem {
@@ -17,11 +18,11 @@ class DOMSymbolItem {
 	}
 
 	public static function load(path: String, file: String): DOMSymbolItem {	
-		return parse(new Fast(Xml.parse(Assets.getText(path + "/" + file)).firstElement()));
+		return parse(XFLAssets.getInstance().getXFLXMLAsset(path + "/" + file));
 	}
 
 	public static function loadIndex(path: String, file: String): DOMItemIndex {
-		var xml: Fast = new Fast(Xml.parse(Assets.getText(path + "/" + file)).firstElement());
+		var xml: Fast = XFLAssets.getInstance().getXFLXMLAsset(path + "/" + file);
 		var index: DOMItemIndex = new DOMItemIndex();
 		index.name = xml.att.name;
 		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;

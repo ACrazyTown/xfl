@@ -34,12 +34,18 @@ class XFLAssets {
     }
 
     /**
-     *  Get XFL XML asset
+     *  Get XML asset
      *  @param asset name
      *  @return haxe.xml.Fast
      */
-    public function getXFLAsset(assetName: String) : haxe.xml.Fast {
-        return new haxe.xml.Fast(Xml.parse(openfl.Assets.getText(assetName)).firstElement());
+    public function getXFLXMLAsset(assetName: String) : haxe.xml.Fast {
+        var asset: haxe.xml.Fast = new haxe.xml.Fast(Xml.parse(openfl.Assets.getText(assetName)).firstElement());
+        if (asset != null) {
+            if (XFL.ASSETS_CLEARCACHE == true) {
+                openfl.Assets.cache.clear();
+            }
+        }
+        return asset;
     }
 
     /**

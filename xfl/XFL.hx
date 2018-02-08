@@ -27,6 +27,7 @@ class XFL {
 	public static var BITMAPDATA_DISPOSEIMAGE: Bool = true;
 	public static var BITMAPDATA_USECACHE: Bool = false;
 	public static var SOUND_USECACHE: Bool = false;
+	public static var ASSETS_CLEARCACHE: Bool = true;
 
 	public var paths: Array<String>;
 	public var documents: Array<DOMDocument>;
@@ -51,6 +52,7 @@ class XFL {
 					if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
 					if (bitmapData != null) {
 						if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
+						if (ASSETS_CLEARCACHE == true) Assets.cache.clear();
 						return bitmapData;
 					}
 				}
@@ -70,6 +72,7 @@ class XFL {
 					if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
 					if (bitmapData != null) {
 						if (BITMAPDATA_DISPOSEIMAGE == true) bitmapData.disposeImage();
+						if (ASSETS_CLEARCACHE == true) Assets.cache.clear();
 						return bitmapData;
 					}
 				}
@@ -87,7 +90,10 @@ class XFL {
 					var soundItem: DOMSoundItem = medium.item;
 					var assetUrl: String = document.path + "/LIBRARY/" + soundItem.href;
 					if (Assets.exists(assetUrl) == true) sound = Assets.getSound(assetUrl, SOUND_USECACHE);
-					if (sound != null) return sound;
+					if (sound != null) {
+						if (ASSETS_CLEARCACHE == true) Assets.cache.clear();
+						return sound;
+					}
 				}
 			}
 		}
@@ -99,7 +105,11 @@ class XFL {
 		for (document in documents) {
 			for (symbol in document.symbols) {
 				if (symbol.linkageClassName == name) {
-					return DOMSymbolItem.load(document.path + "/LIBRARY", symbol.fileName);
+					var domSymbolItem: DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", symbol.fileName);
+					if (domSymbolItem != null) {
+						if (ASSETS_CLEARCACHE == true) Assets.cache.clear();
+					}
+					return domSymbolItem;
 				}
 			}
 		}
