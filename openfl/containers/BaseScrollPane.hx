@@ -35,12 +35,14 @@ class BaseScrollPane extends UIComponent {
     {
         super(name, xflSymbolArguments);
         _scrollBar = getXFLScrollBar("ScrollBar");
-        if (_scrollBar != null) {
-            _scrollBar.visible = true;
-            _scrollBar.x = width - _scrollBar.width;
-            _scrollBar.y = 0.0;
-            _scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
+        if (_scrollBar == null) {
+            _scrollBar = new ScrollBar();
+            addChild(_scrollBar);
         }
+        _scrollBar.visible = true;
+        _scrollBar.x = width - _scrollBar.width;
+        _scrollBar.y = 0.0;
+        _scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
         var maskSprite: Sprite = new Sprite();
         maskSprite.visible = false;
         addChild(maskSprite);
@@ -51,11 +53,9 @@ class BaseScrollPane extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) : Void {
         super.setSize(_width, _height);
-        if (_scrollBar != null) {
-            _scrollBar.x = _width - _scrollBar.width;
-            _scrollBar.y = 0.0;
-            _scrollBar.setSize(_scrollBar.width, _height);
-        }
+        _scrollBar.x = _width - _scrollBar.width;
+        _scrollBar.y = 0.0;
+        _scrollBar.setSize(_scrollBar.width, _height);
         update();
     }
 
@@ -67,15 +67,13 @@ class BaseScrollPane extends UIComponent {
             maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
             maskSprite.graphics.endFill();
         }
-        if (_scrollBar != null) {
-            if (getChildAt(numChildren - 1) != _scrollBar) {
-                addChildAt(_scrollBar, numChildren - 1);
-            }
-            _scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
-            _scrollBar.lineScrollSize = 10.0;
-            _scrollBar.pageScrollSize = height;
-            _scrollBar.visible = _source != null && _source.height > height;
+        if (getChildAt(numChildren - 1) != _scrollBar) {
+            addChildAt(_scrollBar, numChildren - 1);
         }
+        _scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
+        _scrollBar.lineScrollSize = 10.0;
+        _scrollBar.pageScrollSize = height;
+        _scrollBar.visible = _source != null && _source.height > height;
     }
 
     private function get_source(): DisplayObject {
@@ -99,7 +97,7 @@ class BaseScrollPane extends UIComponent {
         source.y = -scrollY;
         if (source.y > 0.0) source.y = 0.0;
         if (source.y < -(source.height - height)) source.y = -(source.height - height);
-        if (_scrollBar != null) _scrollBar.validateNow();
+        _scrollBar.validateNow();
         return source.y;
     }
 
@@ -118,7 +116,7 @@ class BaseScrollPane extends UIComponent {
     private function onMouseWheel(event: MouseEvent): Void {
         if (source.height < height) return;
         scrollY = scrollY - event.delta;
-        if (_scrollBar != null) _scrollBar.scrollPosition = scrollY;
+        _scrollBar.scrollPosition = scrollY;
     }
 
     private function onScrollEvent(event: ScrollEvent): Void {

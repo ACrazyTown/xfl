@@ -1,5 +1,6 @@
 package openfl.controls;
 
+import openfl.containers.BaseScrollPane;
 import openfl.controls.dataGridClasses.HeaderRenderer;
 import openfl.controls.dataGridClasses.DataGridColumn;
 import openfl.controls.listClasses.CellRenderer;
@@ -19,7 +20,7 @@ import xfl.XFLAssets;
 /**
  * Data grid
  */
-class DataGrid extends UIComponent {
+class DataGrid extends BaseScrollPane {
 
     public var columns : Array<DataGridColumn>;
 
@@ -35,7 +36,9 @@ class DataGrid extends UIComponent {
 
     public var length: Int;
 
-    private var displayObjects: Array<DisplayObject>;
+    private var headerDisplayObjects: Array<DisplayObject>;
+    private var dataDisplayObjects: Array<DisplayObject>;
+    private var scrollPaneSource: Sprite;
 
     /**
      * Public constructor
@@ -43,7 +46,8 @@ class DataGrid extends UIComponent {
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments/* != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid")*/);
-        displayObjects = new Array<DisplayObject>();
+        headerDisplayObjects = new Array<DisplayObject>();
+        dataDisplayObjects = new Array<DisplayObject>();
         columns = new Array<DataGridColumn>();
         rendererStyles = new Map<String, Dynamic>();
         _width = 0;
@@ -54,6 +58,8 @@ class DataGrid extends UIComponent {
         height = 0;
         rowHeight = 0.0;
         mouseChildren = true;
+        scrollPaneSource = new Sprite();
+        source = scrollPaneSource;
         draw();
     }
 
@@ -80,7 +86,7 @@ class DataGrid extends UIComponent {
     }
 
     public function getCellRendererAt(row: Int, column: Int): ICellRenderer {
-        return cast(displayObjects[columns.length + (row * columns.length + column)], ICellRenderer);
+        return cast(dataDisplayObjects[columns.length + ((row - 1) * columns.length + column)], ICellRenderer);
     }
 
     public function getItemAt(rowIdx: Int): Dynamic {
@@ -99,9 +105,14 @@ class DataGrid extends UIComponent {
     }
 
     override private function draw() {
-        for (displayObject in displayObjects) {
+        for (displayObject in headerDisplayObjects) {
             removeChild(displayObject);
         }
+        headerDisplayObjects.splice(0, headerDisplayObjects.length);
+        for (displayObject in dataDisplayObjects) {
+            scrollPaneSource.removeChild(displayObject);
+        }
+        dataDisplayObjects.splice(0, dataDisplayObjects.length);
         var headerRenderer: Class<Dynamic> = styles.get("headerRenderer") != null?cast(styles.get("headerRenderer"), Class<Dynamic>):null;
         var cellRenderer: Class<Dynamic> = styles.get("cellRenderer") != null?cast(styles.get("cellRenderer"), Class<Dynamic>):null;
         for (column in columns) {
@@ -109,7 +120,6 @@ class DataGrid extends UIComponent {
             column.cellRenderer = cellRenderer;
         }
         if (headerRenderer == null || cellRenderer == null) return;
-        displayObjects = new Array<DisplayObject>();
         var _x: Float = 0.0;
         var columnIdx: Int = 0;
         var headerTextFormat: TextFormat = styles.get("headerTextFormat") != null?cast(styles.get("headerTextFormat"), TextFormat):null;
@@ -130,7 +140,7 @@ class DataGrid extends UIComponent {
             headerRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
             headerRenderer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEventMove);
             addChild(headerRenderer);
-            displayObjects.push(headerRenderer);
+            headerDisplayObjects.push(headerRenderer);
             _x+= column.width;
         }
         if (_dataProvider != null) {
@@ -167,13 +177,23 @@ class DataGrid extends UIComponent {
                     cellRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
                     cellRenderer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEventMove);
                     cellRenderer.addEventListener(MouseEvent.CLICK, onMouseEventClick);
-                    addChild(cellRenderer);
-                    displayObjects.push(cellRenderer);
+                    scrollPaneSource.addChild(cellRenderer);
+                    dataDisplayObjects.push(cellRenderer);
                     _x+= column.width;
                     columnIdx++;
                 }
             }
         }
+        scrollPaneSource.y = alignDisplayObjects(headerDisplayObjects);
+        alignDisplayObjects(dataDisplayObjects);
+        update();
+        if (verticalScrollBar.visible == true) {
+            realignDisplayObjectsWidth(headerDisplayObjects, verticalScrollBar.width);
+            realignDisplayObjectsWidth(dataDisplayObjects, verticalScrollBar.width);
+        }
+    }
+
+    private function alignDisplayObjects(displayObjects: Array<DisplayObject>, verticalScrollBarSize: Float = 0.0): Float {
         var _y: Float = 0.0;
         if (displayObjects.length > 0) {
             for (i in 0...Std.int(displayObjects.length / columns.length)) {
@@ -182,18 +202,37 @@ class DataGrid extends UIComponent {
                     var cell: DisplayObject = displayObjects[(i * columns.length) + j];
                     if (cell.height > cellHeight) cellHeight = cell.height;
                 }
-                if (i > 0 && rowHeight > cellHeight) cellHeight = rowHeight;
+                if (rowHeight > cellHeight) cellHeight = rowHeight;
+                var _x: Float = 0.0;
                 for (j in 0...columns.length) {
                     var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    cell.x = _x;
                     cell.y = _y;
                     cell.height = cellHeight;
-                    if (i == 0) {
+                    if (Std.is(cell, HeaderRenderer)) {
                         cast(cell, HeaderRenderer).init();
                     } else {
                         cast(cell, CellRenderer).init();
                     }
+                    cell.width-= verticalScrollBarSize / columns.length;
+                    _x+= cell.width;
                 }
                 _y+= cellHeight;
+            }
+        }
+        return _y;
+    }
+
+    private function realignDisplayObjectsWidth(displayObjects: Array<DisplayObject>, verticalScrollBarSize: Float = 0.0): Void {
+        if (displayObjects.length > 0) {
+            for (i in 0...Std.int(displayObjects.length / columns.length)) {
+                var _x: Float = 0.0;
+                for (j in 0...columns.length) {
+                    var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    cell.x = _x;
+                    cell.width-= verticalScrollBarSize / columns.length;
+                    _x+= cell.width;
+                }
             }
         }
     }
@@ -236,13 +275,13 @@ class DataGrid extends UIComponent {
         if (Std.is(cast(event.target, DisplayObject), HeaderRenderer) == true) {
             var mouseHeaderRenderer: HeaderRenderer = cast(event.target, HeaderRenderer);
             for (columnIdx in 0...columns.length) {
-                cast(displayObjects[columnIdx], HeaderRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                cast(headerDisplayObjects[columnIdx], HeaderRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
             }
         }
         if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
             var mouseCellRenderer: CellRenderer = cast(event.target, CellRenderer);
             for (columnIdx in 0...columns.length) {
-                var cellColumnRenderer: CellRenderer = cast(displayObjects[(mouseCellRenderer.listData.index * columns.length) + columnIdx], CellRenderer);
+                var cellColumnRenderer: CellRenderer = cast(dataDisplayObjects[((mouseCellRenderer.listData.index - 1) * columns.length) + columnIdx], CellRenderer);
                 cellColumnRenderer.setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
             }
         }
