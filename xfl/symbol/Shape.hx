@@ -109,6 +109,7 @@ class Shape extends ShapeBase {
 			}
 			flushCommands(edges, fills, fillStyles, lineStyles);
 		}
+		cacheAsBitmap = true;
 	}
 
 	private function parseHexCmd(cmd: String): Int {
@@ -120,5 +121,66 @@ class Shape extends ShapeBase {
 		}
 		return value;
 	}
+
+	/*
+	// Note: This does not yet work with OpenFL
+    #if flash
+        @:setter(scaleX) public function set_scaleX(_scaleX: Float): Void {
+			cacheAsBitmap = false;
+			super.scaleX = _scaleX;
+			cacheAsBitmap = true;
+			return super.scaleX;
+        }
+
+        @:setter(scaleY) function set_scaleY(_scaleY: Float): Void {
+			cacheAsBitmap = false;
+			super.scaleY = _scaleY;
+			cacheAsBitmap = true;
+			return super.scaleY;
+        }
+
+        @:setter(width) public function set_width(_width: Float) {
+			cacheAsBitmap = false;
+			super.width = _width;
+			cacheAsBitmap = true;
+			return super.width;
+        }
+
+        @:setter(height) public function set_height(_height: Float) {
+			cacheAsBitmap = false;
+			super.height = _height;
+			cacheAsBitmap = true;
+			return super.height;
+        }
+    #else
+        public override function set_scaleX(_scaleX: Float): Float {
+			cacheAsBitmap = false;
+			super.scaleX = _scaleX;
+			cacheAsBitmap = true;
+			return super.scaleX;
+        }
+
+        public override function set_scaleY(_scaleY: Float): Float {
+			cacheAsBitmap = false;
+			super.scaleY = _scaleY;
+			cacheAsBitmap = true;
+			return super.scaleY;
+        }
+
+        public override function set_width(_width: Float): Float {
+			cacheAsBitmap = false;
+			super.width = _width;
+			cacheAsBitmap = true;
+			return super.width;
+        }
+
+        public override function set_height(_height: Float): Float {
+			cacheAsBitmap = false;
+			super.height = _height;
+			cacheAsBitmap = true;
+			return super.height;
+        }
+    #end
+	*/
 
 }
