@@ -3,6 +3,7 @@ package openfl.containers;
 import openfl.core.UIComponent;
 import openfl.controls.ScrollBar;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Rectangle;
@@ -60,6 +61,7 @@ class BaseScrollPane extends UIComponent {
     }
 
     public function update() : Void {
+        disableSourceChildren();
         var maskSprite: Sprite = cast(mask, Sprite);
         maskSprite.graphics.clear();
         if (width > 0.0 && height > 0.0) {
@@ -67,13 +69,11 @@ class BaseScrollPane extends UIComponent {
             maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
             maskSprite.graphics.endFill();
         }
-        if (getChildAt(numChildren - 1) != _scrollBar) {
-            addChildAt(_scrollBar, numChildren - 1);
-        }
         _scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
         _scrollBar.lineScrollSize = 10.0;
         _scrollBar.pageScrollSize = height;
         _scrollBar.visible = _source != null && _source.height > height;
+        updateSourceChildren();
     }
 
     private function get_source(): DisplayObject {
@@ -93,12 +93,45 @@ class BaseScrollPane extends UIComponent {
     }
 
     private function set_scrollY(scrollY: Float): Float {
+        disableSourceChildren();
         if (source.height < height) return source.y = 0.0;
         source.y = -scrollY;
         if (source.y > 0.0) source.y = 0.0;
         if (source.y < -(source.height - height)) source.y = -(source.height - height);
         _scrollBar.validateNow();
+        updateSourceChildren();
         return source.y;
+    }
+
+    private function disableSourceChildren(): Void {
+        /*
+        // TODO: a.drewke, not sure if this means any speed up
+        if (getChildAt(numChildren - 1) != _scrollBar) {
+            addChildAt(_scrollBar, numChildren - 1);
+        }
+        if (_source != null && Std.is(_source, DisplayObjectContainer) == true) {
+            var container: DisplayObjectContainer = cast(_source, DisplayObjectContainer);
+            for (i in 0...container.numChildren - 1) {
+                var child: DisplayObject = container.getChildAt(i);
+                child.visible = false;
+            }
+        }
+        */
+    }
+
+    private function updateSourceChildren(): Void {
+        if (getChildAt(numChildren - 1) != _scrollBar) {
+            addChildAt(_scrollBar, numChildren - 1);
+        }
+        if (_source != null && Std.is(_source, DisplayObjectContainer) == true) {
+            var container: DisplayObjectContainer = cast(_source, DisplayObjectContainer);
+            for (i in 0...container.numChildren - 1) {
+                var child: DisplayObject = container.getChildAt(i);
+                child.visible = 
+                    child.y + child.height > scrollY &&
+                    child.y < scrollY + height;
+            }
+        }
     }
 
     private function get_verticalScrollBar(): ScrollBar {

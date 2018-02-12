@@ -9,6 +9,7 @@ import openfl.controls.listClasses.ListData;
 import openfl.core.UIComponent;
 import openfl.data.DataProvider;
 import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
 import openfl.display.Sprite;
 import openfl.display.Shape;
 import openfl.events.MouseEvent;
@@ -36,8 +37,8 @@ class DataGrid extends BaseScrollPane {
 
     public var length: Int;
 
-    private var headerDisplayObjects: Array<DisplayObject>;
-    private var dataDisplayObjects: Array<DisplayObject>;
+    private var headerDisplayObjects: Array<DisplayObjectContainer>;
+    private var dataDisplayObjects: Array<DisplayObjectContainer>;
     private var scrollPaneSource: Sprite;
 
     /**
@@ -46,8 +47,8 @@ class DataGrid extends BaseScrollPane {
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments/* != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid")*/);
-        headerDisplayObjects = new Array<DisplayObject>();
-        dataDisplayObjects = new Array<DisplayObject>();
+        headerDisplayObjects = new Array<DisplayObjectContainer>();
+        dataDisplayObjects = new Array<DisplayObjectContainer>();
         columns = new Array<DataGridColumn>();
         rendererStyles = new Map<String, Dynamic>();
         _width = 0;
@@ -123,6 +124,9 @@ class DataGrid extends BaseScrollPane {
         var _x: Float = 0.0;
         var columnIdx: Int = 0;
         var headerTextFormat: TextFormat = styles.get("headerTextFormat") != null?cast(styles.get("headerTextFormat"), TextFormat):null;
+        var headerRow : DisplayObjectContainer = new DisplayObjectContainer();
+        headerRow.x = 0.0;
+        headerRow.y = 0.0;
         for (column in columns) {
             var headerRenderer: HeaderRenderer = Type.createInstance(column.headerRenderer, []);
             headerRenderer.name = "datagrid.header." + columnIdx;
@@ -135,20 +139,22 @@ class DataGrid extends BaseScrollPane {
             headerRenderer.x = _x;
             headerRenderer.y = 0.0;
             headerRenderer.setSize(column.width, headerRenderer.textField.height);
-            headerRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEventMove);
-            headerRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEventMove);
-            headerRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
-            headerRenderer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEventMove);
-            addChild(headerRenderer);
-            headerDisplayObjects.push(headerRenderer);
+            headerRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
+            headerRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
+            headerRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
+            headerRenderer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+            headerRow.addChild(headerRenderer);
             _x+= column.width;
         }
+        headerDisplayObjects.push(headerRow);
+        addChild(headerRow);
         if (_dataProvider != null) {
             var cellTextFormat: TextFormat = rendererStyles.get("textFormat") != null?cast(rendererStyles.get("textFormat"), TextFormat):null;
             for (i in 0..._dataProvider.length) {
                 _x = 0;
                 var rowData: Dynamic = _dataProvider.getItemAt(i);
                 var columnIdx = 0; 
+                var dataRow : DisplayObjectContainer = new DisplayObjectContainer();
                 for (column in columns) {
                     var cellRenderer: CellRenderer = Type.createInstance(column.cellRenderer, []);
                     var listData: ListData = new ListData();
@@ -172,16 +178,17 @@ class DataGrid extends BaseScrollPane {
                     cellRenderer.setSize(column.width, cellHeight);
                     cellRenderer.data = rowData;
                     cellRenderer.listData = listData;
-                    cellRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEventMove);
-                    cellRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEventMove);
-                    cellRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
-                    cellRenderer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEventMove);
+                    cellRenderer.addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
+                    cellRenderer.addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
+                    cellRenderer.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
+                    cellRenderer.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
                     cellRenderer.addEventListener(MouseEvent.CLICK, onMouseEventClick);
-                    scrollPaneSource.addChild(cellRenderer);
-                    dataDisplayObjects.push(cellRenderer);
                     _x+= column.width;
                     columnIdx++;
+                    dataRow.addChild(cellRenderer);
                 }
+                scrollPaneSource.addChild(dataRow);
+                dataDisplayObjects.push(dataRow);
             }
         }
         scrollPaneSource.y = alignDisplayObjects(headerDisplayObjects);
@@ -193,21 +200,20 @@ class DataGrid extends BaseScrollPane {
         }
     }
 
-    private function alignDisplayObjects(displayObjects: Array<DisplayObject>, verticalScrollBarSize: Float = 0.0): Float {
+    private function alignDisplayObjects(displayObjects: Array<DisplayObjectContainer>, verticalScrollBarSize: Float = 0.0): Float {
         var _y: Float = 0.0;
         if (displayObjects.length > 0) {
-            for (i in 0...Std.int(displayObjects.length / columns.length)) {
+            for (i in 0...Std.int(displayObjects.length)) {
                 var cellHeight: Float = 0.0;
                 for (j in 0...columns.length) {
-                    var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    var cell: DisplayObject = displayObjects[i].getChildAt(j);
                     if (cell.height > cellHeight) cellHeight = cell.height;
                 }
                 if (rowHeight > cellHeight) cellHeight = rowHeight;
                 var _x: Float = 0.0;
                 for (j in 0...columns.length) {
-                    var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    var cell: DisplayObject = displayObjects[i].getChildAt(j);
                     cell.x = _x;
-                    cell.y = _y;
                     cell.height = cellHeight;
                     if (Std.is(cell, HeaderRenderer)) {
                         cast(cell, HeaderRenderer).init();
@@ -217,18 +223,19 @@ class DataGrid extends BaseScrollPane {
                     cell.width-= verticalScrollBarSize / columns.length;
                     _x+= cell.width;
                 }
+                displayObjects[i].y = _y;
                 _y+= cellHeight;
             }
         }
         return _y;
     }
 
-    private function realignDisplayObjectsWidth(displayObjects: Array<DisplayObject>, verticalScrollBarSize: Float = 0.0): Void {
+    private function realignDisplayObjectsWidth(displayObjects: Array<DisplayObjectContainer>, verticalScrollBarSize: Float = 0.0): Void {
         if (displayObjects.length > 0) {
-            for (i in 0...Std.int(displayObjects.length / columns.length)) {
+            for (i in 0...displayObjects.length) {
                 var _x: Float = 0.0;
                 for (j in 0...columns.length) {
-                    var cell: DisplayObject = displayObjects[(i * columns.length) + j];
+                    var cell: DisplayObject = displayObjects[i].getChildAt(j);
                     cell.x = _x;
                     cell.width-= verticalScrollBarSize / columns.length;
                     _x+= cell.width;
@@ -271,18 +278,23 @@ class DataGrid extends BaseScrollPane {
         draw();
     }
 
-    private function onMouseEventMove(event: MouseEvent) : Void {
-        if (Std.is(cast(event.target, DisplayObject), HeaderRenderer) == true) {
+    private function onMouseEvent(event: MouseEvent) : Void {
+        if (Std.is(event.target, HeaderRenderer) == true) {
             var mouseHeaderRenderer: HeaderRenderer = cast(event.target, HeaderRenderer);
             for (columnIdx in 0...columns.length) {
-                cast(headerDisplayObjects[columnIdx], HeaderRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                var headerRenderer: DisplayObject = headerDisplayObjects[0].getChildAt(columnIdx);
+                if (headerRenderer != null) {
+                    cast(headerRenderer, HeaderRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                }
             }
         }
-        if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
+        if (Std.is(event.target, CellRenderer) == true) {
             var mouseCellRenderer: CellRenderer = cast(event.target, CellRenderer);
             for (columnIdx in 0...columns.length) {
-                var cellColumnRenderer: CellRenderer = cast(dataDisplayObjects[((mouseCellRenderer.listData.index - 1) * columns.length) + columnIdx], CellRenderer);
-                cellColumnRenderer.setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                var cellRenderer: DisplayObject = dataDisplayObjects[mouseCellRenderer.listData.index - 1].getChildAt(columnIdx);
+                if (cellRenderer != null) {
+                    cast(cellRenderer, CellRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                }
             }
         }
     }
