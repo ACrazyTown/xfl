@@ -109,7 +109,10 @@ class Shape extends ShapeBase {
 			}
 			flushCommands(edges, fills, fillStyles, lineStyles);
 		}
+		/*
+		// Note: This does not yet work with OpenFL
 		cacheAsBitmap = true;
+		*/
 	}
 
 	private function parseHexCmd(cmd: String): Int {
