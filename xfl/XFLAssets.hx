@@ -39,13 +39,7 @@ class XFLAssets {
      *  @return haxe.xml.Fast
      */
     public function getXFLXMLAsset(assetName: String) : haxe.xml.Fast {
-        var asset: haxe.xml.Fast = new haxe.xml.Fast(Xml.parse(openfl.Assets.getText(assetName)).firstElement());
-        if (asset != null) {
-            if (XFL.ASSETS_CLEARCACHE == true) {
-                openfl.Assets.cache.clear();
-            }
-        }
-        return asset;
+        return XFL.getXMLData(assetName);
     }
 
     /**

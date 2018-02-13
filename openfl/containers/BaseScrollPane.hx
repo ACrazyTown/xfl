@@ -38,9 +38,10 @@ class BaseScrollPane extends UIComponent {
         _scrollBar = getXFLScrollBar("ScrollBar");
         if (_scrollBar == null) {
             _scrollBar = new ScrollBar();
-            addChild(_scrollBar);
+        } else {
+            removeChild(_scrollBar);
         }
-        _scrollBar.visible = true;
+        _scrollBar.visible = false;
         _scrollBar.x = width - _scrollBar.width;
         _scrollBar.y = 0.0;
         _scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
@@ -69,10 +70,18 @@ class BaseScrollPane extends UIComponent {
             maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
             maskSprite.graphics.endFill();
         }
+        _scrollBar.x = _width - _scrollBar.width;
+        _scrollBar.y = 0.0;
+        _scrollBar.setSize(_scrollBar.width, _height);
         _scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
         _scrollBar.lineScrollSize = 10.0;
         _scrollBar.pageScrollSize = height;
         _scrollBar.visible = _source != null && _source.height > height;
+        if (_scrollBar.visible == true) {
+            addChild(_scrollBar);
+        } else {
+            removeChild(_scrollBar);
+        }
         updateSourceChildren();
     }
 
@@ -106,7 +115,7 @@ class BaseScrollPane extends UIComponent {
     private function disableSourceChildren(): Void {
         /*
         // TODO: a.drewke, not sure if this means any speed up
-        if (getChildAt(numChildren - 1) != _scrollBar) {
+        if (_scrollBar.visible == true && getChildAt(numChildren - 1) != _scrollBar) {
             addChildAt(_scrollBar, numChildren - 1);
         }
         if (_source != null && Std.is(_source, DisplayObjectContainer) == true) {
@@ -120,7 +129,7 @@ class BaseScrollPane extends UIComponent {
     }
 
     private function updateSourceChildren(): Void {
-        if (getChildAt(numChildren - 1) != _scrollBar) {
+        if (_scrollBar.visible == true && getChildAt(numChildren - 1) != _scrollBar) {
             addChildAt(_scrollBar, numChildren - 1);
         }
         if (_source != null && Std.is(_source, DisplayObjectContainer) == true) {
@@ -153,7 +162,7 @@ class BaseScrollPane extends UIComponent {
     }
 
     private function onScrollEvent(event: ScrollEvent): Void {
-        if (_scrollBar != null) scrollY = _scrollBar.scrollPosition;
+        scrollY = _scrollBar.scrollPosition;
     }
 
 }

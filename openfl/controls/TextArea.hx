@@ -21,8 +21,8 @@ import xfl.dom.DOMTimeline;
  */
 class TextArea extends UIComponent {
 
-    public var maxVerticalScrollPosition: Float;
-    public var verticalScrollPosition: Float;
+    public var maxVerticalScrollPosition(get, never): Int;
+    public var verticalScrollPosition(get, set): Int;
 
     public var maxChars(get, set): Int;
     public var htmlText(get, set): String;
@@ -69,6 +69,20 @@ class TextArea extends UIComponent {
         }
     }
 
+    public function get_maxVerticalScrollPosition(): Int {
+        return textField.numLines - textField.bottomScrollV + 1;
+    }
+
+    public function get_verticalScrollPosition(): Int {
+        return textField.scrollV;
+    }
+
+    public function set_verticalScrollPosition(verticalScrollPosition: Int): Int {
+        textField.scrollV = verticalScrollPosition;
+        scrollBar.scrollPosition = verticalScrollPosition - 1;
+        return textField.scrollV;
+    }
+
     public function get_maxChars(): Int {
         return textField.maxChars;
     }
@@ -78,14 +92,8 @@ class TextArea extends UIComponent {
     }
 
     public function set_htmlText(_htmlText: String): String {
-        var atEnd = textField.scrollV == textField.maxScrollV;
         textField.htmlText = _htmlText;
         validateNow();
-        if (atEnd == true &&
-            scrollBar.maxScrollPosition > 0.0) {
-            scrollBar.scrollPosition = scrollBar.maxScrollPosition;
-            textField.scrollV = textField.maxScrollV;
-        }
         return textField.htmlText;
     }
 
@@ -94,14 +102,8 @@ class TextArea extends UIComponent {
     }
 
     public function set_text(_text: String): String {
-        var atEnd = textField.scrollV == textField.maxScrollV;
         textField.text = _text;
         validateNow();
-        if (atEnd == true &&
-            scrollBar.maxScrollPosition > 0.0) {
-            scrollBar.scrollPosition = scrollBar.maxScrollPosition;
-            textField.scrollV = textField.maxScrollV;
-        }
         return textField.text;
     }
 

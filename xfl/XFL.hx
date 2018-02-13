@@ -42,6 +42,18 @@ class XFL {
 		}
 	}
 
+	public static function getXMLData(name: String) {
+		var textAsset: String = openfl.Assets.getText(name);
+        if (textAsset != null) {
+            if (ASSETS_CLEARCACHE == true) {
+                Assets.cache.clear();
+            }
+			return new haxe.xml.Fast(Xml.parse(textAsset).firstElement());
+        }
+		trace("getXMLData(): xml data not found: " + name);
+        return null;
+	}
+
 	public function getBitmapData(name:String): BitmapData {
 		var bitmapData: BitmapData = null;
 		for (document in documents) {
