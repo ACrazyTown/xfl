@@ -1,5 +1,7 @@
 package openfl.controls;
 
+import com.slipshift.engine.helpers.Utils;
+
 import openfl.containers.BaseScrollPane;
 import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
@@ -320,6 +322,7 @@ class ScrollBar extends UIComponent {
             case MouseEvent.MOUSE_DOWN:
                 setScrollThumbState("down");
                 scrollThumbMouseMoveYRelative = getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
+                scrollThumbMouseMoveYRelative*= getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").scaleY;
                 stage.addEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
                 stage.addEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
             default:
@@ -342,6 +345,7 @@ class ScrollBar extends UIComponent {
             case MouseEvent.MOUSE_MOVE:
                 var thumbableHeight = scrollTrackHeight - scrollThumbSkinHeight;
                 var skinMouseY: Float = getXFLDisplayObject("ScrollTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
+                skinMouseY*= getXFLDisplayObject("ScrollTrack_skin").scaleY;
                 skinMouseY-= scrollThumbMouseMoveYRelative;
                 _scrollPosition = 
                     (skinMouseY / thumbableHeight) * (_maxScrollPosition - _minScrollPosition);
