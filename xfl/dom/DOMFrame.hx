@@ -32,11 +32,11 @@ class DOMFrame {
 				case "DOMSymbolInstance":
 					frameElements.push(DOMSymbolInstance.parse(childElement));
 				case "DOMDynamicText":
-					frameElements.push(DOMDynamicText.parse(childElement));
+					frameElements.push(DOMDynamicText.parse(childElement, DOMDynamicText.TYPE_DYNAMIC));
 				case "DOMStaticText":
 					frameElements.push(DOMStaticText.parse(childElement));
 				case "DOMInputText":
-					frameElements.push(DOMDynamicText.parse(childElement));
+					frameElements.push(DOMDynamicText.parse(childElement, DOMDynamicText.TYPE_INPUT));
 				case "DOMGroup":
 					for (frameElement in DOMFrame.parseElements(childElement.node.members.elements)) {
 						frameElements.push(frameElement);

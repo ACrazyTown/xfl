@@ -5,6 +5,10 @@ import haxe.xml.Fast;
 
 class DOMDynamicText {
 
+	public static var TYPE_NONE: Int = 0;
+	public static var TYPE_DYNAMIC: Int = 1;
+	public static var TYPE_INPUT: Int = 2;
+
 	public var height: Float;
 	public var isSelectable: Bool;
 	public var multiLine: Bool;
@@ -13,13 +17,15 @@ class DOMDynamicText {
 	public var name: String;
 	public var textRuns: Array<DOMTextRun>;
 	public var width: Float;
+	public var type: Int;
 
 	public function new() {
 		textRuns = new Array <DOMTextRun> ();
 	}
 
-	public static function parse(xml: Fast): DOMDynamicText {
+	public static function parse(xml: Fast, type: Int): DOMDynamicText {
 		var dynamicText = new DOMDynamicText ();
+		dynamicText.type = type;
 		dynamicText.height = Std.parseFloat (xml.att.height);
 		dynamicText.width = Std.parseFloat (xml.att.width);
 		if (xml.has.name) dynamicText.name = xml.att.name;

@@ -10,6 +10,7 @@ import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
 import openfl.geom.Matrix;
 import openfl.text.TextField;
+import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import openfl.text.TextFormatAlign;
 import xfl.dom.DOMBitmapItem;
@@ -69,6 +70,7 @@ class Symbols {
 
 	public static function createDynamicText(instance: DOMDynamicText): TextField {
 		var textField = new TextField();
+		textField.type = instance.type == DOMDynamicText.TYPE_INPUT?TextFieldType.INPUT:TextFieldType.DYNAMIC;
 		textField.width = instance.width;
 		textField.height = instance.height;
 		textField.name = instance.name;
@@ -80,6 +82,7 @@ class Symbols {
 		if (instance.matrix != null) {
 			textField.transform.matrix = instance.matrix;
 		}
+
 		textField.x+= instance.left;
 		var format = new TextFormat();
 		for (textRun in instance.textRuns) {
