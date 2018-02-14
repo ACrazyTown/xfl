@@ -91,7 +91,7 @@ class Shared {
 		for (layer in layers) {
 			// TODO: a.drewke, handle hit area correctly
 			if (layer.name == "HitArea" || layer.name == "hitbox") continue;
-			if (layer.type != "mask" || layer.visible == false) {
+			if (layer.type != "mask") {
 				maskDisplayObjects[layer.index] = null;
 				currentLayer++;
 				continue;
