@@ -6,7 +6,6 @@ class DOMLayer {
 
 	public var index: Int;
 	public var name: String;
-	public var visible: Bool;
 	public var animationType: String;
 	public var frames: Array<DOMFrame>;
 	public var type: String;
@@ -20,7 +19,6 @@ class DOMLayer {
 		var layer = new DOMLayer();
 		layer.index = index;
 		layer.name = xml.has.name == true?xml.att.name:null;
-		layer.visible = xml.has.visible == false || xml.att.visible == "true";
 		if (xml.has.animationType) layer.animationType = xml.att.animationType;
 		if (xml.has.layerType) layer.type = xml.att.layerType;
 		layer.parentLayerIndex = xml.has.parentLayerIndex == true?Std.parseInt(xml.att.parentLayerIndex):-1;
