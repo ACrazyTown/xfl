@@ -13,7 +13,7 @@ I am developing XFL while beeing hired to port a medium sized browser game front
 XFL is beeing programmed by Andreas Drewke at Pixel Racoons GmbH. Pixel Racoons allows me to open source this! Thank you.
 XFL basic functionality like parsing was derived from "https://github.com/haxenme-old/xfl".
 
-1.4. What is already working without claiming to be 100% complete
+1.4. What is already working without claiming to be 100% complete?
 
   - XFL parsing
   - XFL asset management, like retrieving bitmaps, sounds, ... from XFL
@@ -30,7 +30,7 @@ XFL basic functionality like parsing was derived from "https://github.com/haxenm
     - openfl.controls.Slider
     - openfl.controls.TextArea
 
-1.5. Notes
+1.5. Notes!
 
 This is not finished yet! And the code still looks ugly as I did all the things with time in mind. I will maybe clean it up later and document on things and such.
 
