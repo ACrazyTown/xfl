@@ -14,22 +14,23 @@
 	XFL basic functionality like parsing was derived from "https://github.com/haxenme-old/xfl".
 
 1.4 What is already working without claiming to be 100% complete
-	- XFL parsing
-	- XFL asset management, like retrieving bitmaps, sounds, ... from XFL
-	- XFL sprite, XFL movieclip, XFL based shapes, UI components, ... creation from XFL/XML files
-	- XFL tween functionality which derived most of its API from Greensock tween library
-	- UI element related classes using XFL skinning
-	    - openfl.core.UIElement
-	    - openfl.containers.BaseScrollPane,openfl.containers.ScrollPane
-	    - openfl.controls.CheckBox
-	    - openfl.controls.DataGrid
-	    - openfl.controls.LabelButton
-	    - openfl.controls.RadioButton
-	    - openfl.controls.ScrollBar, openfl.controls.UIScrollBar
-	    - openfl.controls.Slider
-	    - openfl.controls.TextArea
+
+  - XFL parsing
+  - XFL asset management, like retrieving bitmaps, sounds, ... from XFL
+  - XFL sprite, XFL movieclip, XFL based shapes, UI components, ... creation from XFL/XML files
+  - XFL tween functionality which derived most of its API from Greensock tween library
+  - UI element related classes using XFL skinning
+    - openfl.core.UIElement
+    - openfl.containers.BaseScrollPane,openfl.containers.ScrollPane
+    - openfl.controls.CheckBox
+    - openfl.controls.DataGrid
+    - openfl.controls.LabelButton
+    - openfl.controls.RadioButton
+    - openfl.controls.ScrollBar, openfl.controls.UIScrollBar
+    - openfl.controls.Slider
+    - openfl.controls.TextArea
 
 1.5 Notes
 
-	This is not finished yet! And the code still looks ugly as I did all the things with time in mind. I will maybe clean it up later and document on things and such.
+    This is not finished yet! And the code still looks ugly as I did all the things with time in mind. I will maybe clean it up later and document on things and such.
 
