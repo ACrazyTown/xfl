@@ -76,7 +76,6 @@ class ScrollBar extends UIComponent {
         scrollThumbMouseMoveYRelative = 0.0;
 
         getXFLMovieClip("ScrollTrack_skin").visible = true;
-        getXFLMovieClip("focusRectSkin").visible = false;
         getXFLMovieClip("ScrollThumb_upSkin").visible = false;
         getXFLMovieClip("ScrollThumb_upSkin").mouseChildren = false;
         getXFLMovieClip("ScrollThumb_overSkin").visible = false;

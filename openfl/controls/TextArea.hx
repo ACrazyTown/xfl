@@ -137,7 +137,6 @@ class TextArea extends UIComponent {
     private function layoutChildren() {
         if (getXFLDisplayObject("TextArea_disabledSkin") != null) getXFLDisplayObject("TextArea_disabledSkin").visible = true;
         if (getXFLDisplayObject("TextArea_upSkin") != null) getXFLDisplayObject("TextArea_upSkin").visible = true;
-        if (getXFLDisplayObject("focusRectSkin") != null) getXFLDisplayObject("focusRectSkin").visible = true;
         if (getXFLDisplayObject("TextArea_disabledSkin") != null) getXFLDisplayObject("TextArea_disabledSkin").visible = true;
         if (getXFLDisplayObject("TextArea_disabledSkin") != null) getXFLDisplayObject("TextArea_disabledSkin").x = 0.0;
         if (getXFLDisplayObject("TextArea_disabledSkin") != null) getXFLDisplayObject("TextArea_disabledSkin").y = 0.0;
@@ -147,10 +146,6 @@ class TextArea extends UIComponent {
         if (getXFLDisplayObject("TextArea_upSkin") != null) getXFLDisplayObject("TextArea_upSkin").y = 0.0;
         if (getXFLDisplayObject("TextArea_upSkin") != null) getXFLDisplayObject("TextArea_upSkin").width = width;
         if (getXFLDisplayObject("TextArea_upSkin") != null) getXFLDisplayObject("TextArea_upSkin").height = height;
-        if (getXFLDisplayObject("focusRectSkin") != null) getXFLDisplayObject("focusRectSkin").x = 0.0;
-        if (getXFLDisplayObject("focusRectSkin") != null) getXFLDisplayObject("focusRectSkin").y = 0.0;
-        if (getXFLDisplayObject("focusRectSkin") != null) getXFLDisplayObject("focusRectSkin").width = width;
-        if (getXFLDisplayObject("focusRectSkin") != null) getXFLDisplayObject("focusRectSkin").height = height;
     }
 
     private function onScrollEvent(event: ScrollEvent): Void {

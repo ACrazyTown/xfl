@@ -10,6 +10,7 @@ import xfl.dom.DOMTimeline;
 class UIComponent extends XFLSprite {
 
     public var disabled(get,set): Bool;
+    public var enabled(get,set): Bool;
 
     private var _disabled: Bool;
     private var _originalWidth: Float;
@@ -44,6 +45,9 @@ class UIComponent extends XFLSprite {
             // remove component avatar
             removeChild(getXFLDisplayObject("Component_avatar"));
         }
+
+        // determine focus rect skin, its not supported yet
+        if (getXFLDisplayObject("focusRectSkin") != null) removeChild(getXFLDisplayObject("focusRectSkin"));
     }
 
     public function get_disabled(): Bool {
@@ -52,6 +56,14 @@ class UIComponent extends XFLSprite {
 
     public function set_disabled(_disabled: Bool): Bool {
         return this._disabled = _disabled;
+    }
+
+    public function get_enabled(): Bool {
+        return _disabled == false;
+    }
+
+    public function set_enabled(_enabled: Bool): Bool {
+        return this.disabled = _enabled == false;
     }
 
     #if flash

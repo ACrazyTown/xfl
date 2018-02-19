@@ -94,7 +94,7 @@ class XFL {
 				}
 			}
 		}
-		trace("getBitmapDataByPath(): bitmap data not found: " + path);
+		trace("getBitmapDataByPath(): bitmap data not found by path: " + path);
 		return null;
 	}
 
