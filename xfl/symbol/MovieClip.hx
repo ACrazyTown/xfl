@@ -64,7 +64,8 @@ class MovieClip extends xfl.display.MovieClip {
 		if (lastFrame == currentFrame) {
 			currentFrame++;
 			if (currentFrame > totalFrames) {
-				currentFrame = 1;
+				gotoAndStop(1);
+				return;
 			}
 		}
 		update();
