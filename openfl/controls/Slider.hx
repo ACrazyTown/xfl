@@ -18,7 +18,7 @@ class Slider extends UIComponent {
     public var maximum(default,set) : Float = 100.0;
     public var minimum(default,set) : Float = 0.0;
     public var value(default,set) : Float = 0.0;
-    public var snapInterval : Float = 1.0;
+    public var snapInterval(default, set) : Float = 1.0;
     public var liveDragging : Bool = false;
     public var tickInterval: Float = 0.0;
 
@@ -146,12 +146,23 @@ class Slider extends UIComponent {
             newValue = maximum;
             clampedValue = true;
         }
-        value = newValue;
+        value = Std.int(newValue * (1.0 / snapInterval)) / snapInterval;
+        // TODO: dispatch event if value != value with snap interval calculation?
         if (clampedValue == true) {
             dispatchEvent(new Event(Event.CHANGE));
         }
         setState(state);
         return value;
+    }
+
+    private function set_snapInterval(newValue: Float): Float {
+        if (newValue < 0.001) {
+            trace("set_snapInterval(): invalid value: " + newValue);
+        } else {
+            snapInterval = newValue;
+            setState(state);
+        }
+        return snapInterval;
     }
 
 }
