@@ -13,7 +13,7 @@ import openfl.display.FrameLabel;
 class MovieClip extends Sprite {
 
 	public var currentFrame (default, null): Int;
-	public var currentFrameLabel (default, null): String;
+	public var currentFrameLabel (get, never): String;
 	public var currentLabel (default, null): String;
 	public var currentLabels (default, null): Array<FrameLabel>;
 	public var enabled: Bool;
@@ -23,6 +23,10 @@ class MovieClip extends Sprite {
 
 	function new() {
 		super ();
+	}
+
+	private function get_currentFrameLabel(): String {
+		return null;
 	}
 
 	public function flatten(): Void {

@@ -43,6 +43,15 @@ class MovieClip extends xfl.display.MovieClip {
 		update();
 	}
 
+	override private function get_currentFrameLabel(): String {
+		for (label in currentLabels) {
+			if (label.frame + 1 == currentFrame) {
+				return label.name;
+			}
+		}
+		return null;
+	}
+
 	private inline function applyTween(start: Float, end: Float, ratio: Float): Float {
 		return start + ((end - start) * ratio);
 	}
