@@ -63,7 +63,8 @@ class UIComponent extends XFLSprite {
     }
 
     public function set_enabled(_enabled: Bool): Bool {
-        return this.disabled = _enabled == false;
+        this.disabled = _enabled == false;
+        return enabled;
     }
 
     #if flash

@@ -12,6 +12,7 @@ import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
+import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
 import openfl.display.XFLElement;
 import openfl.display.XFLSprite;
@@ -91,6 +92,10 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 
 	public function getXFLUIScrollBar(name: String) : UIScrollBar {
 		return xflImplementation.getXFLUIScrollBar(name);
+	}
+
+	public function getXFLUIComponent(name: String): UIComponent {
+		return xflImplementation.getXFLUIComponent(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {

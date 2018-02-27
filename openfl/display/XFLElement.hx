@@ -9,6 +9,7 @@ import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
+import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.text.TextField;
@@ -38,6 +39,7 @@ interface XFLElement {
     public function getXFLList(name: String) : List;
     public function getXFLScrollBar(name: String): ScrollBar;
     public function getXFLUIScrollBar(name: String): UIScrollBar;
+    public function getXFLUIComponent(name: String): UIComponent;
 
     // values
     public function addValue(key: String, value: String): Void;

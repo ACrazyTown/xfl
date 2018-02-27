@@ -81,7 +81,8 @@ class Slider extends UIComponent {
     private function setState(state: String) {
         getXFLDisplayObject("SliderThumb_" + this.state + "Skin").visible = false;
         this.state = state;
-        getXFLDisplayObject("SliderThumb_" + this.state + "Skin").x = getXFLDisplayObject("SliderTrack_skin").x + (((value - minimum) / (maximum - minimum)) * getXFLDisplayObject("SliderTrack_skin").width);
+        var sliderRange: Float = maximum - minimum;
+        getXFLDisplayObject("SliderThumb_" + this.state + "Skin").x = getXFLDisplayObject("SliderTrack_skin").x + (sliderRange < 0.00001?0.0:((value - minimum) / sliderRange) * getXFLDisplayObject("SliderTrack_skin").width);
         getXFLDisplayObject("SliderThumb_" + this.state + "Skin").visible = true;
         getXFLDisplayObject("SliderTick_skin").x = getXFLDisplayObject("SliderTrack_skin").x + (((value - minimum) / (maximum - minimum)) * getXFLDisplayObject("SliderTrack_skin").width);
     }

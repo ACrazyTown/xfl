@@ -12,6 +12,7 @@ import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
+import openfl.core.UIComponent;
 import openfl.display.XFLElement;
 import openfl.text.TextField;
 
@@ -92,6 +93,10 @@ class XFLSprite implements XFLElement extends Sprite {
 
 	public function getXFLUIScrollBar(name: String) : UIScrollBar {
 		return xflImplementation.getXFLUIScrollBar(name);
+	}
+
+	public function getXFLUIComponent(name: String): UIComponent {
+		return xflImplementation.getXFLUIComponent(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {

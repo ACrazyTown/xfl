@@ -9,6 +9,7 @@ import openfl.controls.ScrollBar;
 import openfl.controls.UIScrollBar;
 import openfl.controls.TextArea;
 import openfl.controls.TextInput;
+import openfl.core.UIComponent;
 import openfl.events.Event;
 import openfl.text.TextField;
 
@@ -125,6 +126,12 @@ class XFLImplementation {
     public function getXFLUIScrollBar(name: String) : UIScrollBar {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, UIScrollBar);
+		return null;
+	}
+
+	public function getXFLUIComponent(name: String): UIComponent {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, UIComponent);
 		return null;
 	}
 
