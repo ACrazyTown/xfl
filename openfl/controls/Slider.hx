@@ -17,12 +17,13 @@ class Slider extends UIComponent {
     public var direction: String;
     public var maximum(default,set) : Float = 100.0;
     public var minimum(default,set) : Float = 0.0;
-    public var value(default,set) : Float = 0.0;
+    public var value(get,set) : Float;
     public var snapInterval(default, set) : Float = 1.0;
     public var liveDragging : Bool = false;
     public var tickInterval: Float = 0.0;
 
     private var state: String = "up";
+    private var _value: Float = 0.0;
 
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
@@ -112,8 +113,7 @@ class Slider extends UIComponent {
                 setState("up");
             case MouseEvent.MOUSE_MOVE:
                 var mouseLocalX: Float = getXFLDisplayObject("SliderTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).x * getXFLDisplayObject("SliderTrack_skin").scaleX;
-                value = minimum + ((mouseLocalX / getXFLDisplayObject("SliderTrack_skin").width) * (maximum - minimum));
-                dispatchEvent(new Event(Event.CHANGE));
+                setValueInternal(minimum + ((mouseLocalX / getXFLDisplayObject("SliderTrack_skin").width) * (maximum - minimum)), true);
             default:
                 trace("onMouseEventMove(): unsupported mouse event type '" + event.type + "'");
         }
@@ -121,38 +121,46 @@ class Slider extends UIComponent {
 
     private function set_minimum(newValue: Float): Float {
         minimum = newValue;
+        if (minimum > maximum) {
+            minimum = maximum;
+        }
         if (value < minimum) {
-            value = minimum;
-            dispatchEvent(new Event(Event.CHANGE));
+            setValueInternal(minimum, true);
         }
         return minimum;
     }
 
     private function set_maximum(newValue: Float): Float {
         maximum = newValue;
+        if (maximum < minimum) {
+            maximum = minimum;
+        }
         if (value > maximum) {
-            value = maximum;
-            dispatchEvent(new Event(Event.CHANGE));
+            setValueInternal(maximum, true);
         }
         return maximum;
     }
 
-    private function set_value(newValue: Float): Float {
-        var clampedValue = false;
+    private function setValueInternal(newValue: Float, dispatchChangeEvent: Bool): Void {
         if (newValue < minimum) {
             newValue = minimum;
-            clampedValue = true;
         }
         if (newValue > maximum) {
             newValue = maximum;
-            clampedValue = true;
         }
-        value = Std.int(newValue * (1.0 / snapInterval)) / snapInterval;
-        // TODO: dispatch event if value != value with snap interval calculation?
-        if (clampedValue == true) {
+        _value = Std.int(newValue * (1.0 / snapInterval)) / snapInterval;
+        if (Math.abs(newValue - value) > 0.01 && dispatchChangeEvent == true) {
             dispatchEvent(new Event(Event.CHANGE));
         }
         setState(state);
+    }
+
+    private function get_value(): Float {
+        return _value;
+    }
+
+    private function set_value(newValue: Float): Float {
+        setValueInternal(newValue, true);
         return value;
     }
 
