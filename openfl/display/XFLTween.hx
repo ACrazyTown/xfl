@@ -370,6 +370,7 @@ class XFLTween {
 	}
 
 	private static function handleTweens(event: Event) {
+        // TODO: a.drewke, maybe remove tweens that have no parent or stage attached
         var now: Float = haxe.Timer.stamp();
 		for (tween in tweens) {
             if (now < tween.timeInit) continue;
