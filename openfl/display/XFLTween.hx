@@ -82,6 +82,10 @@ class XFLTween {
         tween.easeFunc = Reflect.hasField(tween, "ease") == true?tween.ease:linearEaseIn;
         tween.repeat = Reflect.hasField(tween, "repeat") == true?tween.repeat:1;
         tween.yoyo = Reflect.hasField(tween, "yoyo") == true?tween.yoyo:false;
+        if (tween.yoyo == true) {
+            tween.repeat*= 2;
+            // tween.duration/= 2.0;
+        }
         tween.runs = 0;
         tween.onCompleteCalled = false;
         tween.nextTween = null;
