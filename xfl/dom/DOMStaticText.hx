@@ -1,6 +1,7 @@
 package xfl.dom;
 
 import xfl.geom.Matrix;
+import xfl.geom.Point;
 import haxe.xml.Fast;
 
 class DOMStaticText {
@@ -34,6 +35,7 @@ class DOMStaticText {
 					}
 			}
 		}
+		if (staticText.matrix != null) staticText.left = staticText.matrix.deltaTransformPoint(new Point(staticText.left, 0.0)).x;
 		return staticText;
 	}
 

@@ -1,6 +1,7 @@
 package xfl.dom;
 
 import xfl.geom.Matrix;
+import xfl.geom.Point;
 import haxe.xml.Fast;
 
 class DOMDynamicText {
@@ -42,6 +43,7 @@ class DOMDynamicText {
 					}
 			}
 		}
+		if (dynamicText.matrix != null) dynamicText.left = dynamicText.matrix.deltaTransformPoint(new Point(dynamicText.left, 0.0)).x;
 		return dynamicText;
 	}
 	
