@@ -83,7 +83,7 @@ class XFLTween {
         tween.repeat = Reflect.hasField(tween, "repeat") == true?tween.repeat:1;
         tween.yoyo = Reflect.hasField(tween, "yoyo") == true?tween.yoyo:false;
         if (tween.yoyo == true) {
-            tween.repeat*= 2;
+            if (tween.repeat != -1) tween.repeat*= 2;
             // tween.duration/= 2.0;
         }
         tween.runs = 0;
