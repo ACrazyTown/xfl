@@ -71,10 +71,10 @@ class MovieClip extends xfl.display.MovieClip {
 			parent = parent.parent;
 		}
 		if (lastFrame == currentFrame) {
-			currentFrame++;
-			if (currentFrame > totalFrames) {
-				gotoAndStop(1);
-				return;
+			if (currentFrame == totalFrames) {
+				stop();
+			} else {
+				currentFrame++;
 			}
 		}
 		update();
