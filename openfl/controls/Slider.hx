@@ -142,13 +142,13 @@ class Slider extends UIComponent {
     }
 
     private function setValueInternal(newValue: Float, dispatchChangeEvent: Bool): Void {
-        if (newValue < minimum) {
-            newValue = minimum;
+        _value = Std.int(newValue + (snapInterval / 2.0) * (1.0 / snapInterval)) / snapInterval;
+        if (_value < minimum) {
+            _value = minimum;
         }
-        if (newValue > maximum) {
-            newValue = maximum;
+        if (_value > maximum) {
+            _value = maximum;
         }
-        _value = Std.int(newValue * (1.0 / snapInterval)) / snapInterval;
         if (Math.abs(newValue - value) > 0.01 && dispatchChangeEvent == true) {
             dispatchEvent(new Event(Event.CHANGE));
         }
