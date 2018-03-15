@@ -1,5 +1,7 @@
 package openfl.containers;
 
+import com.slipshift.engine.helpers.Utils;
+
 import openfl.core.UIComponent;
 import openfl.controls.ScrollBar;
 import openfl.display.DisplayObject;
@@ -26,6 +28,7 @@ class BaseScrollPane extends UIComponent {
     public var horizontalScrollPolicy: String;
     public var verticalScrollPolicy: String;
 
+    private var scrollContainer: Sprite;
     private var _source: DisplayObject;
     private var _scrollBar: ScrollBar;
 
@@ -48,6 +51,8 @@ class BaseScrollPane extends UIComponent {
         var maskSprite: Sprite = new Sprite();
         maskSprite.visible = false;
         addChild(maskSprite);
+        scrollContainer = new Sprite();
+        addChild(scrollContainer);
         mask = maskSprite;
         update();
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
@@ -73,10 +78,10 @@ class BaseScrollPane extends UIComponent {
         _scrollBar.x = _width - _scrollBar.width;
         _scrollBar.y = 0.0;
         _scrollBar.setSize(_scrollBar.width, _height);
-        _scrollBar.maxScrollPosition = _source != null && _source.height > height?_source.height - height:0.0;
+        _scrollBar.maxScrollPosition = _source != null && (_source.y + _source.height) > height?(_source.y + _source.height) - height:0.0;
         _scrollBar.lineScrollSize = 10.0;
         _scrollBar.pageScrollSize = height;
-        _scrollBar.visible = _source != null && _source.height > height;
+        _scrollBar.visible = _source != null && (_source.y + _source.height) > height;
         if (_scrollBar.visible == true) {
             addChild(_scrollBar);
         } else {
@@ -90,26 +95,26 @@ class BaseScrollPane extends UIComponent {
     }
 
     private function set_source(_source: DisplayObject): DisplayObject {
-        if (this._source != null) removeChild(this._source);
+        if (this._source != null) scrollContainer.removeChild(this._source);
         this._source = _source;
-        addChild(this._source);
+        scrollContainer.addChild(this._source);
         update();
         return this._source;
     }
 
     private function get_scrollY(): Float {
-        return -source.y;
+        return -scrollContainer.y;
     }
 
     private function set_scrollY(scrollY: Float): Float {
         disableSourceChildren();
-        if (source.height < height) return source.y = 0.0;
-        source.y = -scrollY;
-        if (source.y > 0.0) source.y = 0.0;
-        if (source.y < -(source.height - height)) source.y = -(source.height - height);
+        if ((source.y + source.height) < height) return scrollContainer.y = 0.0;
+        scrollContainer.y = -scrollY;
+        if (scrollContainer.y > 0.0) scrollContainer.y = 0.0;
+        if (scrollContainer.y < -_source.y - source.height + height) scrollContainer.y = -_source.y - source.height + height;
         _scrollBar.validateNow();
         updateSourceChildren();
-        return source.y;
+        return -scrollContainer.y;
     }
 
     private function disableSourceChildren(): Void {
@@ -156,7 +161,7 @@ class BaseScrollPane extends UIComponent {
     }
 
     private function onMouseWheel(event: MouseEvent): Void {
-        if (source.height < height) return;
+        if ((source.y + source.height) < height) return;
         scrollY = scrollY - event.delta;
         _scrollBar.scrollPosition = scrollY;
     }

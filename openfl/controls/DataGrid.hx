@@ -62,6 +62,7 @@ class DataGrid extends BaseScrollPane {
         scrollPaneSource = new Sprite();
         source = scrollPaneSource;
         draw();
+        update();
     }
 
     /**
@@ -72,6 +73,7 @@ class DataGrid extends BaseScrollPane {
     public function setRendererStyle(key: String, value: Dynamic): Void {
         rendererStyles.set(key, value);
         draw();
+        update();
     }
 
     /**
@@ -84,6 +86,7 @@ class DataGrid extends BaseScrollPane {
         column.headerText = dataField;
         columns.push(column);
         draw();
+        update();
     }
 
     public function getCellRendererAt(row: Int, column: Int): ICellRenderer {
@@ -102,6 +105,7 @@ class DataGrid extends BaseScrollPane {
         _dataProvider = dataProvider;
         setColumnWidth(_width);
         draw();
+        update();
         return _dataProvider;
     }
 
@@ -247,6 +251,7 @@ class DataGrid extends BaseScrollPane {
     private function set_rowHeight(rowHeight: Float): Float {
         this.rowHeight = rowHeight;
         draw();
+        update();
         return rowHeight;
     }
 
@@ -270,12 +275,14 @@ class DataGrid extends BaseScrollPane {
             }
         }
         draw();
+        update();
     }
 
     override public function setSize(_width: Float, _height: Float): Void {
         super.setSize(_width, _height);
         setColumnWidth(width);
         draw();
+        update();
     }
 
     private function onMouseEvent(event: MouseEvent) : Void {
