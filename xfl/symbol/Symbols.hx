@@ -84,6 +84,7 @@ class Symbols {
 		}
 
 		textField.x+= instance.left;
+		textField.y+= instance.top;
 		var format = new TextFormat();
 		for (textRun in instance.textRuns) {
 			var pos = textField.text.length;
@@ -117,6 +118,7 @@ class Symbols {
 			textField.transform.matrix = instance.matrix;
 		}
 		textField.x+= instance.left;
+		textField.y+= instance.top;
 		var format = new TextFormat();
 		for (textRun in instance.textRuns) {
 			var pos = textField.text.length;

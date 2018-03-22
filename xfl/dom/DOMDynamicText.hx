@@ -14,6 +14,7 @@ class DOMDynamicText {
 	public var isSelectable: Bool;
 	public var multiLine: Bool;
 	public var left: Float;
+	public var top: Float;
 	public var matrix: Matrix;
 	public var name: String;
 	public var textRuns: Array<DOMTextRun>;
@@ -33,6 +34,7 @@ class DOMDynamicText {
 		dynamicText.isSelectable = xml.has.isSelectable == false || xml.att.isSelectable == "true";
 		dynamicText.multiLine = xml.has.lineType == true && xml.att.lineType == "multiline";
 		dynamicText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0;
+		dynamicText.top = (xml.has.top == true)?Std.parseFloat(xml.att.top):0;
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":

@@ -10,6 +10,7 @@ class DOMStaticText {
 	public var isSelectable: Bool;
 	public var multiLine: Bool;
 	public var left: Float;
+	public var top: Float;
 	public var matrix: Matrix;
 	public var textRuns: Array<DOMTextRun>;
 	public var width: Float;
@@ -24,6 +25,7 @@ class DOMStaticText {
 		staticText.width = Std.parseFloat(xml.att.width);
 		staticText.multiLine = xml.has.lineType == true && xml.att.lineType == "multiline";
 		staticText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0;
+		staticText.top = (xml.has.top == true)?Std.parseFloat(xml.att.top):0;
 		staticText.isSelectable = xml.has.isSelectable == false || xml.att.isSelectable == "true";
 		for (element in xml.elements) {
 			switch (element.name) {
