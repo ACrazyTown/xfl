@@ -100,7 +100,8 @@ class Symbols {
 					format.color = textRun.textAttrs.fillColor;
 				}
 			}
-			textField.setTextFormat (format, pos, textField.text.length);
+			textField.setTextFormat(format, pos, textField.text.length);
+			textField.defaultTextFormat = format;
 		}		
 		return textField;
 	}
@@ -135,6 +136,7 @@ class Symbols {
 				}
 			}
 			textField.setTextFormat(format, pos, textField.text.length);
+			textField.defaultTextFormat = format;
 		}
 		return textField;
 	}
