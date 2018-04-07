@@ -14,7 +14,7 @@ class Sprite extends xfl.display.Sprite {
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, false);
+		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
 		var labels: Array<FrameLabel> = [];
 		var layers: Array<DOMLayer> = [];
 		children = [];

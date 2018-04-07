@@ -24,7 +24,7 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, false);
+		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
 		currentLabels = [];
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		lastFrame = -1;

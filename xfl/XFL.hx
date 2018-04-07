@@ -13,10 +13,12 @@ import openfl.media.Sound;
 
 class XFLSymbolArguments {
 	public var xfl: XFL;
+	public var name: String;
 	public var timeline: DOMTimeline;
 	public var parametersAreLocked: Bool;
-	public function new(xfl: XFL, timeline: DOMTimeline, parametersAreLocked: Bool) {
+	public function new(xfl: XFL, name: String, timeline: DOMTimeline, parametersAreLocked: Bool) {
 		this.xfl = xfl;
+		this.name = name;
 		this.timeline = timeline;
 		this.parametersAreLocked = parametersAreLocked;
 	}
@@ -140,7 +142,7 @@ class XFL {
 	public function createSymbolArguments(name: String): XFLSymbolArguments {
 		var symbolItem: DOMSymbolItem = getSymbolItem(name);
 		if (symbolItem != null) {
-			return new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked);
+			return new XFLSymbolArguments(this, name, symbolItem.timeline, symbolItem.parametersAreLocked);
 		}
 		trace("createSymbolArguments(): symbol not found: " + name);
 		return null;
@@ -156,7 +158,7 @@ class XFL {
 					return movieClip;
 				}
 			}
-			return new XFLMovieClip(new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked));
+			return new XFLMovieClip(new XFLSymbolArguments(this, name, symbolItem.timeline, symbolItem.parametersAreLocked));
 		}
 		trace("createMovieClip(): movie clip not found: " + name);
 		return null;
@@ -172,7 +174,7 @@ class XFL {
 					return sprite;
 				}
 			}
-			return new XFLSprite(new XFLSymbolArguments(this, symbolItem.timeline, symbolItem.parametersAreLocked));
+			return new XFLSprite(new XFLSymbolArguments(this, name, symbolItem.timeline, symbolItem.parametersAreLocked));
 		}
 		trace("createSprite(): sprite not found: " + name);
 		return null;
