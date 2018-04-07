@@ -14,8 +14,9 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public var children: Array<DisplayObject>;
 
-	public var xflSymbolArguments: XFLSymbolArguments;
+	public var xflSymbolArguments(get, never): XFLSymbolArguments;
 
+	private var _xflSymbolArguments: XFLSymbolArguments;
 	private var lastFrame: Int;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
@@ -24,7 +25,7 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this.xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
+		this._xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
 		currentLabels = [];
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		lastFrame = -1;
@@ -41,6 +42,10 @@ class MovieClip extends xfl.display.MovieClip {
 			children
 		);
 		update();
+	}
+
+	private function get_xflSymbolArguments(): XFLSymbolArguments {
+		return _xflSymbolArguments;
 	}
 
 	override private function get_currentFrameLabel(): String {

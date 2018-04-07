@@ -7,7 +7,7 @@ import openfl.display.XFLMovieClip;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 
 /**

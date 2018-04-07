@@ -1,6 +1,6 @@
 package openfl.controls;
 
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
 import openfl.controls.LabelButton;

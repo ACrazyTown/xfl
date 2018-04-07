@@ -11,7 +11,7 @@ import openfl.events.Event;
 import openfl.geom.Rectangle;
 import openfl.events.ScrollEvent;
 import openfl.events.MouseEvent;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 
 /**

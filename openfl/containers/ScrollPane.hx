@@ -1,7 +1,7 @@
 package openfl.containers;
 
 import openfl.containers.BaseScrollPane;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 
 /**

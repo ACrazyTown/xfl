@@ -1,6 +1,6 @@
 package openfl.display;
 
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.dom.DOMTimeline;
 import xfl.symbol.MovieClip;
 import openfl.controls.CheckBox;

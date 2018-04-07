@@ -179,7 +179,7 @@ class Symbols {
 					if (movieClip != null) loadedByCustomLoader = true;
 				}
 				if (movieClip == null) {
-					movieClip = new XFLMovieClip(new XFLSymbolArguments(xfl, instance.libraryItemName, symbolItem.timeline, symbolItem.parametersAreLocked));
+					movieClip = new XFLMovieClip(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -224,7 +224,7 @@ class Symbols {
 					if (sprite != null) loadedByCustomLoader = true;
 				}
 				if (sprite == null) {
-					sprite = new XFLSprite(new XFLSymbolArguments(xfl, instance.libraryItemName, symbolItem.timeline, symbolItem.parametersAreLocked));
+					sprite = new XFLSprite(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -274,7 +274,7 @@ class Symbols {
 						otherName,
 						new XFLSymbolArguments(
 							xfl, 
-							instance.libraryItemName, 
+							symbolItem.linkageClassName, 
 							symbolItem.timeline,
 							symbolItem.parametersAreLocked
 						)
@@ -320,7 +320,7 @@ class Symbols {
 						componentName, 
 						new XFLSymbolArguments(
 							xfl,
-							instance.libraryItemName,
+							symbolItem.linkageClassName,
 							symbolItem.timeline,
 							symbolItem.parametersAreLocked
 						)

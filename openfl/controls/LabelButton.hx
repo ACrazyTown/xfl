@@ -7,7 +7,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.dom.DOMTimeline;
 
 class LabelButton extends UIComponent {

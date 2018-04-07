@@ -1,6 +1,6 @@
 package openfl.controls;
 
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 import openfl.core.UIComponent;
 import openfl.controls.SelectableList;

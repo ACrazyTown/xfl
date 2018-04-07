@@ -13,11 +13,15 @@ import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
 import openfl.display.DisplayObjectContainer;
 import openfl.text.TextField;
+import xfl.XFLSymbolArguments;
 
 /**
  * XFL element
  */
 interface XFLElement {
+
+    // xfl symbol arguments
+    public var xflSymbolArguments(get, never): XFLSymbolArguments;
 
     // display object container
     public function addChild(child: DisplayObject): DisplayObject;

@@ -11,7 +11,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.ScrollEvent;
 import openfl.geom.Point;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
 

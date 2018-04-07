@@ -15,7 +15,7 @@ import openfl.display.Shape;
 import openfl.events.MouseEvent;
 import openfl.events.ListEvent;
 import openfl.text.TextFormat;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 
 /**

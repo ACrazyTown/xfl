@@ -4,7 +4,7 @@ import openfl.core.UIComponent;
 import openfl.data.DataProvider;
 import openfl.display.DisplayObject;
 import openfl.events.MouseEvent;
-import xfl.XFL;
+import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 
 /**
