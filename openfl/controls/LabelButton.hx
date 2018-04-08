@@ -108,10 +108,14 @@ class LabelButton extends UIComponent {
             newIcon.visible = true;
             currentIcon = newIcon;
         }
-
         if (currentSkin != null) {
             currentSkin.visible = false;
             removeChild(currentSkin);
+        }
+        var textFormat = styles.get("defaultTextFormat");
+        if (textFormat != null) {
+            _textField.defaultTextFormat = textFormat;
+            _textField.setTextFormat(textFormat);
         }
         var newSkin: DisplayObject = styles.get(mouseState + "Skin");
         if (newSkin == null) styles.get("upSkin");
