@@ -27,7 +27,10 @@ class Locale {
 
     public static function loadLanguageXML(language: String, callback: Bool->Void): Void
     {
-        if (localeLanguage == language) return;
+        if (localeLanguage == language) {
+            callback(true);
+            return;
+        }
         localeStrings = new Map<String, String>();
         for (element in Assets.getXMLAsset(xmlPaths.get(language)).node.file.node.body.elements) {
             if (element.name == "trans-unit") {
