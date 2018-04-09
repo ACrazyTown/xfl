@@ -62,6 +62,7 @@ class Slider extends UIComponent {
             if (stage != null) stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
             if (stage != null) stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
         }
+        super.disabled = _disabled;
         if (_disabled == false) {
             addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
             addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
@@ -70,7 +71,7 @@ class Slider extends UIComponent {
         } else {
             setState("disabled");
         }
-        return super.disabled = _disabled;
+        return super.disabled;
     }
 
     override public function setSize(_width: Float, _height: Float) {
@@ -80,6 +81,8 @@ class Slider extends UIComponent {
     }
 
     private function setState(state: String) {
+        getXFLDisplayObject("SliderTrack_skin").visible = disabled == false;
+        getXFLDisplayObject("SliderTrack_disabledSkin").visible = disabled == true;
         getXFLDisplayObject("SliderThumb_" + this.state + "Skin").visible = false;
         this.state = state;
         var sliderRange: Float = maximum - minimum;
