@@ -15,6 +15,8 @@ import openfl.text.TextField;
 
 class XFLImplementation {
 
+	private static var VERBOSE: Bool = false;
+
     private var container: Sprite;
 	private var values: Map<String, String>;
 	private var tweens: Array<Dynamic>;
@@ -34,7 +36,7 @@ class XFLImplementation {
 		}
 		var element : Dynamic = container.getChildByName(name);
 		if (element == null) {
-			trace("Getting XFL element: '" + fullName + name + "', NOT found!");
+			if (VERBOSE == true) trace("Getting XFL element: '" + fullName + name + "', NOT found!");
 		}
 		return element;
 	}
