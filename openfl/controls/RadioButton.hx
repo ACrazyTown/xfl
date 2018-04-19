@@ -29,6 +29,7 @@ class RadioButton extends LabelButton {
         setStyle("upIcon", getXFLMovieClip("RadioButton_upIcon"));
         setStyle("overIcon", getXFLMovieClip("RadioButton_overIcon"));
         setStyle("downIcon", getXFLMovieClip("RadioButton_downIcon"));
+        setStyle("disabledIcon", getXFLMovieClip("RadioButton_disabledIcon"));
         setStyle("selectedUpIcon", getXFLMovieClip("RadioButton_selectedUpIcon"));
         setStyle("selectedOverIcon", getXFLMovieClip("RadioButton_selectedOverIcon"));
         setStyle("selectedDownIcon", getXFLMovieClip("RadioButton_selectedDownIcon"));
@@ -37,6 +38,7 @@ class RadioButton extends LabelButton {
         getXFLMovieClip("RadioButton_upIcon").visible = false;
         getXFLMovieClip("RadioButton_overIcon").visible = false;
         getXFLMovieClip("RadioButton_downIcon").visible = false;
+        getXFLMovieClip("RadioButton_disabledIcon").visible = false;
         getXFLMovieClip("RadioButton_selectedUpIcon").visible = false;
         getXFLMovieClip("RadioButton_selectedOverIcon").visible = false;
         getXFLMovieClip("RadioButton_selectedDownIcon").visible = false;
@@ -115,6 +117,8 @@ class RadioButton extends LabelButton {
         getXFLMovieClip("RadioButton_overIcon").y = (height - getXFLMovieClip("RadioButton_overIcon").height) / 2;
         getXFLMovieClip("RadioButton_downIcon").x = 0.0;
         getXFLMovieClip("RadioButton_downIcon").y = (height - getXFLMovieClip("RadioButton_downIcon").height) / 2;
+        getXFLMovieClip("RadioButton_disabledIcon").x = 0.0;
+        getXFLMovieClip("RadioButton_disabledIcon").y = (height - getXFLMovieClip("RadioButton_disabledIcon").height) / 2;
         getXFLMovieClip("RadioButton_selectedUpIcon").x = 0.0;
         getXFLMovieClip("RadioButton_selectedUpIcon").y = (height - getXFLMovieClip("RadioButton_selectedUpIcon").height) / 2;
         getXFLMovieClip("RadioButton_selectedOverIcon").x = 0.0;
