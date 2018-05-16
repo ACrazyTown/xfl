@@ -1,5 +1,6 @@
 package openfl.display;
 
+import openfl.containers.ScrollPane;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.List;
@@ -134,6 +135,12 @@ class XFLImplementation {
 	public function getXFLUIComponent(name: String): UIComponent {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, UIComponent);
+		return null;
+	}
+
+    public function getXFLScrollPane(name: String) : ScrollPane {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, ScrollPane);
 		return null;
 	}
 

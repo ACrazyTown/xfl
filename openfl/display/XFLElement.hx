@@ -1,5 +1,6 @@
 package openfl.display;
 
+import openfl.containers.ScrollPane;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
@@ -44,6 +45,7 @@ interface XFLElement {
     public function getXFLScrollBar(name: String): ScrollBar;
     public function getXFLUIScrollBar(name: String): UIScrollBar;
     public function getXFLUIComponent(name: String): UIComponent;
+    public function getXFLScrollPane(name: String) : ScrollPane;
 
     // values
     public function addValue(key: String, value: String): Void;

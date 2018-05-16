@@ -345,8 +345,12 @@ class Symbols {
 								Reflect.setProperty(component, variable.variable, Std.parseFloat(variable.defaultValue));
 								instanceVariablesLeft.remove(variable.variable);
 							case "String":
-								Reflect.setProperty(component, variable.variable, variable.defaultValue);
-								instanceVariablesLeft.remove(variable.variable);
+								if (variable.variable == "source") {
+									trace("createComponent(): skipping variable 'source': FIXME!");
+								} else {
+									Reflect.setProperty(component, variable.variable, variable.defaultValue);
+									instanceVariablesLeft.remove(variable.variable);									
+								}
 							default:
 								trace("createComponent(): unknown variable type '" + variable.type + "': " + variable);
 						}

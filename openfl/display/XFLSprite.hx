@@ -3,6 +3,7 @@ package openfl.display;
 import xfl.XFLSymbolArguments;
 import xfl.dom.DOMTimeline;
 import xfl.symbol.Sprite;
+import openfl.containers.ScrollPane;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.List;
@@ -97,6 +98,10 @@ class XFLSprite implements XFLElement extends Sprite {
 
 	public function getXFLUIComponent(name: String): UIComponent {
 		return xflImplementation.getXFLUIComponent(name);
+	}
+
+	public function getXFLScrollPane(name: String) : ScrollPane {
+		return xflImplementation.getXFLScrollPane(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {
