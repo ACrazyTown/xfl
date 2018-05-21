@@ -40,7 +40,9 @@ class DOMFrame {
 				case "DOMGroup":
 					for (frameElement in DOMFrame.parseElements(childElement.node.members.elements)) {
 						frameElements.push(frameElement);
-					}				
+					}
+				case "DOMCompiledClipInstance":
+					// no op
 				default:
 					trace("Warning: Unrecognized DOMFrame element '" + childElement.name + "' with name = '" + (childElement.has.name?childElement.att.name:"null" + "'"));
 			}

@@ -13,25 +13,25 @@ class XFLTween {
 
     private static function copy(value: Dynamic): Dynamic {
         if (Reflect.isObject(value) == false) {
-			return value; 
-		} else 
+            return value; 
+        } else 
         if (Std.is(value, String)) {
-			return value;
-		} else 
-        if(Std.is(value, Array)) {
-			var result = Type.createInstance(Type.getClass(value), []); 
-			untyped { 
-				for( ii in 0...v.length ) {
-					result.push(copy(v[ii]));
-				}
-			} 
-			return result;
-		} else
-        if(Type.getClass(value) == null) {
+            return value;
+        } else 
+        if (Std.is(value, Array)) {
+            var result = Type.createInstance(Type.getClass(value), []); 
+            untyped { 
+                for (ii in 0...v.length ) {
+                    result.push(copy(v[ii]));
+                }
+            } 
+            return result;
+        } else
+        if (Type.getClass(value) == null) {
             var result: Dynamic = {};
-			for (field in Reflect.fields(value)) { 
-				Reflect.setField(result, field, copy(Reflect.field(value, field)));
-			}
+            for (field in Reflect.fields(value)) { 
+                Reflect.setField(result, field, copy(Reflect.field(value, field)));
+            }
             return result;
         }
         return null;
