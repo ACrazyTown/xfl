@@ -7,6 +7,7 @@ import openfl.containers.ScrollPane;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.List;
+import openfl.controls.ProgressBar;
 import openfl.controls.RadioButton;
 import openfl.controls.ScrollBar;
 import openfl.controls.UIScrollBar;
@@ -102,6 +103,10 @@ class XFLSprite implements XFLElement extends Sprite {
 
 	public function getXFLScrollPane(name: String) : ScrollPane {
 		return xflImplementation.getXFLScrollPane(name);
+	}
+
+	public function getXFLProgressBar(name: String) : ProgressBar {
+		return xflImplementation.getXFLProgressBar(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {

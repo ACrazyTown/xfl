@@ -25,6 +25,7 @@ XFL basic functionality like parsing was derived from "https://github.com/haxenm
     - openfl.controls.CheckBox
     - openfl.controls.DataGrid
     - openfl.controls.LabelButton
+    - openfl.controls.ProgressBar
     - openfl.controls.RadioButton
     - openfl.controls.ScrollBar, openfl.controls.UIScrollBar
     - openfl.controls.Slider

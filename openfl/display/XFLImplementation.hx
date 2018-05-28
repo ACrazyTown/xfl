@@ -4,6 +4,7 @@ import openfl.containers.ScrollPane;
 import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.List;
+import openfl.controls.ProgressBar;
 import openfl.controls.RadioButton;
 import openfl.controls.Slider;
 import openfl.controls.ScrollBar;
@@ -141,6 +142,12 @@ class XFLImplementation {
     public function getXFLScrollPane(name: String) : ScrollPane {
 		var element: Dynamic = getXFLElementUntyped(name);
 		if (element != null) return cast(element, ScrollPane);
+		return null;
+	}
+
+    public function getXFLProgressBar(name: String) : ProgressBar {
+		var element: Dynamic = getXFLElementUntyped(name);
+		if (element != null) return cast(element, ProgressBar);
 		return null;
 	}
 

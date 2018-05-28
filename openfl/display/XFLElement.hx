@@ -5,6 +5,7 @@ import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
 import openfl.controls.List;
+import openfl.controls.ProgressBar;
 import openfl.controls.ScrollBar;
 import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
@@ -46,6 +47,7 @@ interface XFLElement {
     public function getXFLUIScrollBar(name: String): UIScrollBar;
     public function getXFLUIComponent(name: String): UIComponent;
     public function getXFLScrollPane(name: String) : ScrollPane;
+    public function getXFLProgressBar(name: String) : ProgressBar;
 
     // values
     public function addValue(key: String, value: String): Void;

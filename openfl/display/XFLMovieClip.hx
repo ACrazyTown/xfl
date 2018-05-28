@@ -8,6 +8,7 @@ import openfl.controls.CheckBox;
 import openfl.controls.ComboBox;
 import openfl.controls.RadioButton;
 import openfl.controls.List;
+import openfl.controls.ProgressBar;
 import openfl.controls.ScrollBar;
 import openfl.controls.UIScrollBar;
 import openfl.controls.Slider;
@@ -101,6 +102,10 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 
 	public function getXFLScrollPane(name: String) : ScrollPane {
 		return xflImplementation.getXFLScrollPane(name);
+	}
+
+	public function getXFLProgressBar(name: String) : ProgressBar {
+		return xflImplementation.getXFLProgressBar(name);
 	}
 
 	public function addValue(key: String, value: String) : Void {
