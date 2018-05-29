@@ -109,11 +109,15 @@ class XFLSprite implements XFLElement extends Sprite {
 		return xflImplementation.getXFLProgressBar(name);
 	}
 
-	public function addValue(key: String, value: String) : Void {
-		 xflImplementation.addValue(key, value);
+	public function removeValue(key: String): Void {
+		xflImplementation.removeValue(key);
 	}
 
-	public function getValue(key: String) : String {
+	public function addValue(key: String, value: Dynamic) : Void {
+		xflImplementation.addValue(key, value);
+	}
+
+	public function getValue(key: String) : Dynamic {
 		return xflImplementation.getValue(key);
 	}
 

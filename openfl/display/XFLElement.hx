@@ -50,7 +50,8 @@ interface XFLElement {
     public function getXFLProgressBar(name: String) : ProgressBar;
 
     // values
-    public function addValue(key: String, value: String): Void;
-    public function getValue(key: String) : String;
+    public function removeValue(key: String): Void;
+    public function addValue(key: String, value: Dynamic): Void;
+    public function getValue(key: String) : Dynamic;
 
 }

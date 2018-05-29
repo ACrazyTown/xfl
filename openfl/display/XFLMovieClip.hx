@@ -108,11 +108,15 @@ class XFLMovieClip extends MovieClip implements XFLElement {
 		return xflImplementation.getXFLProgressBar(name);
 	}
 
-	public function addValue(key: String, value: String) : Void {
+	public function removeValue(key: String): Void {
+		xflImplementation.removeValue(key);
+	}
+
+	public function addValue(key: String, value: Dynamic) : Void {
 		xflImplementation.addValue(key, value);
 	}
 
-	public function getValue(key: String) : String {
+	public function getValue(key: String) : Dynamic {
 		return xflImplementation.getValue(key);
 	}
 

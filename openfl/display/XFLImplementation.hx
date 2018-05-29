@@ -20,7 +20,7 @@ class XFLImplementation {
 	private static var VERBOSE: Bool = false;
 
     private var container: Sprite;
-	private var values: Map<String, String>;
+	private var values: Map<String, Dynamic>;
 	private var tweens: Array<Dynamic>;
 
     public function new(container: Sprite) {
@@ -151,11 +151,15 @@ class XFLImplementation {
 		return null;
 	}
 
-	public function addValue(key: String, value: String) : Void {
+	public function removeValue(key: String): Void {
+		values.remove(key);
+	}
+
+	public function addValue(key: String, value: Dynamic) : Void {
 		values[key] = value;
 	}
 
-	public function getValue(key: String) : String {
+	public function getValue(key: String) : Dynamic {
 		return values[key];
 	}
 
