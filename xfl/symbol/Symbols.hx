@@ -9,6 +9,7 @@ import openfl.display.BitmapData;
 import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
 import openfl.geom.Matrix;
+import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
@@ -365,10 +366,16 @@ class Symbols {
 		if (component != null) {
 			if (instance.matrix != null) {
 				var matrix: Matrix = instance.matrix.clone();
-				component.scaleX = matrix.a;
-				component.scaleY = matrix.d;
-				matrix.a = 1.0;
-				matrix.d = 1.0;
+				matrix.tx = 0.0;
+				matrix.ty = 0.0;
+				var dimension: Point = new Point(1.0, 1.0);
+				var rotatedDimension: Point =  matrix.transformPoint(dimension);
+				matrix.tx = instance.matrix.tx;
+				matrix.ty = instance.matrix.ty;
+				matrix.a = Math.abs(instance.matrix.a) < 0.0001?0.0:1.0;
+				matrix.d = Math.abs(instance.matrix.d) < 0.0001?0.0:1.0;
+				component.scaleX = Math.abs(instance.matrix.a) < 0.0001?rotatedDimension.x:instance.matrix.a;
+				component.scaleY = Math.abs(instance.matrix.d) < 0.0001?rotatedDimension.y:instance.matrix.d;
 				component.transform.matrix = matrix;
 			}
 		}
