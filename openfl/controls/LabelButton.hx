@@ -61,6 +61,8 @@ class LabelButton extends UIComponent {
     }
 
     private function set_label(label: String): String {
+        var defaultTextFormat: TextFormat = styles.get("defaultTextFormat");
+        if (defaultTextFormat != null) _textField.defaultTextFormat = defaultTextFormat;
         _textField.text = label;
         _textField.width = _textField.textWidth + 4;
         _textField.height = _textField.textHeight + 4;
@@ -112,10 +114,10 @@ class LabelButton extends UIComponent {
             currentSkin.visible = false;
             removeChild(currentSkin);
         }
-        var textFormat = styles.get("defaultTextFormat");
+        var textFormat = styles.get("textFormat");
         if (textFormat != null) {
-            _textField.defaultTextFormat = textFormat;
             _textField.setTextFormat(textFormat);
+            _textField.y = (_height - _textField.height) / 2;
         }
         var newSkin: DisplayObject = styles.get(mouseState + "Skin");
         if (newSkin == null) styles.get("upSkin");

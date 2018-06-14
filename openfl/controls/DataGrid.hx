@@ -25,8 +25,6 @@ class DataGrid extends BaseScrollPane {
 
     public var columns : Array<DataGridColumn>;
 
-    private var rendererStyles : Map<String, Dynamic>;
-
     public var sortableColumns : Bool;
     public var resizableColumns : Bool;
 
@@ -50,7 +48,6 @@ class DataGrid extends BaseScrollPane {
         headerDisplayObjects = new Array<DisplayObjectContainer>();
         dataDisplayObjects = new Array<DisplayObjectContainer>();
         columns = new Array<DataGridColumn>();
-        rendererStyles = new Map<String, Dynamic>();
         _width = 0;
         _height = 0;
         x = 0;
@@ -61,17 +58,6 @@ class DataGrid extends BaseScrollPane {
         mouseChildren = true;
         scrollPaneSource = new Sprite();
         source = scrollPaneSource;
-        draw();
-        update();
-    }
-
-    /**
-     * Set style
-     * @param arg0 - Not yet
-     * @param arg1 - Not yet
-     */
-    public function setRendererStyle(key: String, value: Dynamic): Void {
-        rendererStyles.set(key, value);
         draw();
         update();
     }
@@ -135,10 +121,7 @@ class DataGrid extends BaseScrollPane {
             var headerRenderer: HeaderRenderer = Type.createInstance(column.headerRenderer, []);
             headerRenderer.name = "datagrid.header." + columnIdx;
             headerRenderer.column = columnIdx++;
-            if (headerTextFormat != null) {
-                headerRenderer.textField.setTextFormat(headerTextFormat);
-                headerRenderer.textField.defaultTextFormat = headerTextFormat;
-            }
+            if (headerTextFormat != null) headerRenderer.setStyle("defaultTextFormat", headerTextFormat);
             headerRenderer.label = StringTools.ltrim(StringTools.rtrim(column.headerText));
             headerRenderer.x = _x;
             headerRenderer.y = 0.0;
@@ -153,7 +136,6 @@ class DataGrid extends BaseScrollPane {
         headerDisplayObjects.push(headerRow);
         addChild(headerRow);
         if (_dataProvider != null) {
-            var cellTextFormat: TextFormat = rendererStyles.get("textFormat") != null?cast(rendererStyles.get("textFormat"), TextFormat):null;
             for (i in 0..._dataProvider.length) {
                 _x = 0;
                 var rowData: Dynamic = _dataProvider.getItemAt(i);
@@ -169,10 +151,6 @@ class DataGrid extends BaseScrollPane {
                     listData.owner = cellRenderer;
                     listData.row = i;
                     cellRenderer.name = "datagrid.cell." + columnIdx + "," + i;
-                    if (cellTextFormat != null) {
-                        cellRenderer.textField.setTextFormat(cellTextFormat);
-                        cellRenderer.textField.defaultTextFormat = cellTextFormat;
-                    }
                     cellRenderer.label = StringTools.ltrim(StringTools.rtrim(column.itemToLabel(rowData)));
                     cellRenderer.x = _x;
                     cellRenderer.y = 0.0;
