@@ -34,9 +34,9 @@ class LabelButton extends UIComponent {
         _textField = new TextField();
         _textField.text = "label";
         _textField.x = _textPadding;
-        _textField.y = 2;
-        _textField.width = textField.textWidth + 4;
-        _textField.height = textField.textHeight + 4;
+        _textField.y = 0;
+        _textField.width = textField.textWidth;
+        _textField.height = textField.textHeight;
         _selected = false;
         toggle = false;
         mouseChildren = false;
@@ -64,8 +64,8 @@ class LabelButton extends UIComponent {
         var defaultTextFormat: TextFormat = styles.get("defaultTextFormat");
         if (defaultTextFormat != null) _textField.defaultTextFormat = defaultTextFormat;
         _textField.text = label;
-        _textField.width = _textField.textWidth + 4;
-        _textField.height = _textField.textHeight + 4;
+        _textField.width = _textField.textWidth;
+        _textField.height = _textField.textHeight;
         return label;       
     }
 
@@ -115,9 +115,11 @@ class LabelButton extends UIComponent {
             removeChild(currentSkin);
         }
         var textFormat = styles.get("textFormat");
-        if (textFormat != null) {
+        if (textFormat != null && _textField.getTextFormat() != textFormat) {
             _textField.setTextFormat(textFormat);
+            _textField.height = textField.textHeight;
             _textField.y = (_height - _textField.height) / 2;
+            // trace(name + ": " + _height + " / " + _textField.height + " / " + textFormat + " / " + _textField.y);
         }
         var newSkin: DisplayObject = styles.get(mouseState + "Skin");
         if (newSkin == null) styles.get("upSkin");
@@ -134,8 +136,8 @@ class LabelButton extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float): Void {
         super.setSize(_width, _height);
-        _textField.width = textField.textWidth + 4;
-        _textField.height = textField.textHeight + 4;
+        _textField.width = textField.textWidth;
+        _textField.height = textField.textHeight;
         _textField.y = (_height - _textField.height) / 2;
     }
 

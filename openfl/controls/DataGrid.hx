@@ -121,7 +121,7 @@ class DataGrid extends BaseScrollPane {
             var headerRenderer: HeaderRenderer = Type.createInstance(column.headerRenderer, []);
             headerRenderer.name = "datagrid.header." + columnIdx;
             headerRenderer.column = columnIdx++;
-            if (headerTextFormat != null) headerRenderer.setStyle("defaultTextFormat", headerTextFormat);
+            if (headerTextFormat != null) headerRenderer.setStyle("textFormat", headerTextFormat);
             headerRenderer.label = StringTools.ltrim(StringTools.rtrim(column.headerText));
             headerRenderer.x = _x;
             headerRenderer.y = 0.0;
@@ -136,6 +136,7 @@ class DataGrid extends BaseScrollPane {
         headerDisplayObjects.push(headerRow);
         addChild(headerRow);
         if (_dataProvider != null) {
+            var textFormat: TextFormat = styles.get("textFormat") != null?cast(styles.get("textFormat"), TextFormat):null;
             for (i in 0..._dataProvider.length) {
                 _x = 0;
                 var rowData: Dynamic = _dataProvider.getItemAt(i);
@@ -151,6 +152,7 @@ class DataGrid extends BaseScrollPane {
                     listData.owner = cellRenderer;
                     listData.row = i;
                     cellRenderer.name = "datagrid.cell." + columnIdx + "," + i;
+                    if (textFormat != null) cellRenderer.setStyle("textFormat", textFormat);
                     cellRenderer.label = StringTools.ltrim(StringTools.rtrim(column.itemToLabel(rowData)));
                     cellRenderer.x = _x;
                     cellRenderer.y = 0.0;
@@ -189,19 +191,26 @@ class DataGrid extends BaseScrollPane {
                 var cellHeight: Float = 0.0;
                 for (j in 0...columns.length) {
                     var cell: DisplayObject = displayObjects[i].getChildAt(j);
+                    if (Std.is(cell, HeaderRenderer)) {
+                        cast(cell, HeaderRenderer).init();
+                        cast(cell, HeaderRenderer).validateNow();
+                    } else {
+                        cast(cell, CellRenderer).init();
+                        cast(cell, CellRenderer).validateNow();
+                    }
                     if (cell.height > cellHeight) cellHeight = cell.height;
                 }
                 if (rowHeight > cellHeight) cellHeight = rowHeight;
                 var _x: Float = 0.0;
                 for (j in 0...columns.length) {
                     var cell: DisplayObject = displayObjects[i].getChildAt(j);
+                    if (Std.is(cell, HeaderRenderer)) {
+                        cast(cell, HeaderRenderer).setSize(columns[j].width, cellHeight);
+                    } else {
+                        cast(cell, CellRenderer).setSize(columns[j].width, cellHeight);
+                    }
                     cell.x = _x;
                     cell.height = cellHeight;
-                    if (Std.is(cell, HeaderRenderer)) {
-                        cast(cell, HeaderRenderer).init();
-                    } else {
-                        cast(cell, CellRenderer).init();
-                    }
                     cell.width-= verticalScrollBarSize / columns.length;
                     _x+= cell.width;
                 }
