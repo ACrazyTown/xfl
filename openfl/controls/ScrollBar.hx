@@ -322,8 +322,8 @@ class ScrollBar extends UIComponent {
                 setScrollThumbState("down");
                 scrollThumbMouseMoveYRelative = getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").globalToLocal(new Point(event.stageX, event.stageY)).y;
                 scrollThumbMouseMoveYRelative*= getXFLDisplayObject("ScrollThumb_" + this.scrollThumbState + "Skin").scaleY;
-                stage.addEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
-                stage.addEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
+                openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
+                openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
             default:
                 trace("onScrollThumbMouseEvent(): unsupported mouse event type '" + event.type + "'");
         }
@@ -331,15 +331,15 @@ class ScrollBar extends UIComponent {
 
     private function onScrollThumbMouseMove(event: MouseEvent) : Void {
         if (disabled == true) {
-            stage.removeEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
-            stage.removeEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
+            openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
+            openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
             setScrollThumbState("up");
             return;
         }
         switch(event.type) {
             case MouseEvent.MOUSE_UP:
-                stage.removeEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
-                stage.removeEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
+                openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onScrollThumbMouseMove);
+                openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onScrollThumbMouseMove);
                 setScrollThumbState("up");
             case MouseEvent.MOUSE_MOVE:
                 var thumbableHeight = scrollTrackHeight - scrollThumbSkinHeight;
