@@ -87,6 +87,7 @@ class BaseScrollPane extends UIComponent {
         } else {
             removeChild(_scrollBar);
         }
+        scrollY = scrollY;
         updateSourceChildren();
     }
 
@@ -107,14 +108,22 @@ class BaseScrollPane extends UIComponent {
     }
 
     private function set_scrollY(scrollY: Float): Float {
+        if (source == null) return scrollY;
         disableSourceChildren();
         if ((source.y + source.height) < height) {
             scrollContainer.y = 0.0;
         } else {
             scrollContainer.y = -scrollY;
         }
-        if (scrollContainer.y > 0.0) scrollContainer.y = 0.0;
-        if (scrollContainer.y < -_source.y - source.height + height) scrollContainer.y = -_source.y - source.height + height;
+        if (scrollContainer.y > 0.0) { 
+            scrollContainer.y = 0.0;
+        } else
+        if (height > _source.y + source.height) {
+            scrollContainer.y = 0.0;
+        } else
+        if (scrollContainer.y < -_source.y - source.height + height) {
+            scrollContainer.y = -_source.y - source.height + height;
+        }
         _scrollBar.scrollPosition = scrollY;
         _scrollBar.validateNow();
         updateSourceChildren();
