@@ -4,7 +4,6 @@ import haxe.xml.Fast;
 
 class DOMTimeline {
 
-	public var currentFrame: Int;
 	public var layers:Array <DOMLayer>;
 	public var name:String;
 
@@ -16,7 +15,6 @@ class DOMTimeline {
 		var layerIndex: Int = 0;
 		var timeline = new DOMTimeline();
 		if (xml.has.name) timeline.name = xml.att.name;
-		timeline.currentFrame = xml.has.currentFrame == true?Std.parseInt(xml.att.currentFrame):1;
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "layers":

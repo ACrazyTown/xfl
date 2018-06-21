@@ -9,8 +9,8 @@ class DOMShapeBase {
 	public var strokes: Array<StrokeStyle>;
 
     private function new() {
-		fills = new Array<FillStyle>();
-		strokes = new Array<StrokeStyle>();
+			fills = new Array<FillStyle>();
+			strokes = new Array<StrokeStyle>();
     }
 
 }

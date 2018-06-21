@@ -29,7 +29,7 @@ class MovieClip extends xfl.display.MovieClip {
 		currentLabels = [];
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		lastFrame = -1;
-		currentFrame = this.xflSymbolArguments.timeline != null?this.xflSymbolArguments.timeline.currentFrame:1;
+		currentFrame = 1;
 		layers = [];
 		children = [];
 		totalFrames = Shared.init(layers, this.xflSymbolArguments.timeline, currentLabels);

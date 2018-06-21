@@ -22,7 +22,7 @@ class Sprite extends xfl.display.Sprite {
 		children = [];
 		Shared.init(layers, this.xflSymbolArguments.timeline, labels);
 		Shared.createFrames(this.xflSymbolArguments.xfl, this, layers, children);
-		Shared.enableFrame(this.xflSymbolArguments.xfl, this, layers, this.xflSymbolArguments.timeline != null?this.xflSymbolArguments.timeline.currentFrame:1, null);
+		Shared.enableFrame(this.xflSymbolArguments.xfl, this, layers, 1, null);
 	}
 
 	public function get_xflSymbolArguments(): XFLSymbolArguments {
