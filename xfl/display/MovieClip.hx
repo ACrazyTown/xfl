@@ -35,6 +35,9 @@ class MovieClip extends Sprite {
 	public function gotoAndPlay(frame: Dynamic, scene: String = null): Void {
 	}
 
+	public function gotoAndPlayRange(startFrame: Dynamic, endFrame: Dynamic = null, repeat: Bool = true, scene: String = null): Void {
+	}
+
 	public function gotoAndStop(frame: Dynamic, scene: String = null): Void {
 	}
 

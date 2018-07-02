@@ -18,6 +18,9 @@ class MovieClip extends xfl.display.MovieClip {
 
 	private var _xflSymbolArguments: XFLSymbolArguments;
 	private var lastFrame: Int;
+	private var startFrame: Int;
+	private var endFrame: Int;
+	private var repeat: Bool;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
 	private var dfInvisibleObjects: Array<DisplayObject>;
@@ -33,6 +36,7 @@ class MovieClip extends xfl.display.MovieClip {
 		layers = [];
 		children = [];
 		totalFrames = Shared.init(layers, this.xflSymbolArguments.timeline, currentLabels);
+		endFrame = totalFrames;
 		dfInvisibleObjects = [];
 		dfProcessedObjects = [];
 		Shared.createFrames(
@@ -75,12 +79,14 @@ class MovieClip extends xfl.display.MovieClip {
 			}
 			parent = parent.parent;
 		}
-		if (lastFrame == currentFrame) {
-			if (currentFrame == totalFrames) {
+		if (currentFrame == endFrame) {
+			if (repeat == false) {
 				stop();
 			} else {
-				currentFrame++;
+				currentFrame = startFrame;
 			}
+		} else {
+			currentFrame++;
 		}
 		update();
 	}
@@ -106,20 +112,34 @@ class MovieClip extends xfl.display.MovieClip {
 	public override function gotoAndPlay(frame: Dynamic, scene: String = null): Void {
 		stop();
 		currentFrame = getFrame(frame);
+		startFrame = currentFrame;
+		repeat = false;
+		update();
+		play();
+	}
+
+	public override function gotoAndPlayRange(startFrame: Dynamic, endFrame: Dynamic = null, repeat: Bool = true, scene: String = null): Void {
+		stop();
+		currentFrame = getFrame(startFrame);
+		this.startFrame = currentFrame;
+		this.endFrame = endFrame == null?totalFrames:getFrame(endFrame) - 1;
+		this.repeat = repeat;
 		update();
 		play();
 	}
 
 	public override function gotoAndStop(frame: Dynamic, scene: String = null): Void {
 		stop();
+		startFrame = currentFrame;
 		currentFrame = getFrame(frame);
+		repeat = false;
 		update();
 	}
 
 	public override function nextFrame(): Void {
 		var next = currentFrame + 1;
-		if (next > totalFrames) {
-			next = totalFrames;
+		if (next > endFrame) {
+			next = endFrame;
 		}
 		gotoAndStop(next);
 	}
@@ -128,7 +148,7 @@ class MovieClip extends xfl.display.MovieClip {
 		if (parent == null) {
 			trace("play(): do not play clip without parent: " + name);
 		}
-		if (!playing && totalFrames > 1) {
+		if (!playing && endFrame > currentFrame) {
 			playing = true;
 			clips.push(this);
 		}
@@ -146,6 +166,9 @@ class MovieClip extends xfl.display.MovieClip {
 	public override function stop(): Void {
 		if (playing == true) {
 			playing = false;
+			repeat = false;
+			startFrame = currentFrame;
+			endFrame = totalFrames;
 			clips.remove(this);
 		}
 	}

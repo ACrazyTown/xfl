@@ -384,6 +384,13 @@ class XFLTween {
                 tween.timeCurrent = tween.timeFinal;
             }
 			if (tween.handleFunc != null) tween.handleFunc(tween);
+            if (Reflect.hasField(tween, "onUpdate") == true) {
+                Reflect.callMethod(
+                    null, 
+                    tween.onUpdate,
+                    []
+                );
+            }
 			if (tween.completed == true) {
                 tween.runs++;
                 if (tween.repeat == -1 || tween.runs < tween.repeat) {
