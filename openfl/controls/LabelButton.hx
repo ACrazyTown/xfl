@@ -64,7 +64,6 @@ class LabelButton extends UIComponent {
         var defaultTextFormat: TextFormat = styles.get("defaultTextFormat");
         if (defaultTextFormat != null) _textField.defaultTextFormat = defaultTextFormat;
         _textField.text = label;
-        _textField.width = _textField.textWidth;
         _textField.height = _textField.textHeight;
         return label;       
     }
@@ -84,6 +83,7 @@ class LabelButton extends UIComponent {
 
     public function set_textPadding(_textPadding: Float): Float {
         _textField.x = _textPadding;
+        _textField.width = _width - _textPadding; 
         return this._textPadding = _textPadding;
     }
 
@@ -119,7 +119,6 @@ class LabelButton extends UIComponent {
             _textField.setTextFormat(textFormat);
             _textField.height = textField.textHeight;
             _textField.y = (_height - _textField.height) / 2;
-            // trace(name + ": " + _height + " / " + _textField.height + " / " + textFormat + " / " + _textField.y);
         }
         var newSkin: DisplayObject = styles.get(mouseState + "Skin");
         if (newSkin == null) styles.get("upSkin");
@@ -136,7 +135,7 @@ class LabelButton extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float): Void {
         super.setSize(_width, _height);
-        _textField.width = textField.textWidth;
+        _textField.width = _width - _textPadding;
         _textField.height = textField.textHeight;
         _textField.y = (_height - _textField.height) / 2;
     }
