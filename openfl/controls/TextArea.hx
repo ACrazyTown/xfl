@@ -27,7 +27,7 @@ class TextArea extends UIComponent {
     public var maxChars(get, set): Int;
     public var htmlText(get, set): String;
     public var text(get, set): String;
-    public var editable: Bool;
+    public var editable(get, set): Bool;
 
     private var scrollBar: ScrollBar;
     private var textField: TextField;
@@ -109,6 +109,15 @@ class TextArea extends UIComponent {
 
     public function get_text(): String {
         return textField.text;
+    }
+
+    public function get_editable(): Bool {
+        return textField.type == TextFieldType.INPUT; 
+    }
+
+    public function set_editable(editable: Bool): Bool {
+        textField.type = editable == true?TextFieldType.INPUT:TextFieldType.DYNAMIC; 
+        return editable;
     }
 
     override public function setSize(_width: Float, _height: Float) {

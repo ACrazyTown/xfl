@@ -31,8 +31,6 @@ class DataGrid extends BaseScrollPane {
     public var dataProvider(get, set): DataProvider;
     public var rowHeight(default, set): Float;
 
-    public var verticalCellMargin(default, set): Float;
-
     private var _dataProvider: DataProvider;
     private var headerDisplayObjects: Array<DisplayObjectContainer>;
     private var dataDisplayObjects: Array<DisplayObjectContainer>;
@@ -54,7 +52,6 @@ class DataGrid extends BaseScrollPane {
         width = 0;
         height = 0;
         rowHeight = 0.0;
-        verticalCellMargin = 0.0;
         mouseChildren = true;
         scrollPaneSource = new Sprite();
         source = scrollPaneSource;
@@ -215,7 +212,7 @@ class DataGrid extends BaseScrollPane {
                     _x+= cell.width;
                 }
                 displayObjects[i].y = _y;
-                _y+= cellHeight + verticalCellMargin;
+                _y+= cellHeight;
             }
         }
         return _y;
@@ -240,13 +237,6 @@ class DataGrid extends BaseScrollPane {
         draw();
         update();
         return rowHeight;
-    }
-
-    private function set_verticalCellMargin(verticalCellMargin: Float): Float {
-        this.verticalCellMargin = verticalCellMargin;
-        draw();
-        update();
-        return verticalCellMargin;
     }
 
     private function setColumnWidth(_width: Float): Void {
