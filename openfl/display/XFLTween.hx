@@ -19,12 +19,10 @@ class XFLTween {
             return value;
         } else 
         if (Std.is(value, Array)) {
-            var result = Type.createInstance(Type.getClass(value), []); 
-            untyped { 
-                for (ii in 0...v.length ) {
-                    result.push(copy(v[ii]));
-                }
-            } 
+            var result: Array<Dynamic> = cast(value, Array<Dynamic>).copy(); 
+            for (i in 0...result.length) {
+                result[i] = copy(result[i]);
+            }
             return result;
         } else
         if (Type.getClass(value) == null) {
@@ -99,7 +97,7 @@ class XFLTween {
         return tween;
     }
 
-    public static function delayedCall(duration: Float, onComplete: Void->Void, onCompleteParams: Array<Dynamic> = null) {
+    public static function delayedCall(duration: Float, onComplete: Void->Void, onCompleteParams: Array<Dynamic> = null): Void {
         var tween : Dynamic = {};
         tween.object = null;
         tween.delay = Reflect.hasField(tween, "delay")?tween.delay:0.0;
@@ -119,10 +117,10 @@ class XFLTween {
         tween.initFunc = null;
         tween.disposeFunc = null;
         tween.handleFunc = null;
-        tweens.push(tween);
+        addTween(tween);
     }
 
-    private static function toInitDisplayObject(tween: Dynamic) {
+    private static function toInitDisplayObject(tween: Dynamic): Void {
         var object: DisplayObject = cast(tween.object, DisplayObject);
         tween.timeInit = haxe.Timer.stamp() + tween.delay;
         tween.timeCurrent = tween.timeInit;
@@ -190,7 +188,7 @@ class XFLTween {
         }
     }
 
-    public static function toDisposeDisplayObject(tween: Dynamic) {
+    public static function toDisposeDisplayObject(tween: Dynamic): Void {
         var object: DisplayObject = cast(tween.object, DisplayObject);
         if (Reflect.hasField(tween, "glowFilterInstance") == true) {
             var glowFilter: GlowFilter = cast(tween.glowFilterInstance, GlowFilter);
@@ -289,7 +287,7 @@ class XFLTween {
         }
     }
 
-    private static function toInitSoundChannel(tween: Dynamic) {
+    private static function toInitSoundChannel(tween: Dynamic): Void {
         var object: SoundChannel = cast(tween.object, SoundChannel);
         tween.timeInit = haxe.Timer.stamp() + tween.delay;
         tween.timeCurrent = tween.timeInit;
@@ -303,7 +301,7 @@ class XFLTween {
         }
     }
 
-    public static function toDisposeSoundChannel(tween: Dynamic) {
+    public static function toDisposeSoundChannel(tween: Dynamic): Void {
         var object: SoundChannel = cast(tween.object, SoundChannel);
     }
 
@@ -314,7 +312,7 @@ class XFLTween {
         }
     }
 
-    public static function killTweensOf(object: Dynamic) {
+    public static function killTweensOf(object: Dynamic): Void {
 		for (tween in tweens) {
             if (tween.object == object) {
 			    completeTween(tween);
@@ -324,7 +322,7 @@ class XFLTween {
         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
     }
 
-    public static function killChildTweensOf(object: Dynamic) {
+    public static function killChildTweensOf(object: Dynamic): Void {
         if (Std.is(object, DisplayObjectContainer)) {
             var displayObjectContainer: DisplayObjectContainer = cast(object, DisplayObjectContainer);
             for (i in 0...displayObjectContainer.numChildren) {
@@ -334,7 +332,7 @@ class XFLTween {
         killTweensOf(object);
     }
 
-    public static function killDelayedCallsTo(onComplete: Dynamic) {
+    public static function killDelayedCallsTo(onComplete: Void->Void): Void {
 		for (tween in tweens) {
             if (tween.object == null &&
                 Reflect.hasField(tween, "onComplete") == true && 
@@ -347,9 +345,10 @@ class XFLTween {
     }
 
     private static function addTween(tween: Dynamic): Void {
+        if (tweens.length == 0) {
+            openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, handleTweens);
+        }
 		tweens.push(tween);
-		openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
-		openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, handleTweens);
 	}
 
     private static function removeTweens(): Void {
@@ -360,7 +359,7 @@ class XFLTween {
         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
 	}
 
-	private static function completeTween(tween: Dynamic) {
+	private static function completeTween(tween: Dynamic): Void {
         tweens.remove(tween);
         if (tween.onCompleteCalled == true) return;
         tween.onCompleteCalled = true;
@@ -373,7 +372,7 @@ class XFLTween {
 		}
 	}
 
-	private static function handleTweens(event: Event) {
+	private static function handleTweens(event: Event): Void {
         // TODO: a.drewke, maybe remove tweens that have no parent or stage attached
         var now: Float = haxe.Timer.stamp();
 		for (tween in tweens) {
@@ -411,27 +410,27 @@ class XFLTween {
         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, handleTweens);
 	}
 
-    public static function linearEaseIn(x: Float) {
+    public static function linearEaseIn(x: Float): Float {
         return x;
     }
 
-    public static function linearEaseInOut(x: Float) {
+    public static function linearEaseInOut(x: Float): Float {
         return x;
     }
 
-    public static function expoEaseInOut(x: Float) {
+    public static function expoEaseInOut(x: Float): Float {
         return x;
     }
 
-    public static function quartEaseOut(x: Float) {
+    public static function quartEaseOut(x: Float): Float {
         return x;
     }
 
-    public static function elasticEaseInOut(x: Float) {
+    public static function elasticEaseInOut(x: Float): Float {
         return x;
     }
 
-    public static function elasticEaseOut(x: Float) {
+    public static function elasticEaseOut(x: Float): Float {
         return x;
     }
 }
