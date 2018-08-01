@@ -91,7 +91,16 @@ class Symbols {
 			var pos = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null) format.font = textRun.textAttrs.face;
-			if (textRun.textAttrs.alignment != null) format.align = Reflect.field(TextFormatAlign, textRun.textAttrs.alignment.toUpperCase());
+			if (textRun.textAttrs.alignment != null) {
+				switch(textRun.textAttrs.alignment) {
+					case "center": format.align = TextFormatAlign.CENTER;
+					case "justify": format.align = TextFormatAlign.JUSTIFY;
+					case "left": format.align = TextFormatAlign.LEFT;
+					case "right": format.align = TextFormatAlign.RIGHT;
+					default:
+						format.align = TextFormatAlign.LEFT;
+				}
+			}
 			if (textRun.textAttrs.size != null) format.size = Std.int(textRun.textAttrs.size);
 			if (textRun.textAttrs.fillColor != 0) {
 				if (textRun.textAttrs.alpha != 0) {
@@ -126,7 +135,16 @@ class Symbols {
 			var pos = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null) format.font = textRun.textAttrs.face;
-			if (textRun.textAttrs.alignment != null) format.align = Reflect.field(TextFormatAlign, textRun.textAttrs.alignment.toUpperCase());
+			if (textRun.textAttrs.alignment != null) {
+				switch(textRun.textAttrs.alignment) {
+					case "center": format.align = TextFormatAlign.CENTER;
+					case "justify": format.align = TextFormatAlign.JUSTIFY;
+					case "left": format.align = TextFormatAlign.LEFT;
+					case "right": format.align = TextFormatAlign.RIGHT;
+					default:
+						format.align = TextFormatAlign.LEFT;
+				}
+			}
 			if (textRun.textAttrs.size != null) format.size = Std.int(textRun.textAttrs.size);
 			if (textRun.textAttrs.fillColor != 0) {
 				if (textRun.textAttrs.alpha != 0) {
