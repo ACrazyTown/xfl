@@ -281,10 +281,13 @@ class DataGrid extends BaseScrollPane {
         }
         if (Std.is(event.target, CellRenderer) == true) {
             var mouseCellRenderer: CellRenderer = cast(event.target, CellRenderer);
-            for (columnIdx in 0...columns.length) {
-                var cellRenderer: DisplayObject = dataDisplayObjects[mouseCellRenderer.listData.index - 1].getChildAt(columnIdx);
-                if (cellRenderer != null) {
-                    cast(cellRenderer, CellRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+            if (mouseCellRenderer != null) {
+                for (columnIdx in 0...columns.length) {
+                    var displayObjectIndex: Int = mouseCellRenderer.listData.index - 1;
+                    var cellRenderer: DisplayObject = displayObjectIndex < dataDisplayObjects.length?dataDisplayObjects[displayObjectIndex].getChildAt(columnIdx):null;
+                    if (cellRenderer != null) {
+                        cast(cellRenderer, CellRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                    }
                 }
             }
         }
