@@ -6,6 +6,7 @@ import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.text.TextField;
+import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
 import xfl.XFLSymbolArguments;
 import xfl.dom.DOMTimeline;
@@ -37,6 +38,7 @@ class LabelButton extends UIComponent {
         _textField.y = 0;
         _textField.width = textField.textWidth;
         _textField.height = textField.textHeight;
+        _textField.type = TextFieldType.DYNAMIC;
         _selected = false;
         toggle = false;
         mouseChildren = false;

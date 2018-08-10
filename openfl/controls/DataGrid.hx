@@ -75,7 +75,7 @@ class DataGrid extends BaseScrollPane {
     }
 
     public function getCellRendererAt(row: Int, column: Int): ICellRenderer {
-        return cast(dataDisplayObjects[columns.length + ((row - 1) * columns.length + column)], ICellRenderer);
+        return cast(dataDisplayObjects[row].getChildAt(column), ICellRenderer);
     }
 
     public function getItemAt(rowIdx: Int): Dynamic {
@@ -312,7 +312,7 @@ class DataGrid extends BaseScrollPane {
     private function onMouseEventClick(event: MouseEvent) : Void {
         if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
             var cell: CellRenderer = cast(event.target, CellRenderer);
-            var listData = cell.listData;
+            var listData: ListData = cell.listData;
             dispatchEvent(
                 new ListEvent(
                     ListEvent.ITEM_CLICK,
