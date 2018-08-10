@@ -34,6 +34,7 @@ class DataGrid extends BaseScrollPane {
     private var _dataProvider: DataProvider;
     private var headerDisplayObjects: Array<DisplayObjectContainer>;
     private var dataDisplayObjects: Array<DisplayObjectContainer>;
+    private var mouseOverDisplayObjects: DisplayObjectContainer;
     private var scrollPaneSource: Sprite;
 
     /**
@@ -44,6 +45,7 @@ class DataGrid extends BaseScrollPane {
         super(name, xflSymbolArguments/* != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid")*/);
         headerDisplayObjects = new Array<DisplayObjectContainer>();
         dataDisplayObjects = new Array<DisplayObjectContainer>();
+        mouseOverDisplayObjects = null;
         columns = new Array<DataGridColumn>();
         _width = 0;
         _height = 0;
@@ -279,17 +281,31 @@ class DataGrid extends BaseScrollPane {
                 }
             }
         }
-        if (Std.is(event.target, CellRenderer) == true) {
-            var mouseCellRenderer: CellRenderer = cast(event.target, CellRenderer);
-            if (mouseCellRenderer != null) {
-                for (columnIdx in 0...columns.length) {
-                    var displayObjectIndex: Int = mouseCellRenderer.listData.index - 1;
-                    var cellRenderer: DisplayObject = displayObjectIndex < dataDisplayObjects.length?dataDisplayObjects[displayObjectIndex].getChildAt(columnIdx):null;
-                    if (cellRenderer != null) {
-                        cast(cellRenderer, CellRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
-                    }
+
+        // un mouse over last mouse over cells
+        if (mouseOverDisplayObjects != null) {
+            for (columnIdx in 0...columns.length) {
+                var cellRenderer: DisplayObject = mouseOverDisplayObjects.getChildAt(columnIdx);
+                if (cellRenderer != null) {
+                    cast(cellRenderer, CellRenderer).setMouseState("out");
                 }
             }
+            mouseOverDisplayObjects = null;
+        }
+
+        // find mouse cell renderer down up the hierarchy
+        var mouseCellRendererCandidate: DisplayObject = event.target;
+        while(mouseCellRendererCandidate != null && Std.is(mouseCellRendererCandidate, CellRenderer) == false) mouseCellRendererCandidate = mouseCellRendererCandidate.parent;
+        var mouseCellRenderer: CellRenderer = mouseCellRendererCandidate != null?cast(mouseCellRendererCandidate, CellRenderer):null;
+        if (mouseCellRenderer != null) {
+            var displayObjectIndex: Int = mouseCellRenderer.listData.index - 1;
+            for (columnIdx in 0...columns.length) {
+                var cellRenderer: DisplayObject = displayObjectIndex < dataDisplayObjects.length?dataDisplayObjects[displayObjectIndex].getChildAt(columnIdx):null;
+                if (cellRenderer != null) {
+                    cast(cellRenderer, CellRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
+                }
+            }
+            mouseOverDisplayObjects = dataDisplayObjects[displayObjectIndex];
         }
     }
 
