@@ -159,11 +159,13 @@ class TextArea extends UIComponent {
 
     private function onScrollEvent(event: ScrollEvent): Void {
         textField.scrollV = Std.int(scrollBar.scrollPosition) + 1;
+        dispatchEvent(event);
     }
 
     private function onMouseWheel(event: MouseEvent): Void {
         textField.scrollV = textField.scrollV - event.delta;
         if (scrollBar != null) scrollBar.scrollPosition = textField.scrollV - 1;
+        dispatchEvent(event);
     }
 
     private function textFieldChangeHandler(e : Event) : Void {
@@ -178,6 +180,7 @@ class TextArea extends UIComponent {
                 textField.scrollV++;
             }
         }
+        dispatchEvent(e);
     }
 
 }
