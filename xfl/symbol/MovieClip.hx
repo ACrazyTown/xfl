@@ -15,6 +15,7 @@ class MovieClip extends xfl.display.MovieClip {
 	public var children: Array<DisplayObject>;
 
 	public var xflSymbolArguments(get, never): XFLSymbolArguments;
+	public var frameRate: Float;
 
 	private var _xflSymbolArguments: XFLSymbolArguments;
 	private var lastFrame: Int;
@@ -25,6 +26,8 @@ class MovieClip extends xfl.display.MovieClip {
 	private var playing: Bool;
 	private var dfInvisibleObjects: Array<DisplayObject>;
 	private var dfProcessedObjects: Array<DisplayObject>;
+	private var currentFrameStarted: Float;
+	private var customFrameDelay: Map<Int, Float>;
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
@@ -45,11 +48,18 @@ class MovieClip extends xfl.display.MovieClip {
 			layers, 
 			children
 		);
+		frameRate = 24.0;
+		currentFrameStarted = -1.0;
 		update();
 	}
 
 	private function get_xflSymbolArguments(): XFLSymbolArguments {
 		return _xflSymbolArguments;
+	}
+
+	public function setFrameDelay(frame: Dynamic, delay: Float) {
+		if (customFrameDelay == null) customFrameDelay = new Map<Int, Float>();
+		customFrameDelay.set(getFrame(frame), delay);
 	}
 
 	override private function get_currentFrameLabel(): String {
@@ -86,7 +96,14 @@ class MovieClip extends xfl.display.MovieClip {
 				currentFrame = startFrame;
 			}
 		} else {
-			currentFrame++;
+			var now: Float = haxe.Timer.stamp();
+			var currentFrameTime = now - currentFrameStarted;
+			var customFrameDelay: Null<Float> = customFrameDelay == null?null:customFrameDelay.get(currentFrame);
+			var frameDelay: Float = customFrameDelay == null?1.0 / frameRate:customFrameDelay;
+			if (currentFrameTime > frameDelay) {
+				currentFrameStarted = now;
+				currentFrame++;
+			}
 		}
 		update();
 	}
@@ -111,6 +128,7 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public override function gotoAndPlay(frame: Dynamic, scene: String = null): Void {
 		stop();
+		currentFrameStarted = haxe.Timer.stamp();
 		currentFrame = getFrame(frame);
 		startFrame = currentFrame;
 		repeat = false;
@@ -120,6 +138,7 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public override function gotoAndPlayRange(startFrame: Dynamic, endFrame: Dynamic = null, repeat: Bool = true, scene: String = null): Void {
 		stop();
+		currentFrameStarted = haxe.Timer.stamp();
 		currentFrame = getFrame(startFrame);
 		this.startFrame = currentFrame;
 		this.endFrame = endFrame == null?totalFrames:getFrame(endFrame) - 1;
@@ -130,6 +149,7 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public override function gotoAndStop(frame: Dynamic, scene: String = null): Void {
 		stop();
+		currentFrameStarted = -1.0;
 		startFrame = currentFrame;
 		currentFrame = getFrame(frame);
 		repeat = false;
@@ -149,6 +169,7 @@ class MovieClip extends xfl.display.MovieClip {
 			trace("play(): do not play clip without parent: " + name);
 		}
 		if (!playing && endFrame > currentFrame) {
+			currentFrameStarted = haxe.Timer.stamp();
 			playing = true;
 			clips.push(this);
 		}
