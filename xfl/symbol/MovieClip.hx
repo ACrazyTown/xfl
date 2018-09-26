@@ -33,13 +33,17 @@ class MovieClip extends xfl.display.MovieClip {
 		super();
 		this._xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
 		currentLabels = [];
+		// TODO: check if registering a single event listener multiple times work or not
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		lastFrame = -1;
 		currentFrame = 1;
 		layers = [];
 		children = [];
 		totalFrames = Shared.init(layers, this.xflSymbolArguments.timeline, currentLabels);
+		startFrame = 1;
 		endFrame = totalFrames;
+		repeat = false;
+		playing = false;
 		dfInvisibleObjects = [];
 		dfProcessedObjects = [];
 		Shared.createFrames(
@@ -89,19 +93,20 @@ class MovieClip extends xfl.display.MovieClip {
 			}
 			parent = parent.parent;
 		}
-		if (currentFrame == endFrame) {
-			if (repeat == false) {
-				stop();
+
+		var now: Float = haxe.Timer.stamp();
+		var currentFrameTime = now - currentFrameStarted;
+		var customFrameDelay: Null<Float> = customFrameDelay == null?null:customFrameDelay.get(currentFrame);
+		var frameDelay: Float = customFrameDelay == null?1.0 / frameRate:customFrameDelay;
+		if (currentFrameTime > frameDelay) {
+			currentFrameStarted = now;
+			if (currentFrame == endFrame) {
+				if (repeat == false) {
+					stop();
+				} else {
+					currentFrame = startFrame;
+				}
 			} else {
-				currentFrame = startFrame;
-			}
-		} else {
-			var now: Float = haxe.Timer.stamp();
-			var currentFrameTime = now - currentFrameStarted;
-			var customFrameDelay: Null<Float> = customFrameDelay == null?null:customFrameDelay.get(currentFrame);
-			var frameDelay: Float = customFrameDelay == null?1.0 / frameRate:customFrameDelay;
-			if (currentFrameTime > frameDelay) {
-				currentFrameStarted = now;
 				currentFrame++;
 			}
 		}
@@ -131,9 +136,10 @@ class MovieClip extends xfl.display.MovieClip {
 		currentFrameStarted = haxe.Timer.stamp();
 		currentFrame = getFrame(frame);
 		startFrame = currentFrame;
+		endFrame = totalFrames;
 		repeat = false;
 		update();
-		play();
+		_play();
 	}
 
 	public override function gotoAndPlayRange(startFrame: Dynamic, endFrame: Dynamic = null, repeat: Bool = true, scene: String = null): Void {
@@ -144,14 +150,15 @@ class MovieClip extends xfl.display.MovieClip {
 		this.endFrame = endFrame == null?totalFrames:getFrame(endFrame) - 1;
 		this.repeat = repeat;
 		update();
-		play();
+		_play();
 	}
 
 	public override function gotoAndStop(frame: Dynamic, scene: String = null): Void {
 		stop();
 		currentFrameStarted = -1.0;
-		startFrame = currentFrame;
 		currentFrame = getFrame(frame);
+		startFrame = currentFrame;
+		endFrame = currentFrame;
 		repeat = false;
 		update();
 	}
@@ -165,16 +172,22 @@ class MovieClip extends xfl.display.MovieClip {
 	}
 
 	public override function play(): Void {
+		startFrame = 1;
+		endFrame = totalFrames;
+		repeat = true;
+		_play();
+	}
+
+	public function _play(): Void {
 		if (parent == null) {
 			trace("play(): do not play clip without parent: " + name);
 		}
-		if (!playing && endFrame > currentFrame) {
+		if (playing == false) {
 			currentFrameStarted = haxe.Timer.stamp();
 			playing = true;
 			clips.push(this);
 		}
 	}
-
 	
 	public override function prevFrame(): Void {
 		var previous = currentFrame - 1;
