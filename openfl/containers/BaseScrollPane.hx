@@ -1,7 +1,5 @@
 package openfl.containers;
 
-import com.slipshift.engine.helpers.Utils;
-
 import openfl.core.UIComponent;
 import openfl.controls.ScrollBar;
 import openfl.display.DisplayObject;

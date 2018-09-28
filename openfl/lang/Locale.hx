@@ -1,6 +1,6 @@
 package openfl.lang;
 
-import com.slipshift.engine.core.Assets;
+import xfl.XFLAssets;
 
 /**
  * Locale
@@ -32,7 +32,7 @@ class Locale {
             return;
         }
         localeStrings = new Map<String, String>();
-        for (element in Assets.getXMLAsset(xmlPaths.get(language)).node.file.node.body.elements) {
+        for (element in XFLAssets.getInstance().getXFLXMLAsset(xmlPaths.get(language)).node.file.node.body.elements) {
             if (element.name == "trans-unit") {
                 var key: String = element.att.resname;
                 var value: String = element.node.source.innerData;

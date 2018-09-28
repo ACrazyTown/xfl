@@ -1,7 +1,5 @@
 package openfl.controls;
 
-import com.slipshift.engine.helpers.Utils;
-
 import openfl.containers.BaseScrollPane;
 import openfl.core.UIComponent;
 import openfl.display.DisplayObject;
@@ -131,6 +129,10 @@ class ScrollBar extends UIComponent {
         getXFLMovieClip("ScrollThumb_upSkin").addEventListener(MouseEvent.MOUSE_OVER, onScrollThumbMouseEvent);
         getXFLMovieClip("ScrollThumb_overSkin").addEventListener(MouseEvent.MOUSE_OVER, onScrollThumbMouseEvent);
         getXFLMovieClip("ScrollThumb_downSkin").addEventListener(MouseEvent.MOUSE_OVER, onScrollThumbMouseEvent);
+
+        getXFLMovieClip("ScrollThumb_upSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollThumbMouseEvent);
+        getXFLMovieClip("ScrollThumb_overSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollThumbMouseEvent);
+        getXFLMovieClip("ScrollThumb_downSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollThumbMouseEvent);
 
         getXFLMovieClip("ScrollThumb_upSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollThumbMouseEvent);
         getXFLMovieClip("ScrollThumb_overSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollThumbMouseEvent);
@@ -315,7 +317,10 @@ class ScrollBar extends UIComponent {
         if (disabled == true) {
             return;
         }
+        if (scrollThumbState == "down") return;
         switch(event.type) {
+            case MouseEvent.MOUSE_OUT:
+                setScrollThumbState("up");
             case MouseEvent.MOUSE_OVER:
                 setScrollThumbState("over");
             case MouseEvent.MOUSE_DOWN:
