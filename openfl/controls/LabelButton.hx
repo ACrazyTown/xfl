@@ -5,6 +5,7 @@ import openfl.display.Sprite;
 import openfl.display.DisplayObject;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.text.TextFieldType;
 import openfl.text.TextFormat;
@@ -109,7 +110,9 @@ class LabelButton extends UIComponent {
         var styleName: String = (_selected == true?"selected" + mouseState.charAt(0).toUpperCase() + mouseState.substr(1).toLowerCase():mouseState) + "Icon";
         var newIcon: DisplayObject = styles.get(styleName);
         if (newIcon != null) {
+            var iconBounds: Rectangle = newIcon.getBounds(null);
             newIcon.visible = true;
+            _textField.x = newIcon.x + iconBounds.width + _textPadding;
             currentIcon = newIcon;
         }
         if (currentSkin != null) {
@@ -131,6 +134,7 @@ class LabelButton extends UIComponent {
             newSkin.width = width;
             newSkin.height = height;
             newSkin.visible = true;
+            _textField.y = (height - textField.textHeight) / 2.0;
             currentSkin = newSkin;
         }
     }
@@ -139,7 +143,7 @@ class LabelButton extends UIComponent {
         super.setSize(_width, _height);
         _textField.width = _width - _textPadding;
         _textField.height = textField.textHeight;
-        _textField.y = (_height - _textField.height) / 2;
+        _textField.y = (_height - _textField.height) / 2.0;
     }
 
     private function onMouseEvent(event: MouseEvent): Void {
