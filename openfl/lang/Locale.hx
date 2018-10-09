@@ -13,6 +13,13 @@ class Locale {
     private static var localeStrings: Map<String, String> = new Map<String, String>();
     private static var xmlPaths: Map<String, String> = new Map<String, String>();
 
+    public static function reset() {
+        autoReplace = true;
+        localeLanguage = "default";
+        localeStrings = new Map<String, String>();
+        xmlPaths = new Map<String, String>();
+    }
+
     public static function addXMLPath(lang: String, assetName: String): Void {
         xmlPaths.set(lang, assetName);
     }
