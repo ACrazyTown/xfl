@@ -81,9 +81,9 @@ class BaseScrollPane extends UIComponent {
         _scrollBar.pageScrollSize = height;
         _scrollBar.visible = _source != null && (_source.y + _source.height) > height;
         if (_scrollBar.visible == true) {
-            addChild(_scrollBar);
+            if (getChildByName(_scrollBar.name) == null) addChild(_scrollBar);
         } else {
-            removeChild(_scrollBar);
+            if (getChildByName(_scrollBar.name) != null) removeChild(_scrollBar);
         }
         scrollY = scrollY;
         updateSourceChildren();
