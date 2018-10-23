@@ -51,7 +51,7 @@ class DOMFrame {
 	}
 
 	public static function parse(xml: Fast): DOMFrame {
-		var frame = new DOMFrame();
+		var frame: DOMFrame = new DOMFrame();
 		frame.name = xml.has.name == true?xml.att.name:null;
 		frame.index = Std.parseInt(xml.att.index);
 		frame.duration = xml.has.duration == true?Std.parseInt(xml.att.duration):1;

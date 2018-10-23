@@ -12,7 +12,7 @@ class DOMLayer {
 	public var parentLayerIndex: Int;
 
 	public function new() {
-		frames = new Array <DOMFrame> ();
+		frames = new Array<DOMFrame>();
 	}
 
 	public static function parse(index: Int, xml: Fast): DOMLayer {

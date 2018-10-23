@@ -1,7 +1,7 @@
 package xfl.dom;
 
-import xfl.geom.Matrix;
-import xfl.geom.Point;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 import haxe.xml.Fast;
 
 class DOMComponentInstance {
@@ -23,9 +23,9 @@ class DOMComponentInstance {
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "transformationPoint":
-					componentInstance.transformationPoint = Point.parse(element.elements.next());
+					componentInstance.transformationPoint = xfl.geom.Point.parse(element.elements.next());
 				case "matrix":
-					componentInstance.matrix = Matrix.parse(element.elements.next());
+					componentInstance.matrix = xfl.geom.Matrix.parse(element.elements.next());
 				case "parametersAsXML":
 					var propertyElementXML: Fast = new Fast(Xml.parse(element.innerData));
 					for (propertyElement in propertyElementXML.elements) {

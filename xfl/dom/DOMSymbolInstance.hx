@@ -1,8 +1,8 @@
 package xfl.dom;
 
 import xfl.geom.Color;
-import xfl.geom.Matrix;
-import xfl.geom.Point;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 import haxe.xml.Fast;
 
 class DOMSymbolInstance {
@@ -21,11 +21,11 @@ class DOMSymbolInstance {
 	}
 
 	public function clone ():DOMSymbolInstance {
-		var duplicate = new DOMSymbolInstance();
-		if (color != null) duplicate.color = new Color (color.redMultiplier, color.greenMultiplier, color.blueMultiplier, color.alphaMultiplier, color.redOffset, color.greenOffset, color.blueOffset, color.alphaOffset);
+		var duplicate: DOMSymbolInstance = new DOMSymbolInstance();
+		if (color != null) duplicate.color = new Color(color.redMultiplier, color.greenMultiplier, color.blueMultiplier, color.alphaMultiplier, color.redOffset, color.greenOffset, color.blueOffset, color.alphaOffset);
 		duplicate.libraryItemName = libraryItemName;
 		duplicate.loop = loop;
-		if (matrix != null) duplicate.matrix = new Matrix (matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+		if (matrix != null) duplicate.matrix = new Matrix(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
 		duplicate.name = name;
 		duplicate.symbolType = symbolType;
 		duplicate.transformationPoint = transformationPoint;
@@ -43,9 +43,9 @@ class DOMSymbolInstance {
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "transformationPoint":
-					symbolInstance.transformationPoint = Point.parse(element.elements.next());
+					symbolInstance.transformationPoint = xfl.geom.Point.parse(element.elements.next());
 				case "matrix":
-					symbolInstance.matrix = Matrix.parse(element.elements.next());
+					symbolInstance.matrix = xfl.geom.Matrix.parse(element.elements.next());
 				case "color":
 					symbolInstance.color = Color.parse(element.elements.next());
 			}

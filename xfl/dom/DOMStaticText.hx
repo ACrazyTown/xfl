@@ -1,7 +1,7 @@
 package xfl.dom;
 
-import xfl.geom.Matrix;
-import xfl.geom.Point;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 import haxe.xml.Fast;
 
 class DOMStaticText {
@@ -16,28 +16,31 @@ class DOMStaticText {
 	public var width: Float;
 
 	public function new() {
-		textRuns = new Array <DOMTextRun> ();
+		textRuns = new Array<DOMTextRun> ();
 	}
 
 	public static function parse (xml: Fast): DOMStaticText {
-		var staticText = new DOMStaticText();
+		var staticText: DOMStaticText = new DOMStaticText();
 		staticText.height = Std.parseFloat(xml.att.height);
 		staticText.width = Std.parseFloat(xml.att.width);
 		staticText.multiLine = xml.has.lineType == true && xml.att.lineType == "multiline";
-		staticText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0;
-		staticText.top = (xml.has.top == true)?Std.parseFloat(xml.att.top):0;
+		staticText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0.0;
+		staticText.top = (xml.has.top == true)?Std.parseFloat(xml.att.top):0.0;
 		staticText.isSelectable = xml.has.isSelectable == false || xml.att.isSelectable == "true";
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":
-					staticText.matrix = Matrix.parse (element.elements.next ());
+					staticText.matrix = xfl.geom.Matrix.parse(element.elements.next());
 				case "textRuns":
 					for (childElement in element.elements) {
-						staticText.textRuns.push (DOMTextRun.parse (childElement));
+						staticText.textRuns.push(DOMTextRun.parse(childElement));
 					}
 			}
 		}
-		if (staticText.matrix != null) staticText.left = staticText.matrix.deltaTransformPoint(new Point(staticText.left, 0.0)).x;
+		if (staticText.matrix != null) {
+			staticText.left = staticText.matrix.deltaTransformPoint(new Point(staticText.left, 0.0)).x;
+			staticText.top = staticText.matrix.deltaTransformPoint(new Point(0.0, staticText.top)).y;
+		}
 		return staticText;
 	}
 

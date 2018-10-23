@@ -1,7 +1,7 @@
 package xfl.fill;
 
 import haxe.xml.Fast;
-import xfl.geom.Matrix;
+import openfl.geom.Matrix;
 
 class Bitmap {
 
@@ -12,12 +12,12 @@ class Bitmap {
 	}
 
 	public static function parse(xml: Fast): Bitmap {
-		var bitmap = new Bitmap();
+		var bitmap: Bitmap = new Bitmap();
 		bitmap.bitmapPath = xml.att.bitmapPath;
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":
-					bitmap.matrix = Matrix.parse(element.elements.next());
+					bitmap.matrix = xfl.geom.Matrix.parse(element.elements.next());
 			}
 		}
 		return bitmap;

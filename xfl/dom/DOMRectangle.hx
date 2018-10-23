@@ -1,8 +1,8 @@
 package xfl.dom;
 
 import xfl.fill.FillStyle;
-import xfl.geom.Matrix;
-import xfl.geom.Point;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 import xfl.stroke.StrokeStyle;
 import haxe.xml.Fast;
 
@@ -28,9 +28,9 @@ class DOMRectangle extends DOMShapeBase {
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "transformationPoint":
-					shape.transformationPoint = Point.parse(element.elements.next());
+					shape.transformationPoint = xfl.geom.Point.parse(element.elements.next());
 				case "matrix":
-					shape.matrix = Matrix.parse(element.elements.next ());
+					shape.matrix = xfl.geom.Matrix.parse(element.elements.next ());
 				case "fills":
 					for (childElement in element.elements) {
 						shape.fills.push(FillStyle.parse(childElement));

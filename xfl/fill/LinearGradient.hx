@@ -1,6 +1,6 @@
 package xfl.fill;
 
-import xfl.geom.Matrix;
+import openfl.geom.Matrix;
 import haxe.xml.Fast;
 
 class LinearGradient {
@@ -14,14 +14,14 @@ class LinearGradient {
 	}
 
 	public static function parse(xml: Fast): LinearGradient {
-		var linearGradient = new LinearGradient ();
+		var linearGradient: LinearGradient = new LinearGradient ();
 		if (xml.has.spreadMethod) linearGradient.spreadMethod = xml.att.spreadMethod;
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":
-					linearGradient.matrix = Matrix.parse (element.elements.next ());
+					linearGradient.matrix = xfl.geom.Matrix.parse(element.elements.next ());
 				case "GradientEntry":
-					linearGradient.entries.push (GradientEntry.parse (element));
+					linearGradient.entries.push(GradientEntry.parse (element));
 			}
 		}
 		return linearGradient;

@@ -1,7 +1,7 @@
 package xfl.dom;
 
-import xfl.geom.Matrix;
-import xfl.geom.Point;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 import haxe.xml.Fast;
 
 class DOMDynamicText {
@@ -22,30 +22,33 @@ class DOMDynamicText {
 	public var type: Int;
 
 	public function new() {
-		textRuns = new Array <DOMTextRun> ();
+		textRuns = new Array<DOMTextRun>();
 	}
 
 	public static function parse(xml: Fast, type: Int): DOMDynamicText {
-		var dynamicText = new DOMDynamicText ();
+		var dynamicText: DOMDynamicText = new DOMDynamicText();
 		dynamicText.type = type;
-		dynamicText.height = Std.parseFloat (xml.att.height);
-		dynamicText.width = Std.parseFloat (xml.att.width);
+		dynamicText.height = Std.parseFloat(xml.att.height);
+		dynamicText.width = Std.parseFloat(xml.att.width);
 		if (xml.has.name) dynamicText.name = xml.att.name;
 		dynamicText.isSelectable = xml.has.isSelectable == false || xml.att.isSelectable == "true";
 		dynamicText.multiLine = xml.has.lineType == true && xml.att.lineType == "multiline";
-		dynamicText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0;
-		dynamicText.top = (xml.has.top == true)?Std.parseFloat(xml.att.top):0;
+		dynamicText.left = (xml.has.left == true)?Std.parseFloat(xml.att.left):0.0;
+		dynamicText.top = (xml.has.top == true)?Std.parseFloat(xml.att.top):0.0;
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":
-					dynamicText.matrix = Matrix.parse (element.elements.next ());
+					dynamicText.matrix = xfl.geom.Matrix.parse(element.elements.next ());
 				case "textRuns":
 					for (childElement in element.elements) {
-						dynamicText.textRuns.push (DOMTextRun.parse (childElement));
+						dynamicText.textRuns.push(DOMTextRun.parse(childElement));
 					}
 			}
 		}
-		if (dynamicText.matrix != null) dynamicText.left = dynamicText.matrix.deltaTransformPoint(new Point(dynamicText.left, 0.0)).x;
+		if (dynamicText.matrix != null) {
+			dynamicText.left = dynamicText.matrix.deltaTransformPoint(new Point(dynamicText.left, 0.0)).x;
+			dynamicText.top = dynamicText.matrix.deltaTransformPoint(new Point(0.0, dynamicText.top)).y;
+		}
 		return dynamicText;
 	}
 	

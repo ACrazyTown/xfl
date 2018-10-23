@@ -28,7 +28,7 @@ import xfl.XFL;
 class Symbols {
 
 	public static function createShape(xfl: XFL, instance: DOMShape): Shape {
-		var shape = new Shape(instance);
+		var shape: Shape = new Shape(instance);
 		if (instance.matrix != null) {
 			shape.transform.matrix = instance.matrix;
 		}
@@ -38,7 +38,7 @@ class Symbols {
 	}
 
 	public static function createRectangle(xfl: XFL, instance: DOMRectangle): Rectangle {
-		var rectangle = new Rectangle(instance);
+		var rectangle: Rectangle = new Rectangle(instance);
 		if (instance.matrix != null) {
 			rectangle.transform.matrix = instance.matrix;
 		}
@@ -48,8 +48,8 @@ class Symbols {
 	}
 
 	public static function createBitmap(xfl: XFL, instance: DOMBitmapInstance): Bitmap {
-		var bitmap = null;
-		var bitmapData = null;
+		var bitmap: Bitmap = null;
+		var bitmapData: BitmapData = null;
 		for (document in xfl.documents) {
 			if (document.media.exists(instance.libraryItemName)) {
 				var bitmapItem: DOMBitmapItem = document.media.get(instance.libraryItemName).item;
@@ -70,7 +70,7 @@ class Symbols {
 	}
 
 	public static function createDynamicText(instance: DOMDynamicText): TextField {
-		var textField = new TextField();
+		var textField: TextField = new TextField();
 		textField.type = instance.type == DOMDynamicText.TYPE_INPUT?TextFieldType.INPUT:TextFieldType.DYNAMIC;
 		textField.width = instance.width;
 		textField.height = instance.height;
@@ -86,9 +86,9 @@ class Symbols {
 
 		textField.x+= instance.left;
 		textField.y+= instance.top;
-		var format = new TextFormat();
 		for (textRun in instance.textRuns) {
-			var pos = textField.text.length;
+			var format: TextFormat = new TextFormat();
+			var pos: Int = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null) format.font = textRun.textAttrs.face;
 			if (textRun.textAttrs.alignment != null) {
@@ -117,7 +117,7 @@ class Symbols {
 	}
 
 	public static function createStaticText(instance: DOMStaticText): TextField {
-		var textField = new TextField();
+		var textField: TextField = new TextField();
 		textField.width = instance.width;
 		textField.height = instance.height;
 		textField.selectable = instance.isSelectable;
@@ -130,9 +130,9 @@ class Symbols {
 		}
 		textField.x+= instance.left;
 		textField.y+= instance.top;
-		var format = new TextFormat();
 		for (textRun in instance.textRuns) {
-			var pos = textField.text.length;
+			var format: TextFormat = new TextFormat();
+			var pos: Int = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null) format.font = textRun.textAttrs.face;
 			if (textRun.textAttrs.alignment != null) {
@@ -189,7 +189,7 @@ class Symbols {
 	private static function createMovieClip(xfl: XFL, instance: DOMSymbolInstance): XFLMovieClip {
 		var symbolItem: DOMSymbolItem = null;
 		var movieClip: XFLMovieClip = null;
-		var loadedByCustomLoader = false;
+		var loadedByCustomLoader: Bool = false;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
@@ -232,9 +232,9 @@ class Symbols {
 	}
 
 	private static function createSprite(xfl: XFL, instance: DOMSymbolInstance): XFLSprite {
-		var symbolItem = null;
+		var symbolItem : DOMSymbolItem = null;
 		var sprite: XFLSprite = null;
-		var loadedByCustomLoader = false;
+		var loadedByCustomLoader: Bool = false;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
 				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
@@ -277,7 +277,7 @@ class Symbols {
 	}
 
 	private static function createOther(xfl: XFL, instance: DOMSymbolInstance, className: String): Sprite {
-		var symbolItem = null;
+		var symbolItem: DOMSymbolItem = null;
 		var other: Sprite = null;
 		for (document in xfl.documents) {
 			if (document.symbols.exists(instance.libraryItemName)) {
@@ -398,11 +398,11 @@ class Symbols {
 			}
 		}
 		if (Std.is(component, DisplayObjectContainer) == true) {
-			var container = cast(component, DisplayObjectContainer);
-			var containerWidth = container.width;
-			var containerHeight = container.height;
-			var containerScaleX = container.scaleX;
-			var containerScaleY = container.scaleY;
+			var container: DisplayObjectContainer = cast(component, DisplayObjectContainer);
+			var containerWidth: Float = container.width;
+			var containerHeight: Float = container.height;
+			var containerScaleX: Float = container.scaleX;
+			var containerScaleY: Float = container.scaleY;
 			container.scaleX = 1.0;
 			container.scaleY = 1.0;
 			var parametersAreBlocked: Bool = false;

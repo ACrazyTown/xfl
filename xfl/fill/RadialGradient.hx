@@ -1,6 +1,6 @@
 package xfl.fill;
 
-import xfl.geom.Matrix;
+import openfl.geom.Matrix;
 import haxe.xml.Fast;
 
 class RadialGradient {
@@ -19,9 +19,9 @@ class RadialGradient {
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "matrix":
-					radialGradient.matrix = Matrix.parse (element.elements.next ());
+					radialGradient.matrix = xfl.geom.Matrix.parse(element.elements.next ());
 				case "GradientEntry":
-					radialGradient.entries.push (GradientEntry.parse (element));
+					radialGradient.entries.push(GradientEntry.parse (element));
 			}
 		}
 		return radialGradient;
