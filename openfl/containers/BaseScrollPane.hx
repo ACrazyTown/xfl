@@ -69,7 +69,11 @@ class BaseScrollPane extends UIComponent {
         var maskSprite: Sprite = cast(mask, Sprite);
         maskSprite.graphics.clear();
         if (width > 0.0 && height > 0.0) {
-            maskSprite.graphics.beginFill(0x000000);
+            graphics.clear();
+            graphics.beginFill(0xFF0000, 0.0);
+            graphics.drawRect(0.0, 0.0, _width, _height);
+            graphics.endFill();
+            maskSprite.graphics.beginFill(0xFF0000);
             maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
             maskSprite.graphics.endFill();
         }

@@ -33,24 +33,31 @@ class Slider extends UIComponent {
             addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
             addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
         }
-        getXFLDisplayObject("SliderTrack_skin").x = 0.0;
-        getXFLDisplayObject("SliderTrack_skin").y = 0.0;
-        getXFLDisplayObject("SliderTrack_skin").width = width;
-        getXFLDisplayObject("SliderTrack_skin").visible = true;
-        getXFLDisplayObject("SliderTrack_disabledSkin").x = 0.0;
-        getXFLDisplayObject("SliderTrack_disabledSkin").y = 0.0;
-        getXFLDisplayObject("SliderTrack_disabledSkin").width = width;
-        getXFLDisplayObject("SliderTrack_disabledSkin").visible = false;
-        getXFLDisplayObject("SliderTick_skin").x = 0.0;
-        getXFLDisplayObject("SliderTick_skin").y = 0.0;
-        getXFLDisplayObject("SliderThumb_upSkin").x = 0.0;
-        getXFLDisplayObject("SliderThumb_upSkin").y = 0.0;
-        getXFLDisplayObject("SliderThumb_overSkin").x = 0.0;
-        getXFLDisplayObject("SliderThumb_overSkin").y = 0.0;
-        getXFLDisplayObject("SliderThumb_downSkin").x = 0.0;
-        getXFLDisplayObject("SliderThumb_downSkin").y = 0.0;
-        getXFLDisplayObject("SliderThumb_disabledSkin").x = 0.0;
-        getXFLDisplayObject("SliderThumb_disabledSkin").y = 0.0;
+        getXFLMovieClip("SliderTrack_skin").mouseChildren = false;
+        getXFLMovieClip("SliderTrack_skin").x = 0.0;
+        getXFLMovieClip("SliderTrack_skin").y = 0.0;
+        getXFLMovieClip("SliderTrack_skin").width = width;
+        getXFLMovieClip("SliderTrack_skin").visible = true;
+        getXFLMovieClip("SliderTrack_disabledSkin").mouseChildren = false;
+        getXFLMovieClip("SliderTrack_disabledSkin").x = 0.0;
+        getXFLMovieClip("SliderTrack_disabledSkin").y = 0.0;
+        getXFLMovieClip("SliderTrack_disabledSkin").width = width;
+        getXFLMovieClip("SliderTrack_disabledSkin").visible = false;
+        getXFLMovieClip("SliderTick_skin").mouseChildren = false;
+        getXFLMovieClip("SliderTick_skin").x = 0.0;
+        getXFLMovieClip("SliderTick_skin").y = 0.0;
+        getXFLMovieClip("SliderThumb_upSkin").mouseChildren = false;
+        getXFLMovieClip("SliderThumb_upSkin").x = 0.0;
+        getXFLMovieClip("SliderThumb_upSkin").y = 0.0;
+        getXFLMovieClip("SliderThumb_overSkin").mouseChildren = false;
+        getXFLMovieClip("SliderThumb_overSkin").x = 0.0;
+        getXFLMovieClip("SliderThumb_overSkin").y = 0.0;
+        getXFLMovieClip("SliderThumb_downSkin").mouseChildren = false;
+        getXFLMovieClip("SliderThumb_downSkin").x = 0.0;
+        getXFLMovieClip("SliderThumb_downSkin").y = 0.0;
+        getXFLMovieClip("SliderThumb_disabledSkin").mouseChildren = false;
+        getXFLMovieClip("SliderThumb_disabledSkin").x = 0.0;
+        getXFLMovieClip("SliderThumb_disabledSkin").y = 0.0;
         setState(disabled == true?"disabled":"up");
     }
 
@@ -59,8 +66,8 @@ class Slider extends UIComponent {
             removeEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
             removeEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
             removeEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
-            if (stage != null) stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
-            if (stage != null) stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
+            openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
+            openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
         }
         super.disabled = _disabled;
         if (_disabled == false) {
@@ -76,29 +83,30 @@ class Slider extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
-        getXFLDisplayObject("SliderTrack_skin").width = width;
-        getXFLDisplayObject("SliderTrack_disabledSkin").width = width;
+        getXFLMovieClip("SliderTrack_skin").width = width;
+        getXFLMovieClip("SliderTrack_disabledSkin").width = width;
     }
 
     private function setState(state: String) {
-        getXFLDisplayObject("SliderTrack_skin").visible = disabled == false;
-        getXFLDisplayObject("SliderTrack_disabledSkin").visible = disabled == true;
-        getXFLDisplayObject("SliderThumb_" + this.state + "Skin").visible = false;
+        getXFLMovieClip("SliderTrack_skin").visible = disabled == false;
+        getXFLMovieClip("SliderTrack_disabledSkin").visible = disabled == true;
+        getXFLMovieClip("SliderThumb_" + this.state + "Skin").visible = false;
         this.state = state;
         var sliderRange: Float = maximum - minimum;
-        getXFLDisplayObject("SliderThumb_" + this.state + "Skin").x = getXFLDisplayObject("SliderTrack_skin").x + (sliderRange < 0.00001?0.0:((value - minimum) / sliderRange) * getXFLDisplayObject("SliderTrack_skin").width);
-        getXFLDisplayObject("SliderThumb_" + this.state + "Skin").visible = true;
-        getXFLDisplayObject("SliderTick_skin").x = getXFLDisplayObject("SliderTrack_skin").x + (((value - minimum) / (maximum - minimum)) * getXFLDisplayObject("SliderTrack_skin").width);
+        getXFLMovieClip("SliderThumb_" + this.state + "Skin").x = getXFLMovieClip("SliderTrack_skin").x + (sliderRange < 0.00001?0.0:((value - minimum) / sliderRange) * getXFLMovieClip("SliderTrack_skin").width);
+        getXFLMovieClip("SliderThumb_" + this.state + "Skin").visible = true;
+        getXFLMovieClip("SliderTick_skin").x = getXFLMovieClip("SliderTrack_skin").x + (((value - minimum) / (maximum - minimum)) * getXFLMovieClip("SliderTrack_skin").width);
     }
 
     private function onMouseEvent(event: MouseEvent) : Void {
+        if (parent == null) return;
         var newState: String = "up";
         switch(event.type) {
             case MouseEvent.MOUSE_OVER:
                 newState = "over";
             case MouseEvent.MOUSE_DOWN:
-                stage.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
-                stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
+                openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
+                openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
                 newState = "down";
             case MouseEvent.MOUSE_OUT:
                 newState = "up";
@@ -109,14 +117,19 @@ class Slider extends UIComponent {
     }
 
     private function onMouseEventMove(event: MouseEvent) : Void {
+        if (parent == null) {
+            openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
+            openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
+            return;
+        }
         switch(event.type) {
             case MouseEvent.MOUSE_UP:
-                stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
-                stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
+                openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
+                openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
                 setState("up");
             case MouseEvent.MOUSE_MOVE:
-                var mouseLocalX: Float = getXFLDisplayObject("SliderTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).x * getXFLDisplayObject("SliderTrack_skin").scaleX;
-                setValueInternal(minimum + ((mouseLocalX / getXFLDisplayObject("SliderTrack_skin").width) * (maximum - minimum)), true);
+                var mouseLocalX: Float = getXFLMovieClip("SliderTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).x * getXFLMovieClip("SliderTrack_skin").scaleX;
+                setValueInternal(minimum + ((mouseLocalX / getXFLMovieClip("SliderTrack_skin").width) * (maximum - minimum)), true);
             default:
                 trace("onMouseEventMove(): unsupported mouse event type '" + event.type + "'");
         }

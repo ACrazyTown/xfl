@@ -16,12 +16,13 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public var xflSymbolArguments(get, never): XFLSymbolArguments;
 	public var frameRate: Float;
+	public var repeat: Bool;
+	public var isPlaying(get, never): Bool;
 
 	private var _xflSymbolArguments: XFLSymbolArguments;
 	private var lastFrame: Int;
 	private var startFrame: Int;
 	private var endFrame: Int;
-	private var repeat: Bool;
 	private var layers: Array<DOMLayer>;
 	private var playing: Bool;
 	private var dfInvisibleObjects: Array<DisplayObject>;
@@ -222,6 +223,10 @@ class MovieClip extends xfl.display.MovieClip {
 			dfInvisibleObjects.splice(0, dfInvisibleObjects.length);
 			dfProcessedObjects.splice(0, dfProcessedObjects.length);
 		}
+	}
+
+	private function get_isPlaying() {
+		return playing;
 	}
 
 	private static function onEnterFrame(event: Event): Void {
