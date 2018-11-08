@@ -172,7 +172,7 @@ class Shared {
 						}
 					} else 
 					if (Std.is(element, DOMStaticText)) {
-						var text = Symbols.createStaticText(cast element);
+						var text: DisplayObject = Symbols.createStaticText(cast element);
 						if (text != null) {
 							text.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 							text.visible = false;
