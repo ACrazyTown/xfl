@@ -97,7 +97,7 @@ class XFLTween {
         return tween;
     }
 
-    public static function delayedCall(duration: Float, onComplete: Void->Void, onCompleteParams: Array<Dynamic> = null): Void {
+    public static function delayedCall(duration: Float, onComplete: Dynamic, onCompleteParams: Array<Dynamic> = null): Void {
         var tween : Dynamic = {};
         tween.object = null;
         tween.delay = Reflect.hasField(tween, "delay")?tween.delay:0.0;
@@ -334,7 +334,7 @@ class XFLTween {
         killTweensOf(object);
     }
 
-    public static function killDelayedCallsTo(onComplete: Void->Void): Void {
+    public static function killDelayedCallsTo(onComplete: Dynamic): Void {
 		for (tween in tweens) {
             if (tween.object == null &&
                 Reflect.hasField(tween, "onComplete") == true && 
