@@ -158,14 +158,14 @@ class XFLTween {
             tween.targetScaleY = tween.scaleY;
         }
         if (Reflect.hasField(tween, "glowFilter") == true) {
-            tween.glowFilter.targetStrength = tween.glowFilter.strength;
+            tween.glowFilter.targetStrength = tween.glowFilter.strength * 3.0;
             tween.glowFilter.initialStrength = 0.0;
             tween.glowFilterInstance = new GlowFilter(
                 tween.glowFilter.color,
                 tween.glowFilter.alpha,
                 tween.glowFilter.blurX,
                 tween.glowFilter.blurY,
-                tween.glowFilter.strength
+                tween.glowFilter.strength * 3.0
             );
             var objectFilters: Array<BitmapFilter> = object.filters;
             objectFilters.push(tween.glowFilterInstance);
@@ -264,8 +264,6 @@ class XFLTween {
         if (Reflect.hasField(tween, "glowFilter") == true) {
             var glowFilter: GlowFilter = cast(tween.glowFilterInstance, GlowFilter);
             glowFilter.strength = tween.glowFilter.initialStrength + ((tween.glowFilter.strength - tween.glowFilter.initialStrength) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration));
-            glowFilter.blurX = tween.glowFilter.blurX * glowFilter.strength / tween.glowFilter.targetStrength;
-            glowFilter.blurY = tween.glowFilter.blurY * glowFilter.strength / tween.glowFilter.targetStrength;
             var objectFilters: Array<BitmapFilter> = object.filters;
             if (objectFilters.indexOf(glowFilter) == -1) objectFilters.push(glowFilter);
             object.filters = objectFilters;
