@@ -158,14 +158,14 @@ class XFLTween {
             tween.targetScaleY = tween.scaleY;
         }
         if (Reflect.hasField(tween, "glowFilter") == true) {
-            tween.glowFilter.targetStrength = tween.glowFilter.strength * 3.0;
+            tween.glowFilter.targetStrength = tween.glowFilter.strength;
             tween.glowFilter.initialStrength = 0.0;
             tween.glowFilterInstance = new GlowFilter(
                 tween.glowFilter.color,
                 tween.glowFilter.alpha,
                 tween.glowFilter.blurX,
                 tween.glowFilter.blurY,
-                tween.glowFilter.strength * 3.0
+                tween.glowFilter.strength
             );
             var objectFilters: Array<BitmapFilter> = object.filters;
             objectFilters.push(tween.glowFilterInstance);
