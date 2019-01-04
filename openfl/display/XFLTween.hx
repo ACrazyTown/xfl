@@ -158,8 +158,9 @@ class XFLTween {
             tween.targetScaleY = tween.scaleY;
         }
         if (Reflect.hasField(tween, "glowFilter") == true) {
+            tween.glowFilter.firstInvocation = true;
             tween.glowFilter.targetStrength = tween.glowFilter.strength;
-            tween.glowFilter.initialStrength = 0.0;
+            tween.glowFilter.initialStrength = tween.glowFilter.strength;
             tween.glowFilterInstance = new GlowFilter(
                 tween.glowFilter.color,
                 tween.glowFilter.alpha,
@@ -263,14 +264,19 @@ class XFLTween {
         }
         if (Reflect.hasField(tween, "glowFilter") == true) {
             var glowFilter: GlowFilter = cast(tween.glowFilterInstance, GlowFilter);
-            glowFilter.strength = tween.glowFilter.initialStrength + ((tween.glowFilter.strength - tween.glowFilter.initialStrength) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration));
+            var strength: Float = tween.glowFilter.initialStrength + ((tween.glowFilter.strength - tween.glowFilter.initialStrength) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration));
+            if (tween.glowFilter.firstInvocation == true) {
+                glowFilter.strength = tween.glowFilter.targetStrength;
+                tween.glowFilter.firstInvocation = false;
+            } else {
+                glowFilter.strength = strength;
+            }
             var objectFilters: Array<BitmapFilter> = object.filters;
             if (objectFilters.indexOf(glowFilter) == -1) objectFilters.push(glowFilter);
             object.filters = objectFilters;
             if (applyYoyo == true) {
-                var glowFilter: GlowFilter = cast(tween.glowFilterInstance, GlowFilter);
-                tween.glowFilter.initialStrength = glowFilter.strength;
-                tween.glowFilter.strength = glowFilter.strength < 0.1?tween.glowFilter.targetStrength:0.0;
+                tween.glowFilter.strength = strength < 0.1?tween.glowFilter.targetStrength:0.0;
+                tween.glowFilter.initialStrength = strength;
             }
         }
         if (Reflect.hasField(tween, "dropShadowFilter") == true) {
@@ -280,7 +286,6 @@ class XFLTween {
             if (objectFilters.indexOf(dropShadowFilter) == -1) objectFilters.push(dropShadowFilter);
             object.filters = objectFilters;
             if (applyYoyo == true) {
-                var dropShadowFilter: DropShadowFilter = cast(tween.dropShadowFilterInstance, DropShadowFilter);
                 tween.dropShadowFilter.initialDistance = dropShadowFilter.distance;
                 tween.dropShadowFilter.distance = dropShadowFilter.distance < 0.1?tween.dropShadowFilter.targetDistance:0.0;
             }
