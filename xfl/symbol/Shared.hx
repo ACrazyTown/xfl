@@ -193,12 +193,23 @@ class Shared {
     public static function createFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, children: Array<DisplayObject>): Void {
 		var currentLayer: Int = 0;
 		var maskDisplayObjects: Array<Array<DisplayObject>> = createMaskDisplayObjects(xfl, container, layers, children);
+		var containerMask: Bool = false;
 		for (layer in layers) {
 			// TODO: a.drewke, handle hit area correctly
 			if (layer.name == "HitArea" || layer.name == "hitbox") continue;
 			if (layer.type == "mask") {
 				currentLayer++;
 				continue;
+			}
+			// work around for having a layer with multiple objects and one single mask layer for it, which I would place in container then
+			// TODO: fix me, make me more abstract
+			if (maskDisplayObjects.length > 0 && layers.length == 2 && currentLayer == 0) {
+				if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+					for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
+						container.mask = maskDisplayObject;
+						containerMask = true;
+					}
+				}
 			}
 			for (i in 0...layer.frames.length) {
 				var frame: DOMFrame = layer.frames[i];
@@ -212,7 +223,7 @@ class Shared {
 						}
 						symbol = Symbols.createSymbol(xfl, cast element);
 						if (symbol != null) {
-							if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+							if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 								for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 									symbol.mask = maskDisplayObject;
 								}
@@ -225,7 +236,7 @@ class Shared {
 					if (Std.is(element, DOMBitmapInstance)) {
 						var bitmap: Bitmap = Symbols.createBitmap(xfl, cast element);
 						if (bitmap != null) {
-							if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+							if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 								for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 									bitmap.mask = maskDisplayObject;
 								}
@@ -245,7 +256,7 @@ class Shared {
 						}
 						component = Symbols.createComponent(xfl, cast element);
 						if (component != null) {
-							if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+							if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 								for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 									component.mask = maskDisplayObject;
 								}
@@ -258,7 +269,7 @@ class Shared {
 					} else 
 					if (Std.is(element, DOMShape)) {
 						var shape: Shape = Symbols.createShape(xfl, cast element);
-						if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+						if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 							for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 								shape.mask = maskDisplayObject;
 							}
@@ -270,7 +281,7 @@ class Shared {
 					} else 
 					if (Std.is(element, DOMRectangle)) {
 						var rectangle: Rectangle = Symbols.createRectangle(xfl, cast element);
-						if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+						if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 							for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 								rectangle.mask = maskDisplayObject;
 							}
@@ -288,7 +299,7 @@ class Shared {
 						}
 						text = Symbols.createDynamicText(cast element);
 						if (text != null) {
-							if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+							if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 								for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 									text.mask = maskDisplayObject;
 								}
@@ -301,7 +312,7 @@ class Shared {
 					if (Std.is(element, DOMStaticText)) {
 						var text = Symbols.createStaticText(cast element);
 						if (text != null) {
-							if (layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+							if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 								for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 									text.mask = maskDisplayObject;
 								}
