@@ -3,7 +3,6 @@ package openfl.controls.listClasses;
 import openfl.display.DisplayObject;
 import openfl.display.XFLMovieClip;
 import openfl.events.MouseEvent;
-import com.slipshift.engine.helpers.Utils;
 
 /**
  * Cell Renderer

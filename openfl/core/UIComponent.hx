@@ -1,5 +1,6 @@
 package openfl.core;
 
+import openfl.display.DisplayObject;
 import openfl.display.XFLSprite;
 import xfl.XFLSymbolArguments;
 import xfl.dom.DOMTimeline;
@@ -148,6 +149,9 @@ class UIComponent extends XFLSprite {
     }
 
     public function setStyle(style: String, value: Dynamic): Void {
+        if (Std.is(value, DisplayObject) == true) {
+            cast(value, DisplayObject).parent = null;
+        }
         styles.set(style, value);
         draw();
     }

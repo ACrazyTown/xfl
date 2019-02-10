@@ -30,6 +30,8 @@ class LabelButton extends UIComponent {
     private var currentIcon: DisplayObject;
     private var currentSkin: DisplayObject;
 
+    private var _maxIconWidth: Float;
+
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null) {
         super(name, xflSymbolArguments);
         _textPadding = 5.0;
@@ -44,7 +46,6 @@ class LabelButton extends UIComponent {
         toggle = false;
         mouseChildren = false;
         buttonMode = true;
-        styles = new Map<String, Dynamic>();
         currentIcon = null;
         currentSkin = null;
         addChild(_textField);
@@ -53,6 +54,28 @@ class LabelButton extends UIComponent {
         addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
         addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
         setMouseState("up");
+    }
+
+    override public function setStyle(style: String, value: Dynamic): Void {
+        super.setStyle(style, value);
+        var tmpIconWidth: Float = 0.0;
+        _maxIconWidth = 0.0;
+        _maxIconWidth = getStyle("upIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("upIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("overIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("overIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("downIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("downIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("disabledIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("disabledIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("selectedUpIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("selectedUpIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("selectedOverIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("selectedOverIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("selectedDownIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("selectedDownIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        _maxIconWidth = getStyle("selectedDisabledIcon") == null?_maxIconWidth:(tmpIconWidth = cast(getStyle("selectedDisabledIcon"), DisplayObject).width) > _maxIconWidth?tmpIconWidth:_maxIconWidth;
+        if (getStyle("upIcon") != null) cast(getStyle("upIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("upIcon"), DisplayObject).width) / 2.0 - getStyle("upIcon").getBounds(null).x;
+        if (getStyle("overIcon") != null) cast(getStyle("overIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("overIcon"), DisplayObject).width) / 2.0 - getStyle("overIcon").getBounds(null).x;
+        if (getStyle("downIcon") != null) cast(getStyle("downIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("downIcon"), DisplayObject).width) / 2.0 - getStyle("downIcon").getBounds(null).x;
+        if (getStyle("disabledIcon") != null) cast(getStyle("disabledIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("disabledIcon"), DisplayObject).width) / 2.0 - getStyle("disabledIcon").getBounds(null).x;
+        if (getStyle("selectedUpIcon") != null) cast(getStyle("selectedUpIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("selectedUpIcon"), DisplayObject).width) / 2.0 - getStyle("selectedUpIcon").getBounds(null).x;
+        if (getStyle("selectedOverIcon") != null) cast(getStyle("selectedOverIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("selectedOverIcon"), DisplayObject).width) / 2.0 - getStyle("upIcon").getBounds(null).x;
+        if (getStyle("selectedDownIcon") != null) cast(getStyle("selectedDownIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("selectedDownIcon"), DisplayObject).width) / 2.0 - getStyle("selectedDownIcon").getBounds(null).x;
+        if (getStyle("selectedDisabledIcon") != null) cast(getStyle("selectedDisabledIcon"), DisplayObject).x = (_maxIconWidth - cast(getStyle("selectedDisabledIcon"), DisplayObject).width) / 2.0 - getStyle("selectedDisabledIcon").getBounds(null).x;
     }
 
     private function get_textField(): TextField {
@@ -68,6 +91,8 @@ class LabelButton extends UIComponent {
         if (defaultTextFormat != null) _textField.defaultTextFormat = defaultTextFormat;
         _textField.text = label;
         _textField.height = _textField.textHeight;
+        _textField.y = (_height - _textField.height) / 2.0;
+        draw();
         return label;       
     }
 
@@ -77,6 +102,7 @@ class LabelButton extends UIComponent {
 
     private function set_labelPlacement(labelPlacement: String): String {
         _labelPlacement = labelPlacement;
+        draw();
         return _labelPlacement;
     }
 
@@ -87,6 +113,7 @@ class LabelButton extends UIComponent {
     public function set_textPadding(_textPadding: Float): Float {
         _textField.x = _textPadding;
         _textField.width = _width - _textPadding; 
+        draw();
         return this._textPadding = _textPadding;
     }
 
@@ -106,24 +133,26 @@ class LabelButton extends UIComponent {
     }
 
     override private function draw() {
-        if (currentIcon != null) currentIcon.visible = false;
+        var textFormat = styles.get("textFormat");
+        if (textFormat != null && _textField.getTextFormat() != textFormat) {
+            _textField.setTextFormat(textFormat);
+            _textField.height = _textField.textHeight;
+            _textField.y = (_height - _textField.height) / 2.0;
+        }
+        if (currentIcon != null) removeChild(currentIcon);
         var styleName: String = (_selected == true?"selected" + mouseState.charAt(0).toUpperCase() + mouseState.substr(1).toLowerCase():mouseState) + "Icon";
         var newIcon: DisplayObject = styles.get(styleName);
         if (newIcon != null) {
             var iconBounds: Rectangle = newIcon.getBounds(null);
             newIcon.visible = true;
-            _textField.x = newIcon.x + iconBounds.width + _textPadding;
+            newIcon.y = (_height - newIcon.height) / 2.0 - iconBounds.y;
+            _textField.x = _maxIconWidth + _textPadding;
             currentIcon = newIcon;
+            addChild(currentIcon);
         }
         if (currentSkin != null) {
             currentSkin.visible = false;
             removeChild(currentSkin);
-        }
-        var textFormat = styles.get("textFormat");
-        if (textFormat != null && _textField.getTextFormat() != textFormat) {
-            _textField.setTextFormat(textFormat);
-            _textField.height = textField.textHeight;
-            _textField.y = (_height - _textField.height) / 2;
         }
         var newSkin: DisplayObject = styles.get(mouseState + "Skin");
         if (newSkin == null) styles.get("upSkin");
@@ -131,18 +160,16 @@ class LabelButton extends UIComponent {
             addChildAt(newSkin, 0);
             newSkin.x = 0.0;
             newSkin.y = 0.0;
-            newSkin.width = width;
-            newSkin.height = height;
+            newSkin.width = _width;
+            newSkin.height = _height;
             newSkin.visible = true;
-            _textField.y = (height - textField.textHeight) / 2.0;
             currentSkin = newSkin;
         }
     }
 
     override public function setSize(_width: Float, _height: Float): Void {
         super.setSize(_width, _height);
-        _textField.width = _width - _textPadding;
-        _textField.height = textField.textHeight;
+        _textField.width = _width - _textPadding; 
         _textField.y = (_height - _textField.height) / 2.0;
     }
 

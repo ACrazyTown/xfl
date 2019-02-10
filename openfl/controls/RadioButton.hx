@@ -44,8 +44,6 @@ class RadioButton extends LabelButton {
         getXFLMovieClip("RadioButton_selectedDownIcon").visible = false;
         getXFLMovieClip("RadioButton_selectedDisabledIcon").visible = false;
 
-        layoutChildren();
-
         setMouseState("up");
     }
 
@@ -107,26 +105,6 @@ class RadioButton extends LabelButton {
 
     override public function setSize(_width: Float, _height: Float): Void {
         super.setSize(_width, _height);
-        layoutChildren();
-    }
-
-    private function layoutChildren() {
-        getXFLMovieClip("RadioButton_upIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_upIcon").y = (height - getXFLMovieClip("RadioButton_upIcon").height) / 2;
-        getXFLMovieClip("RadioButton_overIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_overIcon").y = (height - getXFLMovieClip("RadioButton_overIcon").height) / 2;
-        getXFLMovieClip("RadioButton_downIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_downIcon").y = (height - getXFLMovieClip("RadioButton_downIcon").height) / 2;
-        getXFLMovieClip("RadioButton_disabledIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_disabledIcon").y = (height - getXFLMovieClip("RadioButton_disabledIcon").height) / 2;
-        getXFLMovieClip("RadioButton_selectedUpIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_selectedUpIcon").y = (height - getXFLMovieClip("RadioButton_selectedUpIcon").height) / 2;
-        getXFLMovieClip("RadioButton_selectedOverIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_selectedOverIcon").y = (height - getXFLMovieClip("RadioButton_selectedOverIcon").height) / 2;
-        getXFLMovieClip("RadioButton_selectedDownIcon").x = 0.0;
-        getXFLMovieClip("RadioButton_selectedDownIcon").y = (height - getXFLMovieClip("RadioButton_selectedDownIcon").height) / 2;
-        getXFLMovieClip("RadioButton_selectedDisabledIcon").x = 0.0; 
-        getXFLMovieClip("RadioButton_selectedDisabledIcon").y = (height - getXFLMovieClip("RadioButton_selectedDisabledIcon").height) / 2;
     }
 
 }
