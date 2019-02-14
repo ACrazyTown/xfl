@@ -23,9 +23,6 @@ class RadioButton extends LabelButton {
     {
         // TODO: clean up group and its radiobuttons if removed
         super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.RadioButton"));
-        _selected = false;
-        toggle = true;
-
         setStyle("upIcon", getXFLMovieClip("RadioButton_upIcon"));
         setStyle("overIcon", getXFLMovieClip("RadioButton_overIcon"));
         setStyle("downIcon", getXFLMovieClip("RadioButton_downIcon"));
@@ -34,17 +31,9 @@ class RadioButton extends LabelButton {
         setStyle("selectedOverIcon", getXFLMovieClip("RadioButton_selectedOverIcon"));
         setStyle("selectedDownIcon", getXFLMovieClip("RadioButton_selectedDownIcon"));
         setStyle("selectedDisabledIcon", getXFLMovieClip("RadioButton_selectedDisabledIcon"));
-
-        getXFLMovieClip("RadioButton_upIcon").visible = false;
-        getXFLMovieClip("RadioButton_overIcon").visible = false;
-        getXFLMovieClip("RadioButton_downIcon").visible = false;
-        getXFLMovieClip("RadioButton_disabledIcon").visible = false;
-        getXFLMovieClip("RadioButton_selectedUpIcon").visible = false;
-        getXFLMovieClip("RadioButton_selectedOverIcon").visible = false;
-        getXFLMovieClip("RadioButton_selectedDownIcon").visible = false;
-        getXFLMovieClip("RadioButton_selectedDisabledIcon").visible = false;
-
         setMouseState("up");
+        _selected = false;
+        toggle = true;
     }
 
     private function get_groupName(): String {
