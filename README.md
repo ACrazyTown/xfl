@@ -30,6 +30,7 @@ XFL basic functionality like parsing was derived from "https://github.com/haxenm
     - openfl.controls.ScrollBar, openfl.controls.UIScrollBar
     - openfl.controls.Slider
     - openfl.controls.TextArea
+  - Client web socket class for native targets
 
 1.5. Notes!
 
