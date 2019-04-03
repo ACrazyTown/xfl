@@ -1,7 +1,5 @@
 package openfl.controls;
 
-import lib.Utils;
-
 import openfl.core.UIComponent;
 import openfl.display.Sprite;
 import openfl.display.DisplayObject;

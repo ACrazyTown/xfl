@@ -90,30 +90,34 @@ class WebSocket extends EventDispatcher
 
 	public function connect(host:String, port:Int, origin:String, url:String, key:String): Void
 	{
-		_socket.connect(new Host(host), port);
-		_socket.output.writeString(
-			"GET " + url + " HTTP/1.1\r\n" +
-			"Host: " + host + ":" + Std.string(port) + "\r\n" +
-			"Upgrade: websocket\r\n" +
-			"Connection: Upgrade\r\n" +
-			"Sec-WebSocket-Key: " + encodeBase64(key) + "\r\n" +
-			"Origin: " + origin + "\r\n" +
-			"Sec-WebSocket-Version: 13"+ "\r\n" +
-			"\r\n"
-		);
-		_socket.output.flush();
+		try {
+			_socket.connect(new Host(host), port);
+			_socket.output.writeString(
+				"GET " + url + " HTTP/1.1\r\n" +
+				"Host: " + host + ":" + Std.string(port) + "\r\n" +
+				"Upgrade: websocket\r\n" +
+				"Connection: Upgrade\r\n" +
+				"Sec-WebSocket-Key: " + encodeBase64(key) + "\r\n" +
+				"Origin: " + origin + "\r\n" +
+				"Sec-WebSocket-Version: 13"+ "\r\n" +
+				"\r\n"
+			);
+			_socket.output.flush();
 
-		var line : String;
-		while((line = _socket.input.readLine()) != "")
-		{
-			trace("connect(): Handshake from server: " + line);
+			var line : String;
+			while((line = _socket.input.readLine()) != "")
+			{
+				trace("connect(): Handshake from server: " + line);
+			}
+
+			_timer = new Timer(Math.ceil(1000.0 / 60.0));
+			_timer.run = run;
+
+			//
+			dispatchEvent(new Event(Event.CONNECT));
+		} catch (e: Dynamic) {
+			trace("connect(): failed: " + e);
 		}
-
-		_timer = new Timer(Math.ceil(1000.0 / 60.0));
-		_timer.run = run;
-
-		//
-		dispatchEvent(new Event(Event.CONNECT));
 	}
 	
 	public function close(?code:Int, reason=""): Void
@@ -322,7 +326,7 @@ class WebSocket extends EventDispatcher
 					_pendingReceiveDataComplete == true?_emptySockets:_readSockets, 
 					_sendBuffer.position == 0?_emptySockets:_writeSockets,
 					_emptySockets, 
-					0.033
+					1.0 / 1000.0
 				);
 			// read?
 			if (result.read.length > 0) {
