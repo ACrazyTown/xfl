@@ -301,9 +301,6 @@ class XFLTween {
         if (Reflect.hasField(tween, "volume") == true) {
             tween.targetVolume = tween.volume;
         }
-        if (object.soundTransform == null) {
-            object.soundTransform = new SoundTransform();
-        }
     }
 
     public static function toDisposeSoundChannel(tween: Dynamic): Void {
@@ -313,7 +310,7 @@ class XFLTween {
     private static function tweenToImplSoundChannel(tween: Dynamic): Void {
         var object: SoundChannel = cast(tween.object, SoundChannel);
         if (Reflect.hasField(tween, "volume") == true) {
-            object.soundTransform.volume = tween.initialVolume + ((tween.volume - tween.initialVolume) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration));
+            object.soundTransform = new SoundTransform(tween.initialVolume + ((tween.volume - tween.initialVolume) * tween.easeFunc((tween.timeCurrent - tween.timeInit) / tween.duration)));
         }
     }
 

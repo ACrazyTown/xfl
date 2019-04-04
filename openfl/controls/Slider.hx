@@ -4,6 +4,7 @@ import openfl.core.UIComponent;
 import openfl.display.XFLMovieClip;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.events.SliderEvent;
 import openfl.geom.Point;
 import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
@@ -127,6 +128,7 @@ class Slider extends UIComponent {
                 openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, onMouseEventMove);
                 openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEventMove);
                 setState("up");
+                dispatchEvent(new Event(SliderEvent.THUMB_RELEASE));
             case MouseEvent.MOUSE_MOVE:
                 var mouseLocalX: Float = getXFLMovieClip("SliderTrack_skin").globalToLocal(new Point(event.stageX, event.stageY)).x * getXFLMovieClip("SliderTrack_skin").scaleX;
                 setValueInternal(minimum + ((mouseLocalX / getXFLMovieClip("SliderTrack_skin").width) * (maximum - minimum)), true);
