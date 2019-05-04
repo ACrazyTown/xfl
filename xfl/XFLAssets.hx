@@ -38,7 +38,7 @@ class XFLAssets {
      *  @param asset name
      *  @return haxe.xml.Fast
      */
-    public function getXFLXMLAsset(assetName: String) : haxe.xml.Fast {
+    public function getXFLXMLAsset(assetName: String): haxe.xml.Fast {
         return XFL.getXMLData(assetName);
     }
 

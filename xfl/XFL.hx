@@ -17,10 +17,13 @@ class XFL {
 	public static var BITMAPDATA_USECACHE: Bool = false;
 	public static var SOUND_USECACHE: Bool = false;
 	public static var ASSETS_CLEARCACHE: Bool = true;
+	public static var XML_USECOLLECTION: Bool = false;
 
 	public var paths: Array<String>;
 	public var documents: Array<DOMDocument>;
 	public var customSymbolLoader: XFLCustomSymbolLoader;
+
+	private static var xmlCollection: haxe.xml.Fast = null;
 
 	public function new (paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
 		this.documents = [];
@@ -31,15 +34,33 @@ class XFL {
 		}
 	}
 
-	public static function getXMLData(name: String) {
-		var textAsset: String = openfl.Assets.getText(name);
-        if (textAsset != null) {
-            if (ASSETS_CLEARCACHE == true) {
-                Assets.cache.clear();
-            }
-			return new haxe.xml.Fast(Xml.parse(textAsset).firstElement());
-        }
-		trace("getXMLData(): xml data not found: " + name);
+	public static function getXMLData(name: String): haxe.xml.Fast {
+		if (XML_USECOLLECTION == false) {
+			var textAsset: String = openfl.Assets.getText(name);
+			if (textAsset != null) {
+				if (ASSETS_CLEARCACHE == true) {
+					Assets.cache.clear();
+				}
+				return new haxe.xml.Fast(Xml.parse(textAsset).firstElement());
+			}
+			trace("getXMLData(): xml data not found: " + name);
+		} else {
+			if (xmlCollection == null) {
+				var textAsset: String = openfl.Assets.getText("xml-collection/xml-collection.xmlcol");
+				if (textAsset != null) {
+					if (ASSETS_CLEARCACHE == true) {
+						Assets.cache.clear();
+					}
+					xmlCollection = new haxe.xml.Fast(Xml.parse(textAsset).firstElement());
+				}
+			}
+			for (entry in xmlCollection.nodes.entry) {
+				if (entry.att.name == name) {
+					return new haxe.xml.Fast(entry.x.firstElement());
+				}
+			}
+			trace("getXMLData(): xml-collection: xml data not found: " + name);
+		}
         return null;
 	}
 
