@@ -27,17 +27,15 @@ class ProgressBar extends UIComponent {
         getXFLDisplayObject("ProgressBar_trackSkin").x = 0.0;
         getXFLDisplayObject("ProgressBar_trackSkin").y = 0.0;
         getXFLDisplayObject("ProgressBar_trackSkin").width = width;
-        getXFLDisplayObject("ProgressBar_trackSkin").height = height;
         getXFLDisplayObject("ProgressBar_trackSkin").visible = true;
-        getXFLDisplayObject("ProgressBar_barSkin").x = 1.0;
-        getXFLDisplayObject("ProgressBar_barSkin").y = 1.0;
+        getXFLDisplayObject("ProgressBar_barSkin").x = 0.0;
+        getXFLDisplayObject("ProgressBar_barSkin").y = 0.0;
         getXFLDisplayObject("ProgressBar_barSkin").width = 0.0;
-        getXFLDisplayObject("ProgressBar_barSkin").height = height - 2.0;
         getXFLDisplayObject("ProgressBar_barSkin").visible = true;
-        getXFLDisplayObject("ProgressBar_indeterminateSkin").x = 2.0;
-        getXFLDisplayObject("ProgressBar_indeterminateSkin").y = 2.0;
+        getXFLDisplayObject("ProgressBar_indeterminateSkin").x = 1.0;
+        getXFLDisplayObject("ProgressBar_indeterminateSkin").y = 1.0;
         getXFLDisplayObject("ProgressBar_indeterminateSkin").width = 0.0;
-        getXFLDisplayObject("ProgressBar_indeterminateSkin").height = height - 4.0;
+        getXFLDisplayObject("ProgressBar_indeterminateSkin").height = getXFLDisplayObject("ProgressBar_trackSkin").height - 2.0;
         getXFLDisplayObject("ProgressBar_indeterminateSkin").visible = true;
         updateBar();
     }
@@ -45,9 +43,6 @@ class ProgressBar extends UIComponent {
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
         getXFLDisplayObject("ProgressBar_trackSkin").width = width;
-        getXFLDisplayObject("ProgressBar_trackSkin").height = height;
-        getXFLDisplayObject("ProgressBar_barSkin").height = height - 2.0;
-        getXFLDisplayObject("ProgressBar_indeterminateSkin").height = height - 4.0;
         updateBar();
     }
 
@@ -55,7 +50,7 @@ class ProgressBar extends UIComponent {
         var barRange: Float = maximum - minimum;
         var barWidth: Float = (barRange < 0.00001?0.0:((value - minimum) / barRange) * getXFLDisplayObject("ProgressBar_trackSkin").width);
         getXFLDisplayObject("ProgressBar_barSkin").width = barWidth - 2.0;
-        getXFLDisplayObject("ProgressBar_indeterminateSkin").width = barWidth - 4.0;
+        getXFLDisplayObject("ProgressBar_indeterminateSkin").width = barWidth - 2.0;
     }
 
     private function set_minimum(newValue: Float): Float {
