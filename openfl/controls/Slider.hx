@@ -6,6 +6,7 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.events.SliderEvent;
 import openfl.geom.Point;
+import openfl.geom.Rectangle;
 import xfl.XFLSymbolArguments;
 import xfl.XFLAssets;
 import xfl.dom.DOMTimeline;
@@ -22,6 +23,7 @@ class Slider extends UIComponent {
     public var snapInterval(default, set) : Float = 1.0;
     public var liveDragging : Bool = false;
     public var tickInterval: Float = 0.0;
+    public static var horizontalThumbPadding: Float = 10.0; // TODO: I guess this can be taken from scale9Grid
 
     private var state: String = "up";
     private var _value: Float = 0.0;
@@ -34,32 +36,39 @@ class Slider extends UIComponent {
             addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
             addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
         }
-        getXFLMovieClip("SliderTrack_skin").mouseChildren = false;
-        getXFLMovieClip("SliderTrack_skin").x = 0.0;
-        getXFLMovieClip("SliderTrack_skin").y = 0.0;
-        getXFLMovieClip("SliderTrack_skin").width = width;
-        getXFLMovieClip("SliderTrack_skin").visible = true;
-        getXFLMovieClip("SliderTrack_disabledSkin").mouseChildren = false;
-        getXFLMovieClip("SliderTrack_disabledSkin").x = 0.0;
-        getXFLMovieClip("SliderTrack_disabledSkin").y = 0.0;
-        getXFLMovieClip("SliderTrack_disabledSkin").width = width;
-        getXFLMovieClip("SliderTrack_disabledSkin").visible = false;
-        getXFLMovieClip("SliderTick_skin").mouseChildren = false;
-        getXFLMovieClip("SliderTick_skin").x = 0.0;
-        getXFLMovieClip("SliderTick_skin").y = 0.0;
-        getXFLMovieClip("SliderThumb_upSkin").mouseChildren = false;
-        getXFLMovieClip("SliderThumb_upSkin").x = 0.0;
-        getXFLMovieClip("SliderThumb_upSkin").y = 0.0;
-        getXFLMovieClip("SliderThumb_overSkin").mouseChildren = false;
-        getXFLMovieClip("SliderThumb_overSkin").x = 0.0;
-        getXFLMovieClip("SliderThumb_overSkin").y = 0.0;
-        getXFLMovieClip("SliderThumb_downSkin").mouseChildren = false;
-        getXFLMovieClip("SliderThumb_downSkin").x = 0.0;
-        getXFLMovieClip("SliderThumb_downSkin").y = 0.0;
-        getXFLMovieClip("SliderThumb_disabledSkin").mouseChildren = false;
-        getXFLMovieClip("SliderThumb_disabledSkin").x = 0.0;
-        getXFLMovieClip("SliderThumb_disabledSkin").y = 0.0;
+
+        setStyle("SliderTrack_skin", getXFLMovieClip("SliderTrack_skin"));
+        setStyle("SliderTrack_disabledSkin", getXFLMovieClip("SliderTrack_disabledSkin"));
+        setStyle("SliderTick_skin", getXFLMovieClip("SliderTick_skin"));
+        setStyle("SliderThumb_upSkin", getXFLMovieClip("SliderThumb_upSkin"));
+        setStyle("SliderThumb_overSkin", getXFLMovieClip("SliderThumb_overSkin"));
+        setStyle("SliderThumb_downSkin", getXFLMovieClip("SliderThumb_downSkin"));
+        setStyle("SliderThumb_disabledSkin", getXFLMovieClip("SliderThumb_disabledSkin"));
+
+        cast(getStyle("SliderTrack_skin"), XFLMovieClip).mouseChildren = false;
+        cast(getStyle("SliderTrack_skin"), XFLMovieClip).x = 0.0;
+        cast(getStyle("SliderTrack_skin"), XFLMovieClip).y = -cast(getStyle("SliderTrack_skin"), XFLMovieClip).height / 2.0;
+        cast(getStyle("SliderTrack_skin"), XFLMovieClip).width = width;
+        cast(getStyle("SliderTrack_skin"), XFLMovieClip).visible = true;
+        cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).mouseChildren = false;
+        cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).x = 0.0;
+        cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).y = -cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).height / 2.0;
+        cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).width = width;
+        cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).visible = true;
+        cast(getStyle("SliderTick_skin"), XFLMovieClip).mouseChildren = false;
+        cast(getStyle("SliderTick_skin"), XFLMovieClip).x = 0.0;
+        cast(getStyle("SliderTick_skin"), XFLMovieClip).y = 0.0;
+        cast(getStyle("SliderTick_skin"), XFLMovieClip).visible = true;
+        cast(getStyle("SliderThumb_upSkin"), XFLMovieClip).visible = true;
+        cast(getStyle("SliderThumb_overSkin"), XFLMovieClip).visible = true;
+        cast(getStyle("SliderThumb_downSkin"), XFLMovieClip).visible = true;
+        cast(getStyle("SliderThumb_disabledSkin"), XFLMovieClip).visible = true;
+        addChild(getStyle("SliderTick_skin"));
         setState(disabled == true?"disabled":"up");
+    }
+
+    override public function setStyle(style: String, value: Dynamic): Void {
+        super.setStyle(style, value);
     }
 
     override public function set_disabled(_disabled: Bool): Bool {
@@ -84,19 +93,24 @@ class Slider extends UIComponent {
 
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
-        getXFLMovieClip("SliderTrack_skin").width = width;
-        getXFLMovieClip("SliderTrack_disabledSkin").width = width;
+        cast(getStyle("SliderTrack_skin"), XFLMovieClip).width = width;
+        cast(getStyle("SliderTrack_disabledSkin"), XFLMovieClip).width = width;
     }
 
     private function setState(state: String) {
-        getXFLMovieClip("SliderTrack_skin").visible = disabled == false;
-        getXFLMovieClip("SliderTrack_disabledSkin").visible = disabled == true;
-        getXFLMovieClip("SliderThumb_" + this.state + "Skin").visible = false;
+        removeChild(getStyle("SliderTrack_skin"));
+        removeChild(getStyle("SliderTrack_disabledSkin"));
+        var trackSkin: XFLMovieClip = disabled == false?getStyle("SliderTrack_skin"):getStyle("SliderTrack_disabledSkin");
+        addChild(trackSkin);
+        removeChild(getStyle("SliderThumb_" + this.state + "Skin"));
         this.state = state;
         var sliderRange: Float = maximum - minimum;
-        getXFLMovieClip("SliderThumb_" + this.state + "Skin").x = getXFLMovieClip("SliderTrack_skin").x + (sliderRange < 0.00001?0.0:((value - minimum) / sliderRange) * getXFLMovieClip("SliderTrack_skin").width);
+        addChild(getStyle("SliderThumb_" + this.state + "Skin"));
+        getXFLMovieClip("SliderThumb_" + this.state + "Skin").x = horizontalThumbPadding + trackSkin.x + (sliderRange < 0.00001?0.0:((value - minimum) / sliderRange) * (trackSkin.width - horizontalThumbPadding * 2.0));
         getXFLMovieClip("SliderThumb_" + this.state + "Skin").visible = true;
-        getXFLMovieClip("SliderTick_skin").x = getXFLMovieClip("SliderTrack_skin").x + (((value - minimum) / (maximum - minimum)) * getXFLMovieClip("SliderTrack_skin").width);
+        getXFLMovieClip("SliderTick_skin").x = horizontalThumbPadding + trackSkin.x + (((value - minimum) / (maximum - minimum)) * (trackSkin.width - horizontalThumbPadding * 2.0));
+        var thumbBounds: Rectangle = getXFLMovieClip("SliderThumb_" + this.state + "Skin").getBounds(null);
+        getXFLMovieClip("SliderThumb_" + this.state + "Skin").y = (_height - getXFLMovieClip("SliderThumb_" + this.state + "Skin").height) / 2.0 - thumbBounds.y;
     }
 
     private function onMouseEvent(event: MouseEvent) : Void {
