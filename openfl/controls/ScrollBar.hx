@@ -111,6 +111,14 @@ class ScrollBar extends UIComponent {
         getXFLMovieClip("ScrollArrowDown_overSkin").addEventListener(MouseEvent.MOUSE_OVER, onScrollArrowMouseEvent);
         getXFLMovieClip("ScrollArrowDown_downSkin").addEventListener(MouseEvent.MOUSE_OVER, onScrollArrowMouseEvent);
 
+        getXFLMovieClip("ScrollArrowUp_upSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollArrowMouseEvent);
+        getXFLMovieClip("ScrollArrowUp_overSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollArrowMouseEvent);
+        getXFLMovieClip("ScrollArrowUp_downSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollArrowMouseEvent);
+
+        getXFLMovieClip("ScrollArrowDown_upSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollArrowMouseEvent);
+        getXFLMovieClip("ScrollArrowDown_overSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollArrowMouseEvent);
+        getXFLMovieClip("ScrollArrowDown_downSkin").addEventListener(MouseEvent.MOUSE_OUT, onScrollArrowMouseEvent);
+
         getXFLMovieClip("ScrollArrowUp_upSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollArrowMouseEvent);
         getXFLMovieClip("ScrollArrowUp_overSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollArrowMouseEvent);
         getXFLMovieClip("ScrollArrowUp_downSkin").addEventListener(MouseEvent.MOUSE_DOWN, onScrollArrowMouseEvent);
@@ -270,6 +278,8 @@ class ScrollBar extends UIComponent {
                 switch(event.type) {
                     case MouseEvent.MOUSE_OVER:
                         newState = "over";
+                    case MouseEvent.MOUSE_OUT:
+                        newState = "up";
                     case MouseEvent.MOUSE_UP:
                         newState = "up";
                         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrameScrollUp);
@@ -285,6 +295,8 @@ class ScrollBar extends UIComponent {
                 switch(event.type) {
                     case MouseEvent.MOUSE_OVER:
                         newState = "over";
+                    case MouseEvent.MOUSE_OUT:
+                        newState = "up";
                     case MouseEvent.MOUSE_UP:
                         newState = "up";
                         openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, onEnterFrameScrollDown);
