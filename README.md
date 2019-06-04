@@ -34,5 +34,5 @@ XFL basic functionality like parsing was derived from "https://github.com/haxenm
 
 1.5. Notes!
 
-This is not finished yet!
-
+  - This is not finished yet!
+  - I have to pay my bills and beer, so if you have any use for this open source project, like educational, productive or fun, ..., consider a donation here https://www.paypal.me/andreasdrewke
