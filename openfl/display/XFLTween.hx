@@ -417,22 +417,69 @@ class XFLTween {
     }
 
     public static function linearEaseInOut(x: Float): Float {
-        return x;
+        if (x <= 0.5) return x * 2.0; else return 1.0 - ((x - 0.5) * 2.0);
     }
 
-    public static function expoEaseInOut(x: Float): Float {
-        return x;
+    public static function expoEaseInOut(k: Float): Float {
+        // author Joshua Granick
+        // author Philippe / http://philippe.elsass.me
+        // author Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
+        // see: https://github.com/jgranick/actuate/blob/master/src/motion/easing/Expo.hx
+        if (k == 0) { return 0; }
+		if (k == 1) { return 1; }
+		if ((k /= 1 / 2.0) < 1.0) {
+			return 0.5 * Math.exp(6.931471805599453 * (k - 1));
+		}
+		return 0.5 * (2 - Math.exp(-6.931471805599453 * --k));
     }
 
     public static function quartEaseOut(x: Float): Float {
+        // author Joshua Granick
+        // author Philippe / http://philippe.elsass.me
+        // author Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
+        // see: https://github.com/jgranick/actuate/blob/master/src/motion/easing/Quart.hx
         return -(--x * x * x * x - 1);
     }
 
     public static function elasticEaseInOut(x: Float): Float {
-        return x;
+        return _elasticEaseInOut(0.1, 0.4, x);
     }
 
     public static function elasticEaseOut(x: Float): Float {
-        return x;
+        return _elasticEaseOut(0.1, 0.4, x);
+    }
+
+    public static function _elasticEaseOut(a: Float, p: Float, k:Float): Float {
+        // author Joshua Granick
+        // author Philippe / http://philippe.elsass.me
+        // author Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
+        // see: https://github.com/jgranick/actuate/blob/master/src/motion/easing/Elastic.hx		
+		if (k == 0) return 0; if (k == 1) return 1;
+		var s:Float;
+		if (a < 1) { a = 1; s = p / 4; }
+		else s = p / (2 * Math.PI) * Math.asin (1 / a);
+		return -(a * Math.exp(6.931471805599453 * (k -= 1)) * Math.sin( (k - s) * (2 * Math.PI) / p ));
+	}
+
+    public static function _elasticEaseInOut(a: Float, p: Float, k:Float): Float {
+        // author Joshua Granick
+        // author Philippe / http://philippe.elsass.me
+        // author Robert Penner / http://www.robertpenner.com/easing_terms_of_use.html
+        // see: https://github.com/jgranick/actuate/blob/master/src/motion/easing/Elastic.hx		
+        if (k == 0) {
+			return 0;
+		}
+		if ((k /= 1 / 2) == 2) {
+			return 1;
+		}
+		
+		var p:Float = (0.3 * 1.5);
+		var a:Float = 1;
+		var s:Float = p / 4;
+		
+		if (k < 1) {
+			return -0.5 * (Math.exp(6.931471805599453 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p));
+		}
+		return Math.exp(-6.931471805599453 * (k -= 1)) * Math.sin((k - s) * (2 * Math.PI) / p) * 0.5 + 1;
     }
 }
