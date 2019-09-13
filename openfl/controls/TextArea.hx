@@ -36,6 +36,8 @@ class TextArea extends UIComponent {
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextArea"));
+        removeChild(getXFLDisplayObject("TextArea_upSkin"));
+        removeChild(getXFLDisplayObject("TextArea_disabledSkin"));
         textField = new TextField();
         textField.name = "textfield";
         textField.x = 0;
@@ -64,8 +66,6 @@ class TextArea extends UIComponent {
             var textFormat: TextFormat = cast(value, TextFormat);
             textField.setTextFormat(textFormat);
             validateNow();
-        } else {
-            trace("setStyle(): '" + style + "', " + value);
         }
     }
 
@@ -137,10 +137,19 @@ class TextArea extends UIComponent {
 
     private function updateScrollBar(): Void {
         textFieldNumLinesLast = textField.numLines;
-        scrollBar.visibleScrollRange = textField.bottomScrollV;
+        scrollBar.visibleScrollRange = textField.bottomScrollV - textField.scrollV + 1;
         scrollBar.pageScrollSize = textField.numLines / scrollBar.visibleScrollRange;
         scrollBar.maxScrollPosition = textField.numLines - scrollBar.visibleScrollRange;
         scrollBar.visible = scrollBar.maxScrollPosition > 0.0;
+        /*
+        trace("textField.numLines: " + textField.numLines);
+        trace("textField.scrollV: " + textField.scrollV);
+        trace("textField.bottomScrollV: " + textField.bottomScrollV);
+        trace("scrollBar.visibleScrollRange: " + scrollBar.visibleScrollRange);
+        trace("scrollBar.pageScrollSize: " + scrollBar.pageScrollSize);
+        trace("scrollBar.maxScrollPosition: " + scrollBar.maxScrollPosition);
+        trace("scrollBar.maxScrollPosition > 0.0: " + scrollBar.maxScrollPosition);
+        */
     }
 
     private function layoutChildren() {

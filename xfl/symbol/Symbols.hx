@@ -217,6 +217,10 @@ class Symbols {
 			if (instance.color != null) {	
 				movieClip.transform.colorTransform = instance.color;
 			}
+			if (symbolItem != null && symbolItem.scaleGrid != null) {
+				trace(movieClip.name + ": Have scale9Grid: " + symbolItem.scaleGrid);
+				movieClip.scale9Grid = symbolItem.scaleGrid;
+			}
 			if (loadedByCustomLoader == true) {
 				xfl.customSymbolLoader.onMovieClipLoaded(xfl, symbolItem, movieClip);
 			}
@@ -261,6 +265,10 @@ class Symbols {
 			}
 			if (instance.color != null) {	
 				sprite.transform.colorTransform = instance.color;
+			}
+			if (symbolItem != null && symbolItem.scaleGrid != null) {
+				trace(sprite.name + ": Have scale9Grid: " + symbolItem.scaleGrid);
+				sprite.scale9Grid = symbolItem.scaleGrid;
 			}
 			if (loadedByCustomLoader == true) {
 				xfl.customSymbolLoader.onSpriteLoaded(xfl, symbolItem, sprite);
@@ -309,6 +317,10 @@ class Symbols {
 			}
 			if (instance.color != null) {	
 				other.transform.colorTransform = instance.color;
+			}
+			if (symbolItem != null && symbolItem.scaleGrid != null) {
+				trace(other.name + ": Have scale9Grid: " + symbolItem.scaleGrid);
+				other.scale9Grid = symbolItem.scaleGrid;
 			}
 			/*
 			// TODO: a.drewke

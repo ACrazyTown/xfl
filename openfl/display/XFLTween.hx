@@ -425,7 +425,7 @@ class XFLTween {
     }
 
     public static function quartEaseOut(x: Float): Float {
-        return x;
+        return -(--x * x * x * x - 1);
     }
 
     public static function elasticEaseInOut(x: Float): Float {

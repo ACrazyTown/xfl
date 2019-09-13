@@ -1,8 +1,9 @@
 package xfl.dom;
 
-import openfl.Assets;
-import xfl.XFLAssets;
 import haxe.xml.Fast;
+import openfl.Assets;
+import openfl.geom.Rectangle;
+import xfl.XFLAssets;
 
 class DOMSymbolItem {
 
@@ -13,6 +14,7 @@ class DOMSymbolItem {
 	public var parametersAreLocked: Bool;
 	public var name: String;
 	public var timeline: DOMTimeline;
+	public var scaleGrid: Rectangle;
 
 	public function new () {
 	}
@@ -39,6 +41,7 @@ class DOMSymbolItem {
 		if (xml.has.linkageExportForAS) symbolItem.linkageExportForAS = (xml.att.linkageExportForAS == "true");
 		if (xml.has.linkageClassName) symbolItem.linkageClassName = xml.att.linkageClassName;
 		symbolItem.parametersAreLocked = xml.has.parametersAreLocked == true && xml.att.parametersAreLocked == "true";
+		symbolItem.scaleGrid = DOMSymbolItemScaleGrid.parse(xml);
 		for (element in xml.elements) {
 			switch (element.name) {
 				case "timeline":
