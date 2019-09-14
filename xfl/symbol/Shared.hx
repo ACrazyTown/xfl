@@ -85,7 +85,7 @@ class Shared {
 		*/
 	}
 
-    private static function createMaskDisplayObjects(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, children: Array<DisplayObject>): Array<Array<DisplayObject>> {
+    private static function createMaskDisplayObjects(xfl: XFL, container: DisplayObjectContainer, scale9Grid: Bool, layers: Array<DOMLayer>, children: Array<DisplayObject>): Array<Array<DisplayObject>> {
 		var maskDisplayObjects: Array<Array<DisplayObject>> = [];
 		var currentLayer: Int = 0;
 		for (layer in layers) {
@@ -116,14 +116,12 @@ class Shared {
 						}
 					} else 
 					if (Std.is(element, DOMBitmapInstance)) {
-						var bitmap: Bitmap = Symbols.createBitmap(xfl, cast element);
-						if (bitmap != null) {
-							bitmap.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
-							bitmap.visible = false;
-							container.addChild(bitmap);
-							children.push(bitmap);
-							maskDisplayObjects[layer.index].push(bitmap);
-						}
+						var bitmap: DisplayObject = scale9Grid == true?Symbols.createBitmapGraphicsSprite(xfl, cast element):Symbols.createBitmap(xfl, cast element);
+						bitmap.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
+						bitmap.visible = false;
+						container.addChild(bitmap);
+						children.push(bitmap);
+						maskDisplayObjects[layer.index].push(bitmap);
 					} else 
 					if (Std.is(element, DOMComponentInstance)) {
 						var name: String = cast(element, DOMComponentInstance).name;
@@ -190,9 +188,9 @@ class Shared {
 		return maskDisplayObjects;
     }
 
-    public static function createFrames(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, children: Array<DisplayObject>): Void {
+    public static function createFrames(xfl: XFL, container: DisplayObjectContainer, scale9Grid: Bool, layers: Array<DOMLayer>, children: Array<DisplayObject>): Void {
 		var currentLayer: Int = 0;
-		var maskDisplayObjects: Array<Array<DisplayObject>> = createMaskDisplayObjects(xfl, container, layers, children);
+		var maskDisplayObjects: Array<Array<DisplayObject>> = createMaskDisplayObjects(xfl, container, scale9Grid, layers, children);
 		var containerMask: Bool = false;
 		for (layer in layers) {
 			// TODO: a.drewke, handle hit area correctly
@@ -234,18 +232,17 @@ class Shared {
 						}
 					} else 
 					if (Std.is(element, DOMBitmapInstance)) {
-						var bitmap: Bitmap = Symbols.createBitmap(xfl, cast element);
-						if (bitmap != null) {
-							if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
-								for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
-									bitmap.mask = maskDisplayObject;
-								}
+						var bitmap: DisplayObject = scale9Grid == true?Symbols.createBitmapGraphicsSprite(xfl, cast element):Symbols.createBitmap(xfl, cast element);
+						if (container.scale9Grid != null) trace(container.name + ": " + container.scale9Grid);
+						if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
+							for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
+								bitmap.mask = maskDisplayObject;
 							}
-							bitmap.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
-							bitmap.visible = false;
-							container.addChild(bitmap);
-							children.push(bitmap);
 						}
+						bitmap.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
+						bitmap.visible = false;
+						container.addChild(bitmap);
+						children.push(bitmap);
 					} else 
 					if (Std.is(element, DOMComponentInstance)) {
 						var name: String = cast(element, DOMComponentInstance).name;

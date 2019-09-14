@@ -28,8 +28,8 @@ class ProgressBar extends UIComponent {
         getXFLDisplayObject("ProgressBar_trackSkin").y = 0.0;
         getXFLDisplayObject("ProgressBar_trackSkin").width = width;
         getXFLDisplayObject("ProgressBar_trackSkin").visible = true;
-        getXFLDisplayObject("ProgressBar_barSkin").x = 0.0;
-        getXFLDisplayObject("ProgressBar_barSkin").y = 0.0;
+        getXFLDisplayObject("ProgressBar_barSkin").x = (getXFLDisplayObject("ProgressBar_trackSkin").width - getXFLDisplayObject("ProgressBar_barSkin").width) / 2.0;
+        getXFLDisplayObject("ProgressBar_barSkin").y = (getXFLDisplayObject("ProgressBar_trackSkin").height - getXFLDisplayObject("ProgressBar_barSkin").height) / 2.0;
         getXFLDisplayObject("ProgressBar_barSkin").width = 0.0;
         getXFLDisplayObject("ProgressBar_barSkin").visible = true;
         getXFLDisplayObject("ProgressBar_indeterminateSkin").x = 1.0;
@@ -49,7 +49,14 @@ class ProgressBar extends UIComponent {
     private function updateBar() {
         var barRange: Float = maximum - minimum;
         var barWidth: Float = (barRange < 0.00001?0.0:((value - minimum) / barRange) * getXFLDisplayObject("ProgressBar_trackSkin").width);
-        getXFLDisplayObject("ProgressBar_barSkin").width = barWidth - 2.0;
+        if (barWidth < 0.00001) {
+            getXFLDisplayObject("ProgressBar_barSkin").width = 0.0;
+        } else {
+            getXFLDisplayObject("ProgressBar_barSkin").width = 
+                barWidth < getXFLDisplayObject("ProgressBar_barSkin").scale9Grid.left?
+                getXFLDisplayObject("ProgressBar_barSkin").scale9Grid.left:
+                barWidth;
+        }
         getXFLDisplayObject("ProgressBar_indeterminateSkin").width = barWidth - 2.0;
     }
 

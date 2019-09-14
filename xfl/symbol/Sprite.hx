@@ -16,12 +16,12 @@ class Sprite extends xfl.display.Sprite {
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this._xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
+		this._xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false, false);
 		var labels: Array<FrameLabel> = [];
 		var layers: Array<DOMLayer> = [];
 		children = [];
 		Shared.init(layers, this.xflSymbolArguments.timeline, labels);
-		Shared.createFrames(this.xflSymbolArguments.xfl, this, layers, children);
+		Shared.createFrames(this.xflSymbolArguments.xfl, this, this.xflSymbolArguments.scale9Grid, layers, children);
 		Shared.enableFrame(this.xflSymbolArguments.xfl, this, layers, 1, null);
 	}
 

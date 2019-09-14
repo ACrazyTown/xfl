@@ -32,7 +32,7 @@ class MovieClip extends xfl.display.MovieClip {
 
 	public function new(xflSymbolArguments: XFLSymbolArguments = null) {
 		super();
-		this._xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false);
+		this._xflSymbolArguments = xflSymbolArguments != null?xflSymbolArguments:new XFLSymbolArguments(null, null, null, false, false);
 		currentLabels = [];
 		// TODO: check if registering a single event listener multiple times work or not
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -50,6 +50,7 @@ class MovieClip extends xfl.display.MovieClip {
 		Shared.createFrames(
 			this.xflSymbolArguments.xfl, 
 			this, 
+			this.xflSymbolArguments.scale9Grid,
 			layers, 
 			children
 		);

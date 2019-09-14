@@ -2,10 +2,11 @@ package xfl.symbol;
 
 import openfl.Assets;
 import openfl.core.UIComponent;
-import openfl.display.DisplayObject;
-import openfl.display.DisplayObjectContainer;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
+import openfl.display.DisplayObject;
+import openfl.display.DisplayObjectContainer;
+import openfl.display.Graphics;
 import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
 import openfl.geom.Matrix;
@@ -45,6 +46,31 @@ class Symbols {
 		// TODO: a.drewke, this increases rendering time a lot
 		// rectangle.cacheAsBitmap = true;
 		return rectangle;
+	}
+
+	public static function createBitmapGraphicsSprite(xfl: XFL, instance: DOMBitmapInstance): Sprite {
+		var bitmap: Bitmap = null;
+		var bitmapData: BitmapData = null;
+		for (document in xfl.documents) {
+			if (document.media.exists(instance.libraryItemName)) {
+				var bitmapItem: DOMBitmapItem = document.media.get(instance.libraryItemName).item;
+				var assetUrl: String = document.path + "/LIBRARY/" + bitmapItem.name;
+				if (Assets.exists(assetUrl) == true) bitmapData = Assets.getBitmapData(assetUrl);
+				if (bitmapData != null) break;
+			}
+		}
+		if (bitmapData == null) {
+			trace("createBitmap(): " + instance.libraryItemName + ": not found");
+			bitmapData = new BitmapData(1, 1, false, 0xFFFFFF);
+		}
+		var bitmapSprite: Sprite = new Sprite();
+		bitmapSprite.graphics.beginBitmapFill(bitmapData);
+		bitmapSprite.graphics.drawRect(0.0, 0.0, bitmapData.width, bitmapData.height);
+		bitmapSprite.graphics.endFill();
+		if (instance.matrix != null) {
+			bitmapSprite.transform.matrix = instance.matrix;
+		}
+		return bitmapSprite;
 	}
 
 	public static function createBitmap(xfl: XFL, instance: DOMBitmapInstance): Bitmap {
@@ -198,7 +224,7 @@ class Symbols {
 					if (movieClip != null) loadedByCustomLoader = true;
 				}
 				if (movieClip == null) {
-					movieClip = new XFLMovieClip(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked));
+					movieClip = new XFLMovieClip(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked, symbolItem.scaleGrid != null));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -218,8 +244,10 @@ class Symbols {
 				movieClip.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				trace(movieClip.name + ": Have scale9Grid: " + symbolItem.scaleGrid);
 				movieClip.scale9Grid = symbolItem.scaleGrid;
+				for (i in 0...movieClip.numChildren) {
+					movieClip.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
+				}
 			}
 			if (loadedByCustomLoader == true) {
 				xfl.customSymbolLoader.onMovieClipLoaded(xfl, symbolItem, movieClip);
@@ -247,7 +275,7 @@ class Symbols {
 					if (sprite != null) loadedByCustomLoader = true;
 				}
 				if (sprite == null) {
-					sprite = new XFLSprite(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked));
+					sprite = new XFLSprite(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked, symbolItem.scaleGrid != null));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
 				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
@@ -267,8 +295,10 @@ class Symbols {
 				sprite.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				trace(sprite.name + ": Have scale9Grid: " + symbolItem.scaleGrid);
 				sprite.scale9Grid = symbolItem.scaleGrid;
+				for (i in 0...sprite.numChildren) {
+					sprite.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
+				}
 			}
 			if (loadedByCustomLoader == true) {
 				xfl.customSymbolLoader.onSpriteLoaded(xfl, symbolItem, sprite);
@@ -303,7 +333,8 @@ class Symbols {
 							xfl, 
 							symbolItem.linkageClassName, 
 							symbolItem.timeline,
-							symbolItem.parametersAreLocked
+							symbolItem.parametersAreLocked,
+							symbolItem.scaleGrid != null
 						)
 					]
 				);
@@ -319,8 +350,10 @@ class Symbols {
 				other.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				trace(other.name + ": Have scale9Grid: " + symbolItem.scaleGrid);
 				other.scale9Grid = symbolItem.scaleGrid;
+				for (i in 0...other.numChildren) {
+					other.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
+				}
 			}
 			/*
 			// TODO: a.drewke
@@ -353,7 +386,8 @@ class Symbols {
 							xfl,
 							symbolItem.linkageClassName,
 							symbolItem.timeline,
-							symbolItem.parametersAreLocked
+							symbolItem.parametersAreLocked,
+							symbolItem.scaleGrid != null
 						)
 					]
 				);
