@@ -244,7 +244,6 @@ class Symbols {
 				movieClip.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				movieClip.scale9Grid = symbolItem.scaleGrid;
 				for (i in 0...movieClip.numChildren) {
 					movieClip.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
 				}
@@ -295,7 +294,6 @@ class Symbols {
 				sprite.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				sprite.scale9Grid = symbolItem.scaleGrid;
 				for (i in 0...sprite.numChildren) {
 					sprite.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
 				}
@@ -350,7 +348,6 @@ class Symbols {
 				other.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				other.scale9Grid = symbolItem.scaleGrid;
 				for (i in 0...other.numChildren) {
 					other.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
 				}

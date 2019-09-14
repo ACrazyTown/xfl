@@ -53,7 +53,7 @@ class ProgressBar extends UIComponent {
             getXFLDisplayObject("ProgressBar_barSkin").width = 0.0;
         } else {
             getXFLDisplayObject("ProgressBar_barSkin").width = 
-                barWidth < getXFLDisplayObject("ProgressBar_barSkin").scale9Grid.left?
+                getXFLDisplayObject("ProgressBar_barSkin").scale9Grid != null && barWidth < getXFLDisplayObject("ProgressBar_barSkin").scale9Grid.left?
                 getXFLDisplayObject("ProgressBar_barSkin").scale9Grid.left:
                 barWidth;
         }

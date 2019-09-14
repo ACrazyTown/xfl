@@ -233,7 +233,6 @@ class Shared {
 					} else 
 					if (Std.is(element, DOMBitmapInstance)) {
 						var bitmap: DisplayObject = scale9Grid == true?Symbols.createBitmapGraphicsSprite(xfl, cast element):Symbols.createBitmap(xfl, cast element);
-						if (container.scale9Grid != null) trace(container.name + ": " + container.scale9Grid);
 						if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 							for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 								bitmap.mask = maskDisplayObject;

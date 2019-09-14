@@ -14,8 +14,7 @@ import openfl.display.GraphicsPath;
 import openfl.display.GraphicsPathWinding;
 import xfl.XFLAssets;
 
-class ShapeBase extends openfl.display.Shape {
-
+class ShapeBase extends openfl.display.Sprite {
 
     private function new() {
         super();
