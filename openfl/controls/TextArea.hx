@@ -28,26 +28,27 @@ class TextArea extends UIComponent {
     public var htmlText(get, set): String;
     public var text(get, set): String;
     public var editable(get, set): Bool;
+    public var textField(get, never): TextField;
 
     private var scrollBar: ScrollBar;
-    private var textField: TextField;
     private var textFieldNumLinesLast: Int;
+    private var _textField: TextField;
 
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextArea"));
         removeChild(getXFLDisplayObject("TextArea_upSkin"));
         removeChild(getXFLDisplayObject("TextArea_disabledSkin"));
-        textField = new TextField();
-        textField.name = "textfield";
-        textField.x = 0;
-        textField.y = 0;
-        textField.type = TextFieldType.INPUT;
-        textField.multiline = true;
-        textField.wordWrap = true;
-        textField.addEventListener(Event.CHANGE, textFieldChangeHandler);
-        textFieldNumLinesLast = textField.numLines;
-        addChild(textField);
+        _textField = new TextField();
+        _textField.name = "_textField";
+        _textField.x = 0;
+        _textField.y = 0;
+        _textField.type = TextFieldType.INPUT;
+        _textField.multiline = true;
+        _textField.wordWrap = true;
+        _textField.addEventListener(Event.CHANGE, _textFieldChangeHandler);
+        textFieldNumLinesLast = _textField.numLines;
+        addChild(_textField);
         scrollBar = getXFLScrollBar("UIScrollBar");
         scrollBar.visible = false;
         scrollBar.x = width - scrollBar.width;
@@ -57,6 +58,10 @@ class TextArea extends UIComponent {
         validateNow();
     }
 
+    private function get_textField(): TextField {
+        return _textField;
+    }
+
     override public function drawFocus(draw: Bool): Void {
         trace("drawFocus(): " + draw);
     }
@@ -64,87 +69,87 @@ class TextArea extends UIComponent {
     override public function setStyle(style: String, value: Dynamic): Void {
         if (style == "textFormat") {
             var textFormat: TextFormat = cast(value, TextFormat);
-            textField.setTextFormat(textFormat);
+            _textField.setTextFormat(textFormat);
             validateNow();
         }
     }
 
     public function get_maxVerticalScrollPosition(): Int {
-        return textField.numLines - textField.bottomScrollV + 1;
+        return _textField.numLines - _textField.bottomScrollV + 1;
     }
 
     public function get_verticalScrollPosition(): Int {
-        return textField.scrollV;
+        return _textField.scrollV;
     }
 
     public function set_verticalScrollPosition(verticalScrollPosition: Int): Int {
-        textField.scrollV = verticalScrollPosition;
+        _textField.scrollV = verticalScrollPosition;
         scrollBar.scrollPosition = verticalScrollPosition - 1;
-        return textField.scrollV;
+        return _textField.scrollV;
     }
 
     public function get_maxChars(): Int {
-        return textField.maxChars;
+        return _textField.maxChars;
     }
 
     public function set_maxChars(maxChars: Int): Int {
-        return textField.maxChars = maxChars;
+        return _textField.maxChars = maxChars;
     }
 
     public function set_htmlText(_htmlText: String): String {
-        textField.htmlText = _htmlText;
+        _textField.htmlText = _htmlText;
         validateNow();
-        return textField.htmlText;
+        return _textField.htmlText;
     }
 
     public function get_htmlText(): String {
-        return textField.htmlText;
+        return _textField.htmlText;
     }
 
     public function set_text(_text: String): String {
-        textField.text = _text;
+        _textField.text = _text;
         validateNow();
-        return textField.text;
+        return _textField.text;
     }
 
     public function get_text(): String {
-        return textField.text;
+        return _textField.text;
     }
 
     public function get_editable(): Bool {
-        return textField.type == TextFieldType.INPUT; 
+        return _textField.type == TextFieldType.INPUT; 
     }
 
     public function set_editable(editable: Bool): Bool {
-        textField.type = editable == true?TextFieldType.INPUT:TextFieldType.DYNAMIC; 
+        _textField.type = editable == true?TextFieldType.INPUT:TextFieldType.DYNAMIC; 
         return editable;
     }
 
     override public function setSize(_width: Float, _height: Float) {
         super.setSize(_width, _height);
-        textField.width = width - scrollBar.width;
-        textField.height = height;
+        _textField.width = width - scrollBar.width;
+        _textField.height = height;
         scrollBar.x = width - scrollBar.width;
         scrollBar.height = height;
-        updateTextField();
+        update_textField();
         updateScrollBar();
         layoutChildren();
     }
 
-    private function updateTextField(): Void {
-        textField.width = width - (scrollBar != null?scrollBar.width:0.0);
+    private function update_textField(): Void {
+        _textField.width = width - (scrollBar != null?scrollBar.width:0.0);
     }
 
     private function updateScrollBar(): Void {
-        textFieldNumLinesLast = textField.numLines;
-        scrollBar.visibleScrollRange = textField.bottomScrollV - textField.scrollV + 1;
-        scrollBar.pageScrollSize = textField.numLines / scrollBar.visibleScrollRange;
-        scrollBar.maxScrollPosition = textField.numLines - scrollBar.visibleScrollRange;
+        textFieldNumLinesLast = _textField.numLines;
+        scrollBar.visibleScrollRange = _textField.bottomScrollV - _textField.scrollV + 1;
+        scrollBar.pageScrollSize = _textField.numLines / scrollBar.visibleScrollRange;
+        scrollBar.maxScrollPosition = _textField.numLines - scrollBar.visibleScrollRange;
         scrollBar.visible = scrollBar.maxScrollPosition > 0.0;
         /*
-        trace("textField.numLines: " + textField.numLines);
-        trace("textField.scrollV: " + textField.scrollV);
-        trace("textField.bottomScrollV: " + textField.bottomScrollV);
+        trace("_textField.numLines: " + _textField.numLines);
+        trace("_textField.scrollV: " + _textField.scrollV);
+        trace("_textField.bottomScrollV: " + _textField.bottomScrollV);
         trace("scrollBar.visibleScrollRange: " + scrollBar.visibleScrollRange);
         trace("scrollBar.pageScrollSize: " + scrollBar.pageScrollSize);
         trace("scrollBar.maxScrollPosition: " + scrollBar.maxScrollPosition);
@@ -167,24 +172,24 @@ class TextArea extends UIComponent {
     }
 
     private function onScrollEvent(event: ScrollEvent): Void {
-        textField.scrollV = Std.int(scrollBar.scrollPosition) + 1;
+        _textField.scrollV = Std.int(scrollBar.scrollPosition) + 1;
     }
 
     private function onMouseWheel(event: MouseEvent): Void {
-        textField.scrollV = textField.scrollV - event.delta;
-        if (scrollBar != null) scrollBar.scrollPosition = textField.scrollV - 1;
+        _textField.scrollV = _textField.scrollV - event.delta;
+        if (scrollBar != null) scrollBar.scrollPosition = _textField.scrollV - 1;
     }
 
-    private function textFieldChangeHandler(e : Event) : Void {
-        if (textFieldNumLinesLast != textField.numLines) {
-            updateTextField();
+    private function _textFieldChangeHandler(e : Event) : Void {
+        if (textFieldNumLinesLast != _textField.numLines) {
+            update_textField();
             updateScrollBar();
             var maxScrollPosition: Int = Std.int(scrollBar.maxScrollPosition);
-            var cursorLine = textField.getLineIndexOfChar(textField.caretIndex) + 1;
+            var cursorLine = _textField.getLineIndexOfChar(_textField.caretIndex) + 1;
             if (scrollBar.maxScrollPosition > 0.0 &&
-                cursorLine >= textField.scrollV + textField.bottomScrollV) {
+                cursorLine >= _textField.scrollV + _textField.bottomScrollV) {
                 scrollBar.scrollPosition++;
-                textField.scrollV++;
+                _textField.scrollV++;
             }
         }
         dispatchEvent(e);
