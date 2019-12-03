@@ -494,6 +494,58 @@ class Shared {
 		}
     }
 
+    public static function isXFLVisible(xfl: XFL, container: DisplayObjectContainer, layers: Array<DOMLayer>, currentFrame: Int, object: DisplayObject): Bool {
+		var currentLayer: Int = 0;
+		for (layer in layers) {
+			// TODO: a.drewke, handle hit area correctly
+			if (layer.name == "HitArea" || layer.name == "hitbox") continue;
+			if (layer.type == "mask") {
+				currentLayer++;
+				continue;
+			}
+			for (frameIdx in 0...layer.frames.length) {
+				var frameAnonymousObjectId : Int = 0;
+				var frame: DOMFrame = layer.frames[frameIdx];
+				if (currentFrame - 1 >= frame.index && currentFrame - 1 < frame.index + frame.duration) {
+					for (element in frame.elements) {
+						if (Std.is(element, DOMSymbolInstance)) {
+							var movieClip: DisplayObject = container.getChildByName(cast(element, DOMSymbolInstance).name);
+							if (movieClip != null && movieClip == object) return true;
+						} else
+						if (Std.is(element, DOMBitmapInstance)) {
+							var bitmap: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+							if (bitmap != null && bitmap == object) return true;
+						} else
+						if (Std.is(element, DOMComponentInstance)) {
+							var component: DisplayObject = container.getChildByName(cast(element, DOMComponentInstance).name);
+							if (component != null && component == object) return true;
+						} else
+						if (Std.is(element, DOMShape)) {
+							var shape: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+							if (shape != null && shape == object) return true;
+						} else
+						if (Std.is(element, DOMRectangle)) {
+							var rectangle: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+							if (rectangle != null && rectangle == object) return true;
+						} else
+						if (Std.is(element, DOMDynamicText)) {
+							var text: DisplayObject = container.getChildByName(cast(element, DOMDynamicText).name);
+							if (text != null && text == object) return true;
+						} else
+						if (Std.is(element, DOMStaticText)) {
+							var text: DisplayObject = container.getChildByName("xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++));
+							if (text != null && text == object) return true;
+						}  else {
+							trace("enableFrame(): Unhandled frame element of type '" + Type.getClassName(Type.getClass(element)) + '"');
+						}
+					}
+				}
+			}
+			currentLayer++;
+		}
+		return false;
+    }
+
     public static function removeFrames(parent: DisplayObjectContainer) {
         while (parent.numChildren > 0) {
             var child: DisplayObject = parent.getChildAt(0);

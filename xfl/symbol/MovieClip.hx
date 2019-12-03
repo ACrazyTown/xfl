@@ -236,4 +236,8 @@ class MovieClip extends xfl.display.MovieClip {
 		}
 	}
 
+	public function isXFLVisible(object: DisplayObject): Bool {
+		return Shared.isXFLVisible(xflSymbolArguments.xfl, this, layers, currentFrame, object);
+	}
+
 }
