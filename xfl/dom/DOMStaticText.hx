@@ -2,7 +2,7 @@ package xfl.dom;
 
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMStaticText {
 
@@ -19,7 +19,7 @@ class DOMStaticText {
 		textRuns = new Array<DOMTextRun> ();
 	}
 
-	public static function parse (xml: Fast): DOMStaticText {
+	public static function parse (xml: Access): DOMStaticText {
 		var staticText: DOMStaticText = new DOMStaticText();
 		staticText.height = Std.parseFloat(xml.att.height);
 		staticText.width = Std.parseFloat(xml.att.width);

@@ -5,7 +5,7 @@ import xfl.fill.FillStyle;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import xfl.stroke.StrokeStyle;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMShape extends DOMShapeBase {
 
@@ -18,7 +18,7 @@ class DOMShape extends DOMShapeBase {
 		edges = new Array<Edge>();
 	}
 
-	public static function parse(xml: Fast): DOMShape {
+	public static function parse(xml: Access): DOMShape {
 		var shape = new DOMShape ();
 		for (element in xml.elements) {
 			switch (element.name) {

@@ -1,11 +1,11 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 import openfl.geom.Rectangle;
 
 class DOMSymbolItemScaleGrid {
 
-    public static function parse(xml: Fast): Rectangle {
+    public static function parse(xml: Access): Rectangle {
         if (xml.has.scaleGridLeft == false ||
             xml.has.scaleGridRight == false ||
             xml.has.scaleGridTop == false ||

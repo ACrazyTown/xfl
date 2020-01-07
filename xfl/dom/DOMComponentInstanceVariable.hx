@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMComponentInstanceVariable {
 
@@ -11,7 +11,7 @@ class DOMComponentInstanceVariable {
 	public function new () {
 	}
 
-	public static function parse(xml: Fast): DOMComponentInstanceVariable {
+	public static function parse(xml: Access): DOMComponentInstanceVariable {
 		var componentInstanceVariable: DOMComponentInstanceVariable = new DOMComponentInstanceVariable();
         componentInstanceVariable.variable = xml.att.variable;
         componentInstanceVariable.defaultValue = xml.att.defaultValue;

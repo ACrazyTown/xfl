@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMFolderItem {
 
@@ -10,7 +10,7 @@ class DOMFolderItem {
 	public function new () {
 	}
 
-	public static function parse(xml: Fast): DOMFolderItem {
+	public static function parse(xml: Access): DOMFolderItem {
 		var folderItem = new DOMFolderItem ();
 		folderItem.name = xml.att.name;
 		folderItem.itemID = xml.att.itemID;

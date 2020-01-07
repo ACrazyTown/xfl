@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 import openfl.Assets;
 import openfl.geom.Rectangle;
 import xfl.XFLAssets;
@@ -24,7 +24,7 @@ class DOMSymbolItem {
 	}
 
 	public static function loadIndex(path: String, file: String): DOMItemIndex {
-		var xml: Fast = XFLAssets.getInstance().getXFLXMLAsset(path + "/" + file);
+		var xml: Access = XFLAssets.getInstance().getXFLXMLAsset(path + "/" + file);
 		var index: DOMItemIndex = new DOMItemIndex();
 		index.name = xml.att.name;
 		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
@@ -33,7 +33,7 @@ class DOMSymbolItem {
 		return index;
 	}
 
-	public static function parse(xml: Fast): DOMSymbolItem {
+	public static function parse(xml: Access): DOMSymbolItem {
 		var symbolItem = new DOMSymbolItem();
 		symbolItem.name = xml.att.name;
 		symbolItem.itemID = xml.att.itemID;

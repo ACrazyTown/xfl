@@ -1,6 +1,6 @@
 package xfl.geom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class MotionObject {
 
@@ -10,7 +10,7 @@ class MotionObject {
 	public function new() {
 	}
 
-	public static function parse(xml: Fast): MotionObject {
+	public static function parse(xml: Access): MotionObject {
 		var motionObject = new MotionObject();
 		for (element in xml.elements) {
 			switch (element.name) {

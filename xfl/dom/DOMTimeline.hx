@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMTimeline {
 
@@ -11,7 +11,7 @@ class DOMTimeline {
 		layers = new Array<DOMLayer>();
 	}
 
-	public static function parse(xml: Fast): DOMTimeline {
+	public static function parse(xml: Access): DOMTimeline {
 		var layerIndex: Int = 0;
 		var timeline = new DOMTimeline();
 		if (xml.has.name) timeline.name = xml.att.name;

@@ -2,7 +2,7 @@ package xfl.dom;
 
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMDynamicText {
 
@@ -25,7 +25,7 @@ class DOMDynamicText {
 		textRuns = new Array<DOMTextRun>();
 	}
 
-	public static function parse(xml: Fast, type: Int): DOMDynamicText {
+	public static function parse(xml: Access, type: Int): DOMDynamicText {
 		var dynamicText: DOMDynamicText = new DOMDynamicText();
 		dynamicText.type = type;
 		dynamicText.height = Std.parseFloat(xml.att.height);

@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMLayer {
 
@@ -15,7 +15,7 @@ class DOMLayer {
 		frames = new Array<DOMFrame>();
 	}
 
-	public static function parse(index: Int, xml: Fast): DOMLayer {
+	public static function parse(index: Int, xml: Access): DOMLayer {
 		var layer = new DOMLayer();
 		layer.index = index;
 		layer.name = xml.has.name == true?xml.att.name:null;

@@ -3,7 +3,7 @@ package xfl.dom;
 import xfl.geom.Color;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMSymbolInstance {
 
@@ -32,7 +32,7 @@ class DOMSymbolInstance {
 		return duplicate;
 	}
 
-	public static function parse(xml: Fast): DOMSymbolInstance {
+	public static function parse(xml: Access): DOMSymbolInstance {
 		var symbolInstance = new DOMSymbolInstance();
 		symbolInstance.libraryItemName = xml.att.libraryItemName;
 		if (xml.has.name) symbolInstance.name = xml.att.name;

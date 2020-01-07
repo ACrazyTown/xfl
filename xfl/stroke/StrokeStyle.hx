@@ -1,6 +1,6 @@
 package xfl.stroke;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class StrokeStyle {
 
@@ -10,7 +10,7 @@ class StrokeStyle {
 	public function new() {
 	}
 
-	public static function parse(xml: Fast): StrokeStyle {
+	public static function parse(xml: Access): StrokeStyle {
 		var strokeStyle = new StrokeStyle ();
 		strokeStyle.index = Std.parseInt(xml.att.index);
 		for (element in xml.elements) {

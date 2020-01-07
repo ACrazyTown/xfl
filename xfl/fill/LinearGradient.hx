@@ -1,7 +1,7 @@
 package xfl.fill;
 
 import openfl.geom.Matrix;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class LinearGradient {
 
@@ -13,7 +13,7 @@ class LinearGradient {
 		entries = new Array<GradientEntry>();
 	}
 
-	public static function parse(xml: Fast): LinearGradient {
+	public static function parse(xml: Access): LinearGradient {
 		var linearGradient: LinearGradient = new LinearGradient ();
 		if (xml.has.spreadMethod) linearGradient.spreadMethod = xml.att.spreadMethod;
 		for (element in xml.elements) {

@@ -1,6 +1,6 @@
 package xfl.fill;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class GradientEntry {
 
@@ -11,7 +11,7 @@ class GradientEntry {
 	public function new (){
 	}
 
-	public static function parse(xml: Fast): GradientEntry {
+	public static function parse(xml: Access): GradientEntry {
 		var gradientEntry = new GradientEntry();
 		gradientEntry.color = xml.has.color == true?Std.parseInt("0x" + xml.att.color.substr(1)):0x000000;
 		gradientEntry.ratio = Std.parseFloat(xml.att.ratio);

@@ -1,10 +1,10 @@
 package xfl.geom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class Matrix {
 
-	public static function parse(xml:Fast): openfl.geom.Matrix {
+	public static function parse(xml:Access): openfl.geom.Matrix {
 		return new openfl.geom.Matrix(
 			xml.has.a == true?Std.parseFloat(xml.att.a):1.0,
 			xml.has.b == true?Std.parseFloat(xml.att.b):0.0,

@@ -1,6 +1,6 @@
 package xfl.geom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 import openfl.geom.ColorTransform;
 
 class Color extends ColorTransform {
@@ -9,7 +9,7 @@ class Color extends ColorTransform {
 		super (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
 	}
 
-	public static function parse(xml: Fast): Color {
+	public static function parse(xml: Access): Color {
 		var color = new Color ();
 		if (xml.has.alphaMultiplier) color.alphaMultiplier = Std.parseFloat (xml.att.alphaMultiplier);
 		if (xml.has.alphaOffset) color.alphaOffset = Std.parseFloat (xml.att.alphaOffset);

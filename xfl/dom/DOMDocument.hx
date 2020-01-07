@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 import haxe.ds.StringMap;
 import xfl.XFLAssets;
 
@@ -25,7 +25,7 @@ class DOMDocument {
 		return parse(XFLAssets.getInstance().getXFLXMLAsset(path + "/" + file), path);
 	}
 
-	public static function parse(xml: Fast, path: String) : DOMDocument {
+	public static function parse(xml: Access, path: String) : DOMDocument {
 		var document = new DOMDocument(path);
 		if (xml.has.width) document.width = Std.parseInt(xml.att.width);
 		if (xml.has.height) document.height = Std.parseInt(xml.att.height);

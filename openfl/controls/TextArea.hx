@@ -141,20 +141,18 @@ class TextArea extends UIComponent {
     }
 
     private function updateScrollBar(): Void {
+        lib.Utils.dumpDisplayObject(_textField);
         textFieldNumLinesLast = _textField.numLines;
         scrollBar.visibleScrollRange = _textField.bottomScrollV - _textField.scrollV + 1;
         scrollBar.pageScrollSize = _textField.numLines / scrollBar.visibleScrollRange;
         scrollBar.maxScrollPosition = _textField.numLines - scrollBar.visibleScrollRange;
         scrollBar.visible = scrollBar.maxScrollPosition > 0.0;
-        /*
         trace("_textField.numLines: " + _textField.numLines);
         trace("_textField.scrollV: " + _textField.scrollV);
         trace("_textField.bottomScrollV: " + _textField.bottomScrollV);
         trace("scrollBar.visibleScrollRange: " + scrollBar.visibleScrollRange);
         trace("scrollBar.pageScrollSize: " + scrollBar.pageScrollSize);
         trace("scrollBar.maxScrollPosition: " + scrollBar.maxScrollPosition);
-        trace("scrollBar.maxScrollPosition > 0.0: " + scrollBar.maxScrollPosition);
-        */
     }
 
     private function layoutChildren() {

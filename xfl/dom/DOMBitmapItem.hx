@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMBitmapItem {
 
@@ -18,7 +18,7 @@ class DOMBitmapItem {
 	public function new () {
 	}
 
-	public static function parseIndex(xml: Fast): DOMItemIndex {
+	public static function parseIndex(xml: Access): DOMItemIndex {
 		var index: DOMItemIndex = new DOMItemIndex();
 		index.name = xml.att.name;
 		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
@@ -27,7 +27,7 @@ class DOMBitmapItem {
 		return index;
 	}
 
-	public static function parse(xml:Fast): DOMBitmapItem {
+	public static function parse(xml: Access): DOMBitmapItem {
 		var bitmapItem = new DOMBitmapItem();		
 		bitmapItem.name = xml.att.name;
 		// bitmapItem.itemID = xml.att.itemID;

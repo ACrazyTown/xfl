@@ -1,6 +1,6 @@
 package xfl.edge;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class Edge {
 
@@ -16,7 +16,7 @@ class Edge {
 		edges = null;
 	}
 
-	public static function parse(xml: Fast): Edge {
+	public static function parse(xml: Access): Edge {
 		var edge = new Edge ();
 		if (xml.has.fillStyle0) edge.fillStyle0 = Std.parseInt (xml.att.fillStyle0);
 		if (xml.has.fillStyle1) edge.fillStyle1 = Std.parseInt (xml.att.fillStyle1);

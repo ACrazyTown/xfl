@@ -1,7 +1,7 @@
 package xfl.stroke;
 
 import xfl.fill.SolidColor;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class SolidStroke {
 
@@ -13,7 +13,7 @@ class SolidStroke {
 		weight = 1;
 	}
 
-	public static function parse(xml: Fast): SolidStroke {
+	public static function parse(xml: Access): SolidStroke {
 		var solidStroke = new SolidStroke ();
 		if (xml.has.scaleMode) solidStroke.scaleMode = xml.att.scaleMode;
 		if (xml.has.weight) solidStroke.weight = Std.parseFloat (xml.att.weight);

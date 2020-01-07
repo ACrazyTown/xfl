@@ -4,7 +4,7 @@ import xfl.fill.FillStyle;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import xfl.stroke.StrokeStyle;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMRectangle extends DOMShapeBase {
 
@@ -19,7 +19,7 @@ class DOMRectangle extends DOMShapeBase {
 		super();
 	}
 
-	public static function parse(xml: Fast): DOMRectangle {
+	public static function parse(xml: Access): DOMRectangle {
 		var shape = new DOMRectangle();
 		shape.x = Std.parseFloat(xml.att.x);
 		shape.y = Std.parseFloat(xml.att.y);

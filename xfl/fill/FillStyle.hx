@@ -1,6 +1,6 @@
 package xfl.fill;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class FillStyle {
 
@@ -10,7 +10,7 @@ class FillStyle {
 	public function new() {
 	}
 
-	public static function parse(xml: Fast): FillStyle {
+	public static function parse(xml: Access): FillStyle {
 		var fillStyle = new FillStyle();
 		fillStyle.index = Std.parseInt(xml.att.index);
 		for (element in xml.elements) {

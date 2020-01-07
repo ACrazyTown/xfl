@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMTextRun {
 
@@ -10,7 +10,7 @@ class DOMTextRun {
 	public function new() {
 	}
 
-	public static function parse(xml: Fast): DOMTextRun {
+	public static function parse(xml: Access): DOMTextRun {
 		var textRun = new DOMTextRun ();
 		for (element in xml.elements) {
 			switch (element.name) {

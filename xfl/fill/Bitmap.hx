@@ -1,6 +1,6 @@
 package xfl.fill;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 import openfl.geom.Matrix;
 
 class Bitmap {
@@ -11,7 +11,7 @@ class Bitmap {
 	public function new() {
 	}
 
-	public static function parse(xml: Fast): Bitmap {
+	public static function parse(xml: Access): Bitmap {
 		var bitmap: Bitmap = new Bitmap();
 		bitmap.bitmapPath = xml.att.bitmapPath;
 		for (element in xml.elements) {

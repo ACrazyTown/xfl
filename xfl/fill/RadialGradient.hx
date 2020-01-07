@@ -1,7 +1,7 @@
 package xfl.fill;
 
 import openfl.geom.Matrix;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class RadialGradient {
 
@@ -13,7 +13,7 @@ class RadialGradient {
 		entries = new Array<GradientEntry>();
 	}
 
-	public static function parse(xml: Fast): RadialGradient {
+	public static function parse(xml: Access): RadialGradient {
 		var radialGradient = new RadialGradient ();
 		radialGradient.spreadMethod = xml.has.spreadMethod == true?xml.att.spreadMethod:"pad";
 		for (element in xml.elements) {

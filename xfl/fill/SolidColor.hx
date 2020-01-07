@@ -1,6 +1,6 @@
 package xfl.fill;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class SolidColor {
 
@@ -12,7 +12,7 @@ class SolidColor {
 		color = 0x000000;
 	}
 
-	public static function parse(xml: Fast): SolidColor {
+	public static function parse(xml: Access): SolidColor {
 		var solidColor = new SolidColor();
 		if (xml.has.color) solidColor.color = Std.parseInt("0x" + xml.att.color.substr(1));
 		if (xml.has.alpha) solidColor.alpha = Std.parseFloat(xml.att.alpha);

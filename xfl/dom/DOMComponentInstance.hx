@@ -2,7 +2,7 @@ package xfl.dom;
 
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMComponentInstance {
 
@@ -16,7 +16,7 @@ class DOMComponentInstance {
 		variables = new Map<String, DOMComponentInstanceVariable>();
 	}
 
-	public static function parse(xml: Fast): DOMComponentInstance {
+	public static function parse(xml: Access): DOMComponentInstance {
 		var componentInstance: DOMComponentInstance = new DOMComponentInstance();
         componentInstance.name = xml.has.name == true?xml.att.name:null;
 		componentInstance.libraryItemName = xml.att.libraryItemName;
@@ -27,7 +27,7 @@ class DOMComponentInstance {
 				case "matrix":
 					componentInstance.matrix = xfl.geom.Matrix.parse(element.elements.next());
 				case "parametersAsXML":
-					var propertyElementXML: Fast = new Fast(Xml.parse(element.innerData));
+					var propertyElementXML: Access = new Access(Xml.parse(element.innerData));
 					for (propertyElement in propertyElementXML.elements) {
 						if (propertyElement.name == "property") {
 							var inspectableElement = propertyElement.node.Inspectable;

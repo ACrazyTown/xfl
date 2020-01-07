@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 import xfl.geom.MotionObject;
 
 class DOMFrame {
@@ -17,7 +17,7 @@ class DOMFrame {
 		elements = new Array<Dynamic>();
 	}
 
-	private static function parseElements(elements: Iterator<haxe.xml.Fast>): Array<Dynamic> {
+	private static function parseElements(elements: Iterator<haxe.xml.Access>): Array<Dynamic> {
 		var frameElements: Array<Dynamic> = [];
 		for (childElement in elements) {
 			switch (childElement.name) {
@@ -50,7 +50,7 @@ class DOMFrame {
 		return frameElements;
 	}
 
-	public static function parse(xml: Fast): DOMFrame {
+	public static function parse(xml: Access): DOMFrame {
 		var frame: DOMFrame = new DOMFrame();
 		frame.name = xml.has.name == true?xml.att.name:null;
 		frame.index = Std.parseInt(xml.att.index);

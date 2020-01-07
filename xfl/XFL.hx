@@ -23,7 +23,7 @@ class XFL {
 	public var documents: Array<DOMDocument>;
 	public var customSymbolLoader: XFLCustomSymbolLoader;
 
-	private static var xmlCollection: haxe.xml.Fast = null;
+	private static var xmlCollection: haxe.xml.Access = null;
 
 	public function new (paths: Array<String>, customSymbolLoader: XFLCustomSymbolLoader = null) {
 		this.documents = [];
@@ -34,14 +34,14 @@ class XFL {
 		}
 	}
 
-	public static function getXMLData(name: String): haxe.xml.Fast {
+	public static function getXMLData(name: String): haxe.xml.Access {
 		if (XML_USECOLLECTION == false) {
 			var textAsset: String = openfl.Assets.getText(name);
 			if (textAsset != null) {
 				if (ASSETS_CLEARCACHE == true) {
 					Assets.cache.clear();
 				}
-				return new haxe.xml.Fast(Xml.parse(textAsset).firstElement());
+				return new haxe.xml.Access(Xml.parse(textAsset).firstElement());
 			}
 			trace("getXMLData(): xml data not found: " + name);
 		} else {
@@ -51,12 +51,12 @@ class XFL {
 					if (ASSETS_CLEARCACHE == true) {
 						Assets.cache.clear();
 					}
-					xmlCollection = new haxe.xml.Fast(Xml.parse(textAsset).firstElement());
+					xmlCollection = new haxe.xml.Access(Xml.parse(textAsset).firstElement());
 				}
 			}
 			for (entry in xmlCollection.nodes.entry) {
 				if (entry.att.name == name) {
-					return new haxe.xml.Fast(entry.x.firstElement());
+					return new haxe.xml.Access(entry.x.firstElement());
 				}
 			}
 			trace("getXMLData(): xml-collection: xml data not found: " + name);

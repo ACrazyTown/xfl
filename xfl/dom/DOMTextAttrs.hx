@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMTextAttrs {
 
@@ -14,7 +14,7 @@ class DOMTextAttrs {
 	public function new() {
 	}
 
-	public static function parse(xml: Fast): DOMTextAttrs {
+	public static function parse(xml: Access): DOMTextAttrs {
 		var textAttrs = new DOMTextAttrs ();
 		if (xml.has.alignment) textAttrs.alignment = xml.att.alignment;
 		if (xml.has.aliasText) textAttrs.aliasText = (xml.att.aliasText == "true");

@@ -1,6 +1,6 @@
 package xfl.dom;
 
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMSoundItem {
 
@@ -17,7 +17,7 @@ class DOMSoundItem {
 	public function new () {
 	}
 
-	public static function parseIndex(xml: Fast): DOMItemIndex {
+	public static function parseIndex(xml: Access): DOMItemIndex {
 		var index: DOMItemIndex = new DOMItemIndex();
 		index.name = xml.att.name;
 		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
@@ -26,7 +26,7 @@ class DOMSoundItem {
 		return index;
 	}
 
-	public static function parse (xml:Fast): DOMSoundItem {
+	public static function parse (xml: Access): DOMSoundItem {
 		var soundItem = new DOMSoundItem();		
 		// soundItem.name = xml.att.name;
 		// soundItem.itemID = xml.att.itemID;

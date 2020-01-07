@@ -2,7 +2,7 @@ package xfl.dom;
 
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import haxe.xml.Fast;
+import haxe.xml.Access;
 
 class DOMBitmapInstance {
 
@@ -13,7 +13,7 @@ class DOMBitmapInstance {
 	public function new () {
 	}
 
-	public static function parse(xml: Fast): DOMBitmapInstance {
+	public static function parse(xml: Access): DOMBitmapInstance {
 		var bitmapInstance: DOMBitmapInstance = new DOMBitmapInstance();
 		bitmapInstance.libraryItemName = xml.att.libraryItemName;
 		for (element in xml.elements) {
