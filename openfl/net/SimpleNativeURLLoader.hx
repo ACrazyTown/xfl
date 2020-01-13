@@ -1,5 +1,6 @@
 package openfl.net;
 
+import lime.net.curl.CURLInfo;
 import haxe.io.Bytes;
 
 import lime.net.curl.CURL;
@@ -31,6 +32,9 @@ class SimpleNativeURLLoader extends EventDispatcher
 
 	private var curl: CURL;
 	private var bytes: Bytes;
+	private var responseCode: Int;
+	private var responseHeaders: Array<URLRequestHeader>;
+	private var uri: String;
 
 	public function new(request: URLRequest = null)
 	{
@@ -39,6 +43,7 @@ class SimpleNativeURLLoader extends EventDispatcher
 		bytesLoaded = 0;
 		bytesTotal = 0;
 		dataFormat = URLLoaderDataFormat.TEXT;
+		responseHeaders = [];
 
 		if (request != null)
 		{
@@ -69,9 +74,9 @@ class SimpleNativeURLLoader extends EventDispatcher
 				curl.reset();
 		}
 
+		uri = request.url;
 		var data: Bytes = null;
 		var query: String = "";
-		var uri: String = request.url;
 		if (Std.is(request.data, Dynamic) == true)
 		{
 				for (key in Reflect.fields(request.data))
@@ -101,7 +106,6 @@ class SimpleNativeURLLoader extends EventDispatcher
 		} else {
 			data = cast request.data;
 		}
-		trace("load(): " + uri + ": " + data);
 		curl.setOption(URL, uri);
 		switch (request.method)
 		{
@@ -178,96 +182,80 @@ class SimpleNativeURLLoader extends EventDispatcher
 		curl.setOption(CURLOption.HTTPHEADER, headers);
 		curl.setOption(CURLOption.PROGRESSFUNCTION, curl_onProgress);
 		curl.setOption(CURLOption.WRITEFUNCTION, curl_onWrite);
-		/*
-		if (parent.enableResponseHeaders)
-		{
-				parent.responseHeaders = [];
-				curl.setOption(HEADERFUNCTION, curl_onHeader);
-		}
-		*/
+		curl.setOption(HEADERFUNCTION, curl_onHeader);
 		curl.setOption(CURLOption.SSL_VERIFYPEER, false);
 		curl.setOption(CURLOption.SSL_VERIFYHOST, 0);
 		curl.setOption(CURLOption.USERAGENT, request.userAgent == null?"libcurl-agent/1.0":request.userAgent);
-		// curl.setOption (CONNECTTIMEOUT, 30);
+		curl.setOption (CONNECTTIMEOUT, 30);
 		curl.setOption(CURLOption.NOSIGNAL, true);
 		curl.setOption(CURLOption.TRANSFERTEXT, dataFormat != URLLoaderDataFormat.BINARY);
 		// curl.setOption(CURLOption.VERBOSE, true);
 		curl.perform();
-		curl.reset();
-		if (dataFormat == BINARY)
+		responseCode = curl.getInfo(CURLInfo.RESPONSE_CODE);
+		if (responseCode < 200 || responseCode >= 399) {
+			dispatchError();
+		} else {
+			if (dataFormat == BINARY)
 			{
-				__dispatchStatus();
+				dispatchStatus();
 				this.data = bytes;
 				var event = new Event(Event.COMPLETE);
 				dispatchEvent(event);
 			}
 			else
 			{
-				__dispatchStatus();
+				dispatchStatus();
 				this.data = bytes.toString();
 				var event = new Event(Event.COMPLETE);
 				dispatchEvent(event);
 			}
+		}
+		curl.reset();
 	}
 
 	private function growBuffer(length:Int)
 	{
 		if (length > bytes.length)
 		{
-				var cacheBytes = bytes;
-				bytes = Bytes.alloc(length);
-				bytes.blit(0, cacheBytes, 0, cacheBytes.length);
+			var cacheBytes = bytes;
+			bytes = Bytes.alloc(length);
+			bytes.blit(0, cacheBytes, 0, cacheBytes.length);
 		}
 	}
 
-	private function __dispatchStatus(): Void
+	private function dispatchStatus(): Void
 	{
-		/*
-		var event = new HTTPStatusEvent(HTTPStatusEvent.HTTP_STATUS, false, false, __httpRequest.responseStatus);
-		event.responseURL = __httpRequest.uri;
-
-		var headers = new Array<URLRequestHeader>();
-
-		#if (lime && !display && !macro && !doc_gen)
-		if (__httpRequest.enableResponseHeaders && __httpRequest.responseHeaders != null)
-		{
-			for (header in __httpRequest.responseHeaders)
-			{
-				headers.push(new URLRequestHeader(header.name, header.value));
-			}
-		}
-		#end
-		event.responseHeaders = headers;
+		var event = new HTTPStatusEvent(HTTPStatusEvent.HTTP_STATUS, false, false, responseCode);
+		event.responseURL = uri;
+		event.responseHeaders = responseHeaders;
 		dispatchEvent(event);
-		*/
 	}
 
 	// Event Handlers
-	private function httpRequest_onError(error: Dynamic): Void
+	private function dispatchError(): Void
 	{
-		__dispatchStatus();
-		/*
-		if (error == 403)
+		dispatchStatus();
+		if (responseCode == 403)
 		{
 			var event = new SecurityErrorEvent(SecurityErrorEvent.SECURITY_ERROR);
-			event.text = Std.string(error);
+			event.text = Std.string(responseCode);
 			dispatchEvent(event);
 		}
 		else
 		{
 			var event = new IOErrorEvent(IOErrorEvent.IO_ERROR);
-			event.text = Std.string(error);
+			event.text = Std.string(responseCode);
 			dispatchEvent(event);
 		}
-		*/
 	}
 
-	private function httpRequest_onProgress(bytesLoaded: Int, bytesTotal: Int): Void
+	private function curl_onHeader(curl:CURL, header:String):Void
 	{
-		var event = new ProgressEvent(ProgressEvent.PROGRESS);
-		event.bytesLoaded = bytesLoaded;
-		event.bytesTotal = bytesTotal;
-		dispatchEvent(event);
+		var parts = header.split(': ');
+		if (parts.length == 2)
+		{
+			responseHeaders.push(new URLRequestHeader(StringTools.trim(parts[0]), StringTools.trim(parts[1])));
+		}
 	}
 
 	private function curl_onWrite(curl : CURL, output: Bytes): Int
@@ -280,14 +268,18 @@ class SimpleNativeURLLoader extends EventDispatcher
 	
 	private function curl_onProgress(curl: CURL, dltotal: Float, dlnow: Float, uptotal: Float, upnow: Float): Void
 	{
-		trace("curl_onProgress(): " + dltotal + " / " + dlnow + " / " + uptotal + " / " + upnow);
 		if (upnow > writeBytesLoaded || dlnow > writeBytesLoaded || uptotal > writeBytesTotal || dltotal > writeBytesTotal)
 		{
-				if (upnow > writeBytesLoaded) writeBytesLoaded = Std.int(upnow);
-				if (dlnow > writeBytesLoaded) writeBytesLoaded = Std.int(dlnow);
-				if (uptotal > writeBytesTotal) writeBytesTotal = Std.int(uptotal);
-				if (dltotal > writeBytesTotal) writeBytesTotal = Std.int(dltotal);
+			if (upnow > writeBytesLoaded) writeBytesLoaded = Std.int(upnow);
+			if (dlnow > writeBytesLoaded) writeBytesLoaded = Std.int(dlnow);
+			if (uptotal > writeBytesTotal) writeBytesTotal = Std.int(uptotal);
+			if (dltotal > writeBytesTotal) writeBytesTotal = Std.int(dltotal);
+			/*
+			var event = new ProgressEvent(ProgressEvent.PROGRESS);
+			event.bytesLoaded = bytesLoaded;
+			event.bytesTotal = bytesTotal;
+			dispatchEvent(event);
+			*/
 		}
-		trace("curl_onProgress(): " + writeBytesLoaded + " / " + writeBytesTotal);
 	}
 }
