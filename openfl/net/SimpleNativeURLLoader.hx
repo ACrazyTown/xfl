@@ -1,9 +1,10 @@
 package openfl.net;
 
-import lime.net.curl.CURLInfo;
 import haxe.io.Bytes;
+import haxe.Timer;
 
 import lime.net.curl.CURL;
+import lime.net.curl.CURLInfo;
 import lime.net.curl.CURLCode;
 import lime.net.curl.CURLOption;
 
@@ -13,6 +14,8 @@ import openfl.events.HTTPStatusEvent;
 import openfl.events.IOErrorEvent;
 import openfl.events.ProgressEvent;
 import openfl.events.SecurityErrorEvent;
+
+import sys.thread.Thread;
 
 class SimpleNativeURLLoader extends EventDispatcher
 {
@@ -36,14 +39,17 @@ class SimpleNativeURLLoader extends EventDispatcher
 	private var responseHeaders: Array<URLRequestHeader>;
 	private var uri: String;
 
+	private var timer: Timer;
+	private var ioThread: Thread;
+	private var ioThreadFinished: Bool;
+
 	public function new(request: URLRequest = null)
 	{
 		super();
-
 		bytesLoaded = 0;
 		bytesTotal = 0;
 		dataFormat = URLLoaderDataFormat.TEXT;
-		responseHeaders = [];
+		ioThreadFinished = true;
 
 		if (request != null)
 		{
@@ -57,13 +63,21 @@ class SimpleNativeURLLoader extends EventDispatcher
 
 	public function load(request: URLRequest):Void
 	{
-		bytes = Bytes.alloc(0);
+		if (ioThreadFinished == false) {
+			trace("load(): a request is already pending: " + uri);
+			return;
+		}
 
+		ioThreadFinished = false;
+		bytes = Bytes.alloc(0);
 		bytesLoaded = 0;
 		bytesTotal = 0;
 		writeBytesLoaded = 0;
 		writeBytesTotal = 0;
 		writePosition = 0;
+		responseCode = 0;
+		responseHeaders = [];
+		uri = null;
 
 		if (curl == null)
 		{
@@ -190,27 +204,11 @@ class SimpleNativeURLLoader extends EventDispatcher
 		curl.setOption(CURLOption.NOSIGNAL, true);
 		curl.setOption(CURLOption.TRANSFERTEXT, dataFormat != URLLoaderDataFormat.BINARY);
 		// curl.setOption(CURLOption.VERBOSE, true);
-		curl.perform();
-		responseCode = curl.getInfo(CURLInfo.RESPONSE_CODE);
-		if (responseCode < 200 || responseCode >= 399) {
-			dispatchError();
-		} else {
-			if (dataFormat == BINARY)
-			{
-				dispatchStatus();
-				this.data = bytes;
-				var event = new Event(Event.COMPLETE);
-				dispatchEvent(event);
-			}
-			else
-			{
-				dispatchStatus();
-				this.data = bytes.toString();
-				var event = new Event(Event.COMPLETE);
-				dispatchEvent(event);
-			}
-		}
-		curl.reset();
+
+		timer = new Timer(Math.ceil(1000.0 / 60.0));
+		timer.run = timerRun;
+
+		ioThread = Thread.create(threadRun);
 	}
 
 	private function growBuffer(length:Int)
@@ -274,12 +272,48 @@ class SimpleNativeURLLoader extends EventDispatcher
 			if (dlnow > writeBytesLoaded) writeBytesLoaded = Std.int(dlnow);
 			if (uptotal > writeBytesTotal) writeBytesTotal = Std.int(uptotal);
 			if (dltotal > writeBytesTotal) writeBytesTotal = Std.int(dltotal);
-			/*
-			var event = new ProgressEvent(ProgressEvent.PROGRESS);
-			event.bytesLoaded = bytesLoaded;
-			event.bytesTotal = bytesTotal;
-			dispatchEvent(event);
-			*/
 		}
 	}
+
+	private function threadRun(): Void 
+	{
+		curl.perform();
+		ioThreadFinished = true;
+		ioThread = null;
+	}
+
+	private function timerRun(): Void 
+	{
+		if (ioThreadFinished == false) {
+			var event = new ProgressEvent(ProgressEvent.PROGRESS);
+			event.bytesLoaded = writeBytesLoaded;
+			event.bytesTotal = writeBytesTotal;
+			dispatchEvent(event);
+			return;
+		}
+		//
+		timer.stop();
+		timer = null;
+		responseCode = curl.getInfo(CURLInfo.RESPONSE_CODE);
+		if (responseCode < 200 || responseCode >= 399) {
+			dispatchError();
+		} else {
+			if (dataFormat == BINARY)
+			{
+				dispatchStatus();
+				this.data = bytes;
+				var event = new Event(Event.COMPLETE);
+				dispatchEvent(event);
+			}
+			else
+			{
+				dispatchStatus();
+				this.data = bytes.toString();
+				var event = new Event(Event.COMPLETE);
+				dispatchEvent(event);
+			}
+		}
+		curl.reset();
+	}
+
 }
