@@ -30,6 +30,11 @@ class BaseScrollPane extends UIComponent {
     private var _source: DisplayObject;
     private var _scrollBar: ScrollBar;
 
+    private var _dragMouseYLast: Null<Float>;
+    private var _swipeVerticalDirection: Null<Float>;
+    private var _swipeVerticalCurrent: Null<Float>;
+    private var _swipeVerticalTime: Null<Float>;
+
     /**
      * Public constructor
      **/
@@ -54,6 +59,7 @@ class BaseScrollPane extends UIComponent {
         mask = maskSprite;
         update();
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+        addEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
     }
 
     override public function setSize(_width: Float, _height: Float) : Void {
@@ -185,4 +191,67 @@ class BaseScrollPane extends UIComponent {
         scrollY = _scrollBar.scrollPosition;
     }
 
+    private function doSwiping(event: Event): Void {
+        if (parent == null) {
+            openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, doSwiping);
+            _swipeVerticalCurrent = null;
+            _swipeVerticalDirection = null;
+            _swipeVerticalTime = null;
+            mouseChildren = true;
+            return;
+        }
+        var now: Float = haxe.Timer.stamp();
+        var scrollStep: Float = (now - _swipeVerticalTime) * _height / 45.0 * 60.0;
+        _swipeVerticalCurrent+= scrollStep;
+        _swipeVerticalTime = now;
+        scrollY+= _swipeVerticalDirection * scrollStep;
+        if (_swipeVerticalCurrent >= _height) {
+            openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, doSwiping);
+            _swipeVerticalCurrent = null;
+            _swipeVerticalDirection = null;
+            _swipeVerticalTime = null;
+            mouseChildren = true;
+        }
+
+    }
+
+    private function mouseDragHandler(e: MouseEvent): Void {
+        if (parent == null) {
+            removeEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
+            removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+            removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+        }
+        switch (e.type) {
+            case MouseEvent.MOUSE_MOVE:
+                if (e.stageY > _dragMouseYLast + 25.0) {
+                    _swipeVerticalDirection = 1.0;
+                    _swipeVerticalCurrent = 0.0;
+                    _swipeVerticalTime = haxe.Timer.stamp();
+                    mouseChildren = false;
+                    openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, doSwiping);
+                    _dragMouseYLast = null;
+                    removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                    removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+                } else
+                if (e.stageY < _dragMouseYLast - 25.0) {
+                    _swipeVerticalDirection = -1.0;
+                    _swipeVerticalCurrent = 0.0;
+                    _swipeVerticalTime = haxe.Timer.stamp();
+                    mouseChildren = false;
+                    openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, doSwiping);
+                    _dragMouseYLast = null;
+                    removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                    removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+                }
+            case MouseEvent.MOUSE_DOWN:
+                _dragMouseYLast = e.stageY;
+                addEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                addEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+            case MouseEvent.MOUSE_UP:
+                mouseChildren = true;
+                _dragMouseYLast = null;
+                removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+        }
+    }
 }
