@@ -224,7 +224,7 @@ class BaseScrollPane extends UIComponent {
         switch (e.type) {
             case MouseEvent.MOUSE_MOVE:
                 if (e.stageY > _dragMouseYLast + 25.0) {
-                    _swipeVerticalDirection = 1.0;
+                    _swipeVerticalDirection = -1.0;
                     _swipeVerticalCurrent = 0.0;
                     _swipeVerticalTime = haxe.Timer.stamp();
                     mouseChildren = false;
@@ -234,7 +234,7 @@ class BaseScrollPane extends UIComponent {
                     removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
                 } else
                 if (e.stageY < _dragMouseYLast - 25.0) {
-                    _swipeVerticalDirection = -1.0;
+                    _swipeVerticalDirection = 1.0;
                     _swipeVerticalCurrent = 0.0;
                     _swipeVerticalTime = haxe.Timer.stamp();
                     mouseChildren = false;
