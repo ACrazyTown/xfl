@@ -113,7 +113,7 @@ class XFLTween {
         tween.onCompleteCalled = false;
         tween.nextTween = null;
         tween.onComplete = onComplete;
-        tween.onCompleteParams = onCompleteParams;
+        if (onCompleteParams != null) tween.onCompleteParams = onCompleteParams;
         tween.initFunc = null;
         tween.disposeFunc = null;
         tween.handleFunc = null;
