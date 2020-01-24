@@ -54,6 +54,7 @@ class TextArea extends UIComponent {
         scrollBar.x = width - scrollBar.width;
         scrollBar.y = 0.0;
         scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
+        removeChild(scrollBar);
         addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         validateNow();
     }
@@ -141,12 +142,16 @@ class TextArea extends UIComponent {
     }
 
     private function updateScrollBar(): Void {
-        lib.Utils.dumpDisplayObject(_textField);
         textFieldNumLinesLast = _textField.numLines;
         scrollBar.visibleScrollRange = _textField.bottomScrollV - _textField.scrollV + 1;
         scrollBar.pageScrollSize = _textField.numLines / scrollBar.visibleScrollRange;
         scrollBar.maxScrollPosition = _textField.numLines - scrollBar.visibleScrollRange;
         scrollBar.visible = scrollBar.maxScrollPosition > 0.0;
+        if (scrollBar.visible == true) {
+            if (getChildByName(scrollBar.name) == null) addChild(scrollBar);
+        } else {
+            if (getChildByName(scrollBar.name) != null) removeChild(scrollBar);
+        }
         trace("_textField.numLines: " + _textField.numLines);
         trace("_textField.scrollV: " + _textField.scrollV);
         trace("_textField.bottomScrollV: " + _textField.bottomScrollV);

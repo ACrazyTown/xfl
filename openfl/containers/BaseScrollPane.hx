@@ -41,6 +41,8 @@ class BaseScrollPane extends UIComponent {
     public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
     {
         super(name, xflSymbolArguments);
+        removeChild(getXFLDisplayObject("ScrollPane_upSkin"));
+        removeChild(getXFLDisplayObject("ScrollPane_disabledSkin"));
         _scrollBar = getXFLScrollBar("ScrollBar");
         if (_scrollBar == null) {
             _scrollBar = new ScrollBar();
