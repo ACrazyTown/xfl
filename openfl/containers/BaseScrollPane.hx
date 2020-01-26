@@ -27,6 +27,7 @@ class BaseScrollPane extends UIComponent {
     public var verticalScrollPolicy: String;
 
     private var scrollContainer: Sprite;
+    private var sourceContainer: Sprite;
     private var _source: DisplayObject;
     private var _scrollBar: ScrollBar;
 
@@ -53,15 +54,17 @@ class BaseScrollPane extends UIComponent {
         _scrollBar.x = width - _scrollBar.width;
         _scrollBar.y = 0.0;
         _scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
+        sourceContainer = new Sprite();
+        addChild(sourceContainer);
+        scrollContainer = new Sprite();
+        sourceContainer.addChild(scrollContainer);
         var maskSprite: Sprite = new Sprite();
         maskSprite.visible = false;
-        addChild(maskSprite);
-        scrollContainer = new Sprite();
-        addChild(scrollContainer);
-        mask = maskSprite;
+        sourceContainer.addChild(maskSprite);
+        sourceContainer.mask = maskSprite;
         update();
-        addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-        addEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
+        sourceContainer.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+        sourceContainer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
     }
 
     override public function setSize(_width: Float, _height: Float) : Void {
@@ -74,17 +77,6 @@ class BaseScrollPane extends UIComponent {
 
     public function update() : Void {
         disableSourceChildren();
-        var maskSprite: Sprite = cast(mask, Sprite);
-        maskSprite.graphics.clear();
-        if (width > 0.0 && height > 0.0) {
-            graphics.clear();
-            graphics.beginFill(0xFF0000, 0.0);
-            graphics.drawRect(0.0, 0.0, _width, _height);
-            graphics.endFill();
-            maskSprite.graphics.beginFill(0xFF0000);
-            maskSprite.graphics.drawRect(0.0, 0.0, _width, _height);
-            maskSprite.graphics.endFill();
-        }
         _scrollBar.x = _width - _scrollBar.width;
         _scrollBar.y = 0.0;
         _scrollBar.setSize(_scrollBar.width, _height);
@@ -92,6 +84,17 @@ class BaseScrollPane extends UIComponent {
         _scrollBar.lineScrollSize = 10.0;
         _scrollBar.pageScrollSize = height;
         _scrollBar.visible = _source != null && (_source.y + _source.height) > height;
+        var maskSprite: Sprite = cast(sourceContainer.mask, Sprite);
+        maskSprite.graphics.clear();
+        if (width > 0.0 && height > 0.0) {
+            sourceContainer.graphics.clear();
+            sourceContainer.graphics.beginFill(0xFF0000, 0.0);
+            sourceContainer.graphics.drawRect(0.0, 0.0, _width - (_scrollBar.visible == true?_scrollBar.width:0), _height);
+            sourceContainer.graphics.endFill();
+            maskSprite.graphics.beginFill(0xFF0000);
+            maskSprite.graphics.drawRect(0.0, 0.0, _width - (_scrollBar.visible == true?_scrollBar.width:0), _height);
+            maskSprite.graphics.endFill();
+        }
         if (_scrollBar.visible == true) {
             if (getChildByName(_scrollBar.name) == null) addChild(_scrollBar);
         } else {
@@ -219,9 +222,9 @@ class BaseScrollPane extends UIComponent {
 
     private function mouseDragHandler(e: MouseEvent): Void {
         if (parent == null) {
-            removeEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
-            removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
-            removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+            sourceContainer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
+            sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+            sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
         }
         switch (e.type) {
             case MouseEvent.MOUSE_MOVE:
@@ -232,8 +235,8 @@ class BaseScrollPane extends UIComponent {
                     mouseChildren = false;
                     openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, doSwiping);
                     _dragMouseYLast = null;
-                    removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-                    removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+                    sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                    sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
                 } else
                 if (e.stageY < _dragMouseYLast - 25.0) {
                     _swipeVerticalDirection = 1.0;
@@ -242,18 +245,18 @@ class BaseScrollPane extends UIComponent {
                     mouseChildren = false;
                     openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, doSwiping);
                     _dragMouseYLast = null;
-                    removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-                    removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+                    sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                    sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
                 }
             case MouseEvent.MOUSE_DOWN:
                 _dragMouseYLast = e.stageY;
-                addEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-                addEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+                sourceContainer.addEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                sourceContainer.addEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
             case MouseEvent.MOUSE_UP:
                 mouseChildren = true;
                 _dragMouseYLast = null;
-                removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-                removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+                sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+                sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
         }
     }
 }
