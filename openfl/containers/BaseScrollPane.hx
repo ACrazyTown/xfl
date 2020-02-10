@@ -233,8 +233,8 @@ class BaseScrollPane extends UIComponent {
 
 		if (parent == null) {
 			sourceContainer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
-			sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
-			sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+			openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+			openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
 		}
 
 		switch (e.type) {
@@ -246,8 +246,8 @@ class BaseScrollPane extends UIComponent {
 					mouseChildren = false;
 					openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, doSwiping);
 					_dragMouseYLast = null;
-					sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-					sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+					openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+					openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
 				} else if (e.stageY < _dragMouseYLast - 25.0) {
 					_swipeVerticalDirection = 1.0;
 					_swipeVerticalCurrent = 0.0;
@@ -255,18 +255,18 @@ class BaseScrollPane extends UIComponent {
 					mouseChildren = false;
 					openfl.Lib.current.stage.addEventListener(Event.ENTER_FRAME, doSwiping);
 					_dragMouseYLast = null;
-					sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-					sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+					openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+					openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
 				}
 			case MouseEvent.MOUSE_DOWN:
 				_dragMouseYLast = e.stageY;
-				sourceContainer.addEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-				sourceContainer.addEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+				openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+				openfl.Lib.current.stage.addEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
 			case MouseEvent.MOUSE_UP:
 				mouseChildren = true;
 				_dragMouseYLast = null;
-				sourceContainer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
-				sourceContainer.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+				openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+				openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
 		}
 	}
 }
