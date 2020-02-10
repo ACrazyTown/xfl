@@ -77,7 +77,6 @@ class BaseScrollPane extends UIComponent {
 	}
 
 	public function update():Void {
-		trace("update()");
 		disableSourceChildren();
 		_scrollBar.x = _width - _scrollBar.width;
 		_scrollBar.y = 0.0;
@@ -100,11 +99,9 @@ class BaseScrollPane extends UIComponent {
 			maskSprite.graphics.endFill();
 		}
 		if (_scrollBar.visible == true) {
-			trace("a");
 			if (getChildByName(_scrollBar.name) == null)
 				addChild(_scrollBar);
 		} else {
-			trace("b");
 			if (getChildByName(_scrollBar.name) != null)
 				removeChild(_scrollBar);
 		}
