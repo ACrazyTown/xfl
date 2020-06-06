@@ -26,8 +26,8 @@ class BaseScrollPane extends UIComponent {
 	public var horizontalScrollPolicy:String;
 	public var verticalScrollPolicy:String;
 
-	private var scrollContainer:Sprite;
-	private var sourceContainer:Sprite;
+	private var _scrollContainer:Sprite;
+	private var _sourceContainer:Sprite;
 	private var _source:DisplayObject;
 	private var _scrollBar:ScrollBar;
 
@@ -55,17 +55,17 @@ class BaseScrollPane extends UIComponent {
 		_scrollBar.x = width - _scrollBar.width;
 		_scrollBar.y = 0.0;
 		_scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
-		sourceContainer = new Sprite();
-		addChild(sourceContainer);
-		scrollContainer = new Sprite();
-		sourceContainer.addChild(scrollContainer);
+		_sourceContainer = new Sprite();
+		addChild(_sourceContainer);
+		_scrollContainer = new Sprite();
+		_sourceContainer.addChild(_scrollContainer);
 		var maskSprite:Sprite = new Sprite();
 		maskSprite.visible = false;
-		sourceContainer.addChild(maskSprite);
-		sourceContainer.mask = maskSprite;
+		_sourceContainer.addChild(maskSprite);
+		_sourceContainer.mask = maskSprite;
 		update();
-		sourceContainer.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
-		sourceContainer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
+		_sourceContainer.addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		_sourceContainer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
 	}
 
 	override public function setSize(_width:Float, _height:Float):Void {
@@ -87,13 +87,13 @@ class BaseScrollPane extends UIComponent {
 		_scrollBar.pageScrollSize = height;
 		_scrollBar.visible = verticalScrollPolicy == ScrollPolicy.ON
 			|| (verticalScrollPolicy == ScrollPolicy.AUTO && _source != null && _source.y + _source.height > height);
-		var maskSprite:Sprite = cast(sourceContainer.mask, Sprite);
+		var maskSprite:Sprite = cast(_sourceContainer.mask, Sprite);
 		maskSprite.graphics.clear();
 		if (width > 0.0 && height > 0.0) {
-			sourceContainer.graphics.clear();
-			sourceContainer.graphics.beginFill(0xFF0000, 0.0);
-			sourceContainer.graphics.drawRect(0.0, 0.0, _width - (_scrollBar.visible == true ? _scrollBar.width : 0), _height);
-			sourceContainer.graphics.endFill();
+			_sourceContainer.graphics.clear();
+			_sourceContainer.graphics.beginFill(0xFF0000, 0.0);
+			_sourceContainer.graphics.drawRect(0.0, 0.0, _width - (_scrollBar.visible == true ? _scrollBar.width : 0), _height);
+			_sourceContainer.graphics.endFill();
 			maskSprite.graphics.beginFill(0xFF0000);
 			maskSprite.graphics.drawRect(0.0, 0.0, _width - (_scrollBar.visible == true ? _scrollBar.width : 0), _height);
 			maskSprite.graphics.endFill();
@@ -115,16 +115,16 @@ class BaseScrollPane extends UIComponent {
 
 	private function set_source(_source:DisplayObject):DisplayObject {
 		if (this._source != null)
-			scrollContainer.removeChild(this._source);
+			_scrollContainer.removeChild(this._source);
 		this._source = _source;
 		if (_source != null)
-			scrollContainer.addChild(this._source);
+			_scrollContainer.addChild(this._source);
 		update();
 		return this._source;
 	}
 
 	private function get_scrollY():Float {
-		return -scrollContainer.y;
+		return -_scrollContainer.y;
 	}
 
 	private function set_scrollY(scrollY:Float):Float {
@@ -132,21 +132,21 @@ class BaseScrollPane extends UIComponent {
 			return scrollY;
 		disableSourceChildren();
 		if ((source.y + source.height) < height) {
-			scrollContainer.y = 0.0;
+			_scrollContainer.y = 0.0;
 		} else {
-			scrollContainer.y = -scrollY;
+			_scrollContainer.y = -scrollY;
 		}
-		if (scrollContainer.y > 0.0) {
-			scrollContainer.y = 0.0;
+		if (_scrollContainer.y > 0.0) {
+			_scrollContainer.y = 0.0;
 		} else if (height > _source.y + source.height) {
-			scrollContainer.y = 0.0;
-		} else if (scrollContainer.y < -_source.y - source.height + height) {
-			scrollContainer.y = -_source.y - source.height + height;
+			_scrollContainer.y = 0.0;
+		} else if (_scrollContainer.y < -_source.y - source.height + height) {
+			_scrollContainer.y = -_source.y - source.height + height;
 		}
 		_scrollBar.scrollPosition = scrollY;
 		_scrollBar.validateNow();
 		updateSourceChildren();
-		return -scrollContainer.y;
+		return -_scrollContainer.y;
 	}
 
 	private function disableSourceChildren():Void {
@@ -232,7 +232,7 @@ class BaseScrollPane extends UIComponent {
 			return;
 
 		if (parent == null) {
-			sourceContainer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
+			_sourceContainer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDragHandler);
 			openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
 			openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
 		}
@@ -268,5 +268,13 @@ class BaseScrollPane extends UIComponent {
 				openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
 				openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
 		}
+	}
+
+	override public function dispose():Void {
+		_scrollBar.removeEventListener(ScrollEvent.SCROLL, onScrollEvent);
+		_sourceContainer.removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
+		openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragHandler);
+		openfl.Lib.current.stage.removeEventListener(MouseEvent.MOUSE_UP, mouseDragHandler);
+		openfl.Lib.current.stage.removeEventListener(Event.ENTER_FRAME, doSwiping);
 	}
 }
