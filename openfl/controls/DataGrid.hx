@@ -93,7 +93,7 @@ class DataGrid extends BaseScrollPane {
 	}
 
 	override private function draw() {
-		dispose();
+		disposeChildren();
 		var headerRenderer:Class<Dynamic> = styles.get("headerRenderer") != null ? cast(styles.get("headerRenderer"), Class<Dynamic>) : null;
 		var cellRenderer:Class<Dynamic> = styles.get("cellRenderer") != null ? cast(styles.get("cellRenderer"), Class<Dynamic>) : null;
 		for (column in columns) {
@@ -319,7 +319,7 @@ class DataGrid extends BaseScrollPane {
 		}
 	}
 
-	override public function dispose():Void {
+	private function disposeChildren():Void {
 		for (rowDisplayObjects in _headerDisplayObjects) {
 			for (i in 0...rowDisplayObjects.numChildren) {
 				var rowDisplayObject:DisplayObject = rowDisplayObjects.getChildAt(i);
@@ -343,6 +343,10 @@ class DataGrid extends BaseScrollPane {
 			_scrollPaneSource.removeChild(rowDisplayObjects);
 		}
 		_dataDisplayObjects.splice(0, _dataDisplayObjects.length);
+	}
+
+	override public function dispose():Void {
+		disposeChildren();
 		super.dispose();
 	}
 }
