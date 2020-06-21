@@ -31,19 +31,19 @@ class DataGrid extends BaseScrollPane {
 	public var rowHeight(default, set):Float;
 
 	private var _dataProvider:DataProvider;
-	private var headerDisplayObjects:Array<DisplayObjectContainer>;
-	private var dataDisplayObjects:Array<DisplayObjectContainer>;
-	private var mouseOverDisplayObjects:DisplayObjectContainer;
-	private var scrollPaneSource:Sprite;
+	private var _headerDisplayObjects:Array<DisplayObjectContainer>;
+	private var _dataDisplayObjects:Array<DisplayObjectContainer>;
+	private var _mouseOverDisplayObjects:DisplayObjectContainer;
+	private var _scrollPaneSource:Sprite;
 
 	/**
 	 * Public constructor
 	**/
 	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null) {
 		super(name, xflSymbolArguments /* != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.DataGrid")*/);
-		headerDisplayObjects = new Array<DisplayObjectContainer>();
-		dataDisplayObjects = new Array<DisplayObjectContainer>();
-		mouseOverDisplayObjects = null;
+		_headerDisplayObjects = new Array<DisplayObjectContainer>();
+		_dataDisplayObjects = new Array<DisplayObjectContainer>();
+		_mouseOverDisplayObjects = null;
 		columns = new Array<DataGridColumn>();
 		_width = 0;
 		_height = 0;
@@ -53,8 +53,8 @@ class DataGrid extends BaseScrollPane {
 		height = 0;
 		rowHeight = 0.0;
 		mouseChildren = true;
-		scrollPaneSource = new Sprite();
-		source = scrollPaneSource;
+		_scrollPaneSource = new Sprite();
+		source = _scrollPaneSource;
 		draw();
 		update();
 	}
@@ -73,7 +73,7 @@ class DataGrid extends BaseScrollPane {
 	}
 
 	public function getCellRendererAt(row:Int, column:Int):ICellRenderer {
-		return cast(dataDisplayObjects[row].getChildAt(column), ICellRenderer);
+		return cast(_dataDisplayObjects[row].getChildAt(column), ICellRenderer);
 	}
 
 	public function getItemAt(rowIdx:Int):Dynamic {
@@ -93,14 +93,7 @@ class DataGrid extends BaseScrollPane {
 	}
 
 	override private function draw() {
-		for (displayObject in headerDisplayObjects) {
-			removeChild(displayObject);
-		}
-		headerDisplayObjects.splice(0, headerDisplayObjects.length);
-		for (displayObject in dataDisplayObjects) {
-			scrollPaneSource.removeChild(displayObject);
-		}
-		dataDisplayObjects.splice(0, dataDisplayObjects.length);
+		dispose();
 		var headerRenderer:Class<Dynamic> = styles.get("headerRenderer") != null ? cast(styles.get("headerRenderer"), Class<Dynamic>) : null;
 		var cellRenderer:Class<Dynamic> = styles.get("cellRenderer") != null ? cast(styles.get("cellRenderer"), Class<Dynamic>) : null;
 		for (column in columns) {
@@ -132,7 +125,7 @@ class DataGrid extends BaseScrollPane {
 			headerRow.addChild(headerRenderer);
 			_x += column.width;
 		}
-		headerDisplayObjects.push(headerRow);
+		_headerDisplayObjects.push(headerRow);
 		addChild(headerRow);
 		if (_dataProvider != null) {
 			var textFormat:TextFormat = styles.get("textFormat") != null ? cast(styles.get("textFormat"), TextFormat) : null;
@@ -173,16 +166,16 @@ class DataGrid extends BaseScrollPane {
 					columnIdx++;
 					dataRow.addChild(cellRenderer);
 				}
-				scrollPaneSource.addChild(dataRow);
-				dataDisplayObjects.push(dataRow);
+				_scrollPaneSource.addChild(dataRow);
+				_dataDisplayObjects.push(dataRow);
 			}
 		}
-		scrollPaneSource.y = alignDisplayObjects(headerDisplayObjects);
-		alignDisplayObjects(dataDisplayObjects);
+		_scrollPaneSource.y = alignDisplayObjects(_headerDisplayObjects);
+		alignDisplayObjects(_dataDisplayObjects);
 		update();
 		if (verticalScrollBar.visible == true) {
-			realignDisplayObjectsWidth(headerDisplayObjects, verticalScrollBar.width);
-			realignDisplayObjectsWidth(dataDisplayObjects, verticalScrollBar.width);
+			realignDisplayObjectsWidth(_headerDisplayObjects, verticalScrollBar.width);
+			realignDisplayObjectsWidth(_dataDisplayObjects, verticalScrollBar.width);
 		}
 	}
 
@@ -281,7 +274,7 @@ class DataGrid extends BaseScrollPane {
 		if (Std.is(event.target, HeaderRenderer) == true) {
 			var mouseHeaderRenderer:HeaderRenderer = cast(event.target, HeaderRenderer);
 			for (columnIdx in 0...columns.length) {
-				var headerRenderer:DisplayObject = headerDisplayObjects[0].getChildAt(columnIdx);
+				var headerRenderer:DisplayObject = _headerDisplayObjects[0].getChildAt(columnIdx);
 				if (headerRenderer != null) {
 					cast(headerRenderer, HeaderRenderer).setMouseState(event.type.charAt("mouse".length)
 						.toLowerCase() + event.type.substr("mouse".length + 1));
@@ -290,14 +283,14 @@ class DataGrid extends BaseScrollPane {
 		}
 
 		// un mouse over last mouse over cells
-		if (mouseOverDisplayObjects != null) {
+		if (_mouseOverDisplayObjects != null) {
 			for (columnIdx in 0...columns.length) {
-				var cellRenderer:DisplayObject = mouseOverDisplayObjects.getChildAt(columnIdx);
+				var cellRenderer:DisplayObject = _mouseOverDisplayObjects.getChildAt(columnIdx);
 				if (cellRenderer != null) {
 					cast(cellRenderer, CellRenderer).setMouseState("out");
 				}
 			}
-			mouseOverDisplayObjects = null;
+			_mouseOverDisplayObjects = null;
 		}
 
 		// find mouse cell renderer down up the hierarchy
@@ -308,12 +301,12 @@ class DataGrid extends BaseScrollPane {
 		if (mouseCellRenderer != null) {
 			var displayObjectIndex:Int = mouseCellRenderer.listData.index - 1;
 			for (columnIdx in 0...columns.length) {
-				var cellRenderer:DisplayObject = displayObjectIndex < dataDisplayObjects.length ? dataDisplayObjects[displayObjectIndex].getChildAt(columnIdx) : null;
+				var cellRenderer:DisplayObject = displayObjectIndex < _dataDisplayObjects.length ? _dataDisplayObjects[displayObjectIndex].getChildAt(columnIdx) : null;
 				if (cellRenderer != null) {
 					cast(cellRenderer, CellRenderer).setMouseState(event.type.charAt("mouse".length).toLowerCase() + event.type.substr("mouse".length + 1));
 				}
 			}
-			mouseOverDisplayObjects = dataDisplayObjects[displayObjectIndex];
+			_mouseOverDisplayObjects = _dataDisplayObjects[displayObjectIndex];
 		}
 	}
 
@@ -324,5 +317,32 @@ class DataGrid extends BaseScrollPane {
 			dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK, false, false, listData.column, listData.row, listData.index,
 				cast(listData.owner, CellRenderer).data));
 		}
+	}
+
+	override public function dispose():Void {
+		for (rowDisplayObjects in _headerDisplayObjects) {
+			for (i in 0...rowDisplayObjects.numChildren) {
+				var rowDisplayObject:DisplayObject = rowDisplayObjects.getChildAt(i);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+			}
+			removeChild(rowDisplayObjects);
+		}
+		_headerDisplayObjects.splice(0, _headerDisplayObjects.length);
+		for (rowDisplayObjects in _dataDisplayObjects) {
+			for (i in 0...rowDisplayObjects.numChildren) {
+				var rowDisplayObject:DisplayObject = rowDisplayObjects.getChildAt(i);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+				rowDisplayObject.addEventListener(MouseEvent.CLICK, onMouseEventClick);
+			}
+			_scrollPaneSource.removeChild(rowDisplayObjects);
+		}
+		_dataDisplayObjects.splice(0, _dataDisplayObjects.length);
+		super.dispose();
 	}
 }
