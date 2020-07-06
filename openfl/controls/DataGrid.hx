@@ -308,8 +308,7 @@ class DataGrid extends BaseScrollPane {
 		if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
 			var cell:CellRenderer = cast(event.target, CellRenderer);
 			var listData:ListData = cell.listData;
-			dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK, false, false, listData.column, listData.row, listData.index,
-				cast(listData.owner, CellRenderer).data));
+			dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK, false, false, listData.column, listData.row, listData.index, cell.data));
 		}
 	}
 
