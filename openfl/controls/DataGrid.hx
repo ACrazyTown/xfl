@@ -136,13 +136,7 @@ class DataGrid extends BaseScrollPane {
 				var dataRow:DisplayObjectContainer = new DisplayObjectContainer();
 				for (column in columns) {
 					var cellRenderer:CellRenderer = Type.createInstance(column.cellRenderer, []);
-					var listData:ListData = new ListData();
-					listData.column = columnIdx;
-					listData.index = i + 1;
-					listData.icon = null;
-					listData.label = null;
-					listData.owner = cellRenderer;
-					listData.row = i;
+					var listData:ListData = new ListData(columnIdx, null, i + 1, null, this, i);
 					cellRenderer.name = "datagrid.cell." + columnIdx + "," + i;
 					if (textFormat != null)
 						cellRenderer.setStyle("textFormat", textFormat);

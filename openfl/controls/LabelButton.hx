@@ -38,8 +38,8 @@ class LabelButton extends UIComponent {
 		_textField.text = "label";
 		_textField.x = _textPadding;
 		_textField.y = 0;
-		_textField.width = textField.textWidth;
-		_textField.height = textField.textHeight;
+		_textField.width = _textField.textWidth;
+		_textField.height = _textField.textHeight;
 		_textField.type = TextFieldType.DYNAMIC;
 		_selected = false;
 		toggle = false;
@@ -185,7 +185,9 @@ class LabelButton extends UIComponent {
 			currentSkin.visible = false;
 			removeChild(currentSkin);
 		}
-		var newSkin:DisplayObject = styles.get(mouseState + "Skin");
+		var newSkin:DisplayObject = styles.get((_selected == true ? "selected" + mouseState.charAt(0)
+			.toUpperCase() + mouseState.substr(1).toLowerCase() : mouseState)
+			+ "Skin");
 		if (newSkin == null)
 			styles.get("upSkin");
 		if (newSkin != null) {
