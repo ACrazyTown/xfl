@@ -23,8 +23,10 @@ XFL basic functionality like parsing was derived from "https://github.com/haxenm
     - openfl.core.UIElement
     - openfl.containers.BaseScrollPane, openfl.containers.ScrollPane
     - openfl.controls.CheckBox
+    - openfl.controls.ComboBox
     - openfl.controls.DataGrid
     - openfl.controls.LabelButton
+    - openfl.controls.List, openfl.controls.SelectableList
     - openfl.controls.ProgressBar
     - openfl.controls.RadioButton
     - openfl.controls.ScrollBar, openfl.controls.UIScrollBar
