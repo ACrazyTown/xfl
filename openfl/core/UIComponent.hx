@@ -153,6 +153,11 @@ class UIComponent extends XFLSprite {
 		draw();
 	}
 
+	public function move(x:Int, y:Int):Void {
+		this.x = x;
+		this.y = y;
+	}
+
 	public function setSize(_width:Float, _height:Float):Void {
 		this._width = _width;
 		this._height = _height;

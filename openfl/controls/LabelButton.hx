@@ -25,9 +25,9 @@ class LabelButton extends UIComponent {
 	private var _textField:TextField;
 	private var _selected:Bool;
 
-	private var mouseState:String;
-	private var currentIcon:DisplayObject;
-	private var currentSkin:DisplayObject;
+	private var _mouseState:String;
+	private var _currentIcon:DisplayObject;
+	private var _currentSkin:DisplayObject;
 
 	private var _maxIconWidth:Float;
 
@@ -45,8 +45,8 @@ class LabelButton extends UIComponent {
 		toggle = false;
 		mouseChildren = false;
 		buttonMode = true;
-		currentIcon = null;
-		currentSkin = null;
+		_currentIcon = null;
+		_currentSkin = null;
 		addChild(_textField);
 		addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
@@ -157,7 +157,7 @@ class LabelButton extends UIComponent {
 	}
 
 	public function setMouseState(newMouseState:String):Void {
-		mouseState = newMouseState == "out" ? "up" : newMouseState;
+		_mouseState = newMouseState == "out" ? "up" : newMouseState;
 		draw();
 	}
 
@@ -168,9 +168,9 @@ class LabelButton extends UIComponent {
 			_textField.height = _textField.textHeight;
 			_textField.y = (_height - _textField.height) / 2.0;
 		}
-		if (currentIcon != null)
-			removeChild(currentIcon);
-		var styleName:String = (_selected == true ? "selected" + mouseState.charAt(0).toUpperCase() + mouseState.substr(1).toLowerCase() : mouseState)
+		if (_currentIcon != null)
+			removeChild(_currentIcon);
+		var styleName:String = (_selected == true ? "selected" + _mouseState.charAt(0).toUpperCase() + _mouseState.substr(1).toLowerCase() : _mouseState)
 			+ "Icon";
 		var newIcon:DisplayObject = styles.get(styleName);
 		if (newIcon != null) {
@@ -178,15 +178,15 @@ class LabelButton extends UIComponent {
 			newIcon.visible = true;
 			newIcon.y = (_height - newIcon.height) / 2.0 - iconBounds.y;
 			_textField.x = _maxIconWidth + _textPadding;
-			currentIcon = newIcon;
-			addChild(currentIcon);
+			_currentIcon = newIcon;
+			addChild(_currentIcon);
 		}
-		if (currentSkin != null) {
-			currentSkin.visible = false;
-			removeChild(currentSkin);
+		if (_currentSkin != null) {
+			_currentSkin.visible = false;
+			removeChild(_currentSkin);
 		}
-		var newSkin:DisplayObject = styles.get((_selected == true ? "selected" + mouseState.charAt(0)
-			.toUpperCase() + mouseState.substr(1).toLowerCase() : mouseState)
+		var newSkin:DisplayObject = styles.get((_selected == true ? "selected" + _mouseState.charAt(0)
+			.toUpperCase() + _mouseState.substr(1).toLowerCase() : _mouseState)
 			+ "Skin");
 		if (newSkin == null)
 			styles.get("upSkin");
@@ -197,7 +197,7 @@ class LabelButton extends UIComponent {
 			newSkin.width = _width;
 			newSkin.height = _height;
 			newSkin.visible = true;
-			currentSkin = newSkin;
+			_currentSkin = newSkin;
 		}
 	}
 

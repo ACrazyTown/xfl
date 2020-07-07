@@ -24,8 +24,6 @@ class CellRenderer extends LabelButton implements ICellRenderer {
 	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null) {
 		super(name,
 			xflSymbolArguments != null ? xflSymbolArguments : XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.listClasses.CellRenderer"));
-		for (i in 0...numChildren)
-			trace("new(): " + getChildAt(i).name);
 		setStyle("upSkin", getXFLElementUntyped("CellRenderer_upSkin"));
 		setStyle("disabledSkin", getXFLElementUntyped("CellRenderer_disabledSkin"));
 		setStyle("downSkin", getXFLElementUntyped("CellRenderer_downSkin"));

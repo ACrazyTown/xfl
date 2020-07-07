@@ -29,8 +29,6 @@ class SelectableList extends BaseScrollPane {
 	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null) {
 		super(name, xflSymbolArguments != null ? xflSymbolArguments : XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.List"));
 		removeChild(getXFLMovieClip("List_skin"));
-		for (i in 0...numChildren)
-			trace("new(): " + getChildAt(i).name);
 		_cellRenderers = [];
 		selectable = true;
 		_selectedIndex = -1;
