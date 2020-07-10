@@ -112,6 +112,9 @@ class SelectableList extends BaseScrollPane {
 			cellRendererY += cellRendererHeight;
 			idx++;
 		}
+		if (cellRendererY > _height) {
+			cast(getStyle("skin"), DisplayObject).height = cellRendererY;
+		}
 		selectedIndex = _selectedIndex;
 		update();
 	}
