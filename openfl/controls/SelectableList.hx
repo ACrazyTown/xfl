@@ -19,6 +19,7 @@ class SelectableList extends BaseScrollPane {
 	public var dataProvider(get, set):DataProvider;
 	public var selectable(get, set):Bool;
 	public var selectedIndex(get, set):Int;
+	public var selectedItem(get, never):Dynamic;
 
 	private var _dataProvider:DataProvider;
 	private var _selectable:Bool;
@@ -28,13 +29,13 @@ class SelectableList extends BaseScrollPane {
 
 	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null) {
 		super(name, xflSymbolArguments != null ? xflSymbolArguments : XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.List"));
-		removeChild(getXFLMovieClip("List_skin"));
 		_cellRenderers = [];
 		selectable = true;
 		_selectedIndex = -1;
 		selectedIndex = 0;
 		_container = new Sprite();
 		source = _container;
+		setStyle("skin", getXFLElementUntyped("List_skin"));
 		setStyle("cellRenderer", getXFLElementUntyped("CellRenderer"));
 		layoutChildren();
 	}
@@ -44,6 +45,7 @@ class SelectableList extends BaseScrollPane {
 	}
 
 	private function set_dataProvider(dataProvider:DataProvider):DataProvider {
+		_selectedIndex = -1;
 		_dataProvider = dataProvider;
 		draw();
 		return _dataProvider;
@@ -78,6 +80,12 @@ class SelectableList extends BaseScrollPane {
 		return _selectedIndex;
 	}
 
+	private function get_selectedItem():Dynamic {
+		if (_dataProvider == null || _selectedIndex == -1)
+			return null;
+		return _dataProvider.getItemAt(_selectedIndex);
+	}
+
 	override private function draw() {
 		super.draw();
 		for (cellRenderer in _cellRenderers) {
@@ -86,6 +94,7 @@ class SelectableList extends BaseScrollPane {
 			_container.removeChild(cellRenderer);
 		}
 		_cellRenderers = [];
+		_container.addChild(cast(getStyle("skin"), DisplayObject));
 		if (_dataProvider == null)
 			return;
 		var cellRendererHeight:Float = cast(cast(getStyle("cellRenderer"), UIComponent).getStyle("upSkin"), DisplayObject).getBounds(null).height;
@@ -120,9 +129,14 @@ class SelectableList extends BaseScrollPane {
 		super.setSize(_width, _height);
 		layoutChildren();
 		update();
+		draw();
 	}
 
 	private function layoutChildren() {
+		cast(getStyle("skin"), DisplayObject).x = 0.0;
+		cast(getStyle("skin"), DisplayObject).y = 0.0;
+		cast(getStyle("skin"), DisplayObject).width = _width;
+		cast(getStyle("skin"), DisplayObject).height = _height;
 		var cellRendererHeight:Float = cast(cast(getStyle("cellRenderer"), UIComponent).getStyle("upSkin"), DisplayObject).getBounds(null).height;
 		var cellRendererY:Float = 0.0;
 		for (cellRenderer in _cellRenderers) {

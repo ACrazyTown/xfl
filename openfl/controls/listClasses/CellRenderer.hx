@@ -29,7 +29,7 @@ class CellRenderer extends LabelButton implements ICellRenderer {
 		setStyle("downSkin", getXFLElementUntyped("CellRenderer_downSkin"));
 		setStyle("overSkin", getXFLElementUntyped("CellRenderer_overSkin"));
 		setStyle("selectedUpSkin", getXFLElementUntyped("CellRenderer_selectedUpSkin"));
-		setStyle("selectedDisabledUpSkin", getXFLElementUntyped("CellRenderer_selectedDisabledSkin"));
+		setStyle("selectedDisabledSkin", getXFLElementUntyped("CellRenderer_selectedDisabledSkin"));
 		setStyle("selectedDownSkin", getXFLElementUntyped("CellRenderer_selectedDownSkin"));
 		setStyle("selectedOverSkin", getXFLElementUntyped("CellRenderer_selectedOverSkin"));
 	}

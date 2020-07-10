@@ -148,6 +148,8 @@ class UIComponent extends XFLSprite {
 	public function setStyle(style:String, value:Dynamic):Void {
 		if (Std.is(value, DisplayObject) == true && cast(value, DisplayObject).parent != null) {
 			cast(value, DisplayObject).parent.removeChild(value);
+			while (getChildByName(cast(value, DisplayObject).name) != null)
+				removeChild(getChildByName(cast(value, DisplayObject).name));
 		}
 		styles.set(style, value);
 		draw();

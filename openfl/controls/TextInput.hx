@@ -14,76 +14,88 @@ import xfl.XFLAssets;
  * Text input
  */
 class TextInput extends UIComponent {
+	public var horizontalScrollPosition:Float;
 
-    public var horizontalScrollPosition: Float;
+	public var htmlText(get, set):String;
+	public var text(get, set):String;
+	public var editable:Bool;
 
-    public var htmlText(get, set): String;
-    public var text(get, set): String;
-    public var editable: Bool;
+	private var _textField:TextField;
+	private var _currentSkin:DisplayObject;
 
-    private var textField: TextField;
+	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null) {
+		super(name, xflSymbolArguments != null ? xflSymbolArguments : XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextInput"));
+		mouseChildren = false;
+		buttonMode = true;
+		setStyle("upSkin", getXFLElementUntyped("TextInput_upSkin"));
+		setStyle("disabledSkin", getXFLElementUntyped("TextInput_disabledSkin"));
+		_textField = new TextField();
+		_textField.name = "textField";
+		_textField.x = 0;
+		_textField.y = 0;
+		_textField.type = TextFieldType.INPUT;
+		_textField.multiline = false;
+		_textField.wordWrap = false;
+		addChild(_textField);
+		layoutChildren();
+		draw();
+	}
 
-    public function new(name: String = null, xflSymbolArguments: XFLSymbolArguments = null)
-    {
-        super(name, xflSymbolArguments != null?xflSymbolArguments:XFLAssets.getInstance().createXFLSymbolArguments("fl.controls.TextInput"));
-        textField = new TextField();
-        textField.name = "textfield";
-        textField.x = 0;
-        textField.y = 0;
-        textField.type = TextFieldType.INPUT;
-        textField.multiline = false;
-        textField.wordWrap = false;
-        addChild(textField);
-        updateTextField();
-        layoutChildren();
-    }
+	override public function drawFocus(draw:Bool):Void {}
 
-    override public function drawFocus(draw: Bool): Void {
-        trace("drawFocus(): " + draw);
-    }
+	public function set_htmlText(_htmlText:String):String {
+		_textField.htmlText = _htmlText;
+		draw();
+		return _textField.htmlText;
+	}
 
-    override public function setStyle(style: String, value: Dynamic): Void {
-        if (style == "textFormat") {
-            var textFormat: TextFormat = cast(value, TextFormat);
-            textField.setTextFormat(textFormat);
-            updateTextField();
-        } else {
-            trace("setStyle(): '" + style + "', " + value);
-        }
-    }
+	public function get_htmlText():String {
+		return _textField.htmlText;
+	}
 
-    public function set_htmlText(_htmlText: String): String {
-        textField.htmlText = _htmlText;
-        updateTextField();
-        return textField.htmlText;
-    }
+	public function set_text(_text:String):String {
+		_textField.text = _text;
+		draw();
+		return _textField.text;
+	}
 
-    public function get_htmlText(): String {
-        return textField.htmlText;
-    }
+	public function get_text():String {
+		return _textField.text;
+	}
 
-    public function set_text(_text: String): String {
-        textField.text = _text;
-        updateTextField();
-        return textField.text;
-    }
+	override public function draw():Void {
+		if (_currentSkin != null) {
+			_currentSkin.visible = false;
+			removeChild(_currentSkin);
+		}
+		var newSkin:DisplayObject = styles.get("upSkin");
+		if (newSkin != null) {
+			addChildAt(newSkin, 0);
+			newSkin.visible = true;
+			_currentSkin = newSkin;
+		}
+		var textFormat:TextFormat = getStyle("textFormat");
+		if (textFormat != null)
+			_textField.setTextFormat(textFormat);
+	}
 
-    public function get_text(): String {
-        return textField.text;
-    }
+	override public function setSize(_width:Float, _height:Float) {
+		super.setSize(_width, _height);
+		layoutChildren();
+	}
 
-    override public function setSize(_width: Float, _height: Float) {
-        super.setSize(_width, _height);
-        updateTextField();
-        layoutChildren();
-    }
+	private function layoutChildren() {
+		cast(getStyle("upSkin"), XFLMovieClip).x = 0.0;
+		cast(getStyle("upSkin"), XFLMovieClip).y = 0.0;
+		cast(getStyle("upSkin"), XFLMovieClip).width = _width;
+		cast(getStyle("upSkin"), XFLMovieClip).height = _height;
 
-    private function updateTextField(): Void {
-        textField.width = width;
-        textField.height = height;
-    }
+		cast(getStyle("disabledSkin"), XFLMovieClip).x = 0.0;
+		cast(getStyle("disabledSkin"), XFLMovieClip).y = 0.0;
+		cast(getStyle("disabledSkin"), XFLMovieClip).width = _width;
+		cast(getStyle("disabledSkin"), XFLMovieClip).height = _height;
 
-    private function layoutChildren() {
-    }
-
+		_textField.width = _width;
+		_textField.height = _height;
+	}
 }

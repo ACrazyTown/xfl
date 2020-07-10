@@ -18,8 +18,9 @@ import xfl.dom.DOMTimeline;
  * Combo box grid
  */
 class ComboBox extends UIComponent {
-	public var selectedIndex(get, set):Int;
 	public var dataProvider(get, set):DataProvider;
+	public var selectedIndex(get, set):Int;
+	public var selectedItem(get, never):Dynamic;
 
 	private var _textField:TextField;
 	private var _list:List;
@@ -36,7 +37,6 @@ class ComboBox extends UIComponent {
 		setStyle("downSkin", getXFLElementUntyped("ComboBox_downSkin"));
 		setStyle("overSkin", getXFLElementUntyped("ComboBox_overSkin"));
 		_list = cast getXFLElementUntyped("List");
-		_list.setSize(_width, 100.0);
 		_list.addEventListener(Event.CHANGE, onListChange);
 		_textField = cast getXFLElementUntyped("TextInput");
 		_textField.visible = true;
@@ -67,7 +67,13 @@ class ComboBox extends UIComponent {
 	}
 
 	private function set_selectedIndex(value:Int):Int {
-		return _list.selectedIndex = value;
+		_list.selectedIndex = value;
+		_textField.text = selectedIndex == -1 ? "" : dataProvider.getItemAt(selectedIndex).label;
+		return _list.selectedIndex;
+	}
+
+	private function get_selectedItem():Dynamic {
+		return _list.selectedItem;
 	}
 
 	override public function draw():Void {
@@ -83,13 +89,9 @@ class ComboBox extends UIComponent {
 		}
 		var newSkin:DisplayObject = styles.get(_mouseState + "Skin");
 		if (newSkin == null)
-			styles.get("upSkin");
+			newSkin = styles.get("upSkin");
 		if (newSkin != null) {
 			addChildAt(newSkin, 0);
-			newSkin.x = 0.0;
-			newSkin.y = 0.0;
-			newSkin.width = _width;
-			newSkin.height = _height;
 			newSkin.visible = true;
 			_currentSkin = newSkin;
 		}
@@ -168,10 +170,12 @@ class ComboBox extends UIComponent {
 				if (_listOpened == false) {
 					stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseEvent);
 					var stagePosition:Point = localToGlobal(new Point(0.0, _height));
+					var stageSize:Point = localToGlobal(new Point(_width, 100.0));
 					_list.x = stagePosition.x;
 					_list.y = stagePosition.y;
 					_list.visible = true;
 					stage.addChild(_list);
+					_list.setSize(stageSize.x - stagePosition.x, stageSize.y - stagePosition.y);
 					_listOpened = true;
 				} else {
 					stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageMouseEvent);
@@ -186,7 +190,6 @@ class ComboBox extends UIComponent {
 	override public function setSize(_width:Float, _height:Float):Void {
 		super.setSize(_width, _height);
 		layoutChildren();
-		_list.setSize(_width, 100.0);
 	}
 
 	override public function dispose():Void {
@@ -194,6 +197,10 @@ class ComboBox extends UIComponent {
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
 		removeEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+		if (stage != null) {
+			stage.removeChild(_list);
+			stage.removeEventListener(MouseEvent.MOUSE_DOWN, onStageMouseEvent);
+		}
 		_list.dispose();
 		_list.removeEventListener(Event.CHANGE, onListChange);
 	}
