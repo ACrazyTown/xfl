@@ -3,7 +3,7 @@
 1.1. What is it?
 
 XFL is a lightweight implementation of Adobe Flash XFL and related things like UI components plus GSAP tweens library for Haxe/OpenFL.
-If you want to see it in action check this XFL test project: https://github.com/andreasdr/xfl-test
+If you want to see it in action check this out XFL test project: https://github.com/andreasdr/xfl-test.
 
 1.2. Why?
 
