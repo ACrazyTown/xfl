@@ -307,7 +307,6 @@ class Symbols {
 		}
 		if (sprite != null) {
 			if (instance.matrix != null) {
-				trace("b: " + sprite.name + ": " + instance.matrix + " / " + sprite.transform.matrix);
 				sprite.transform.matrix = instance.matrix;
 			}
 			if (instance.color != null) {
