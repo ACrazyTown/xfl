@@ -115,7 +115,7 @@ class LabelButton extends UIComponent {
 	}
 
 	private function set_label(label:String):String {
-		var defaultTextFormat:TextFormat = styles.get("defaultTextFormat");
+		var defaultTextFormat:TextFormat = getStyle("defaultTextFormat");
 		if (defaultTextFormat != null)
 			_textField.defaultTextFormat = defaultTextFormat;
 		_textField.text = label;
@@ -162,7 +162,7 @@ class LabelButton extends UIComponent {
 	}
 
 	override private function draw() {
-		var textFormat = styles.get("textFormat");
+		var textFormat = getStyle("textFormat");
 		if (textFormat != null && _textField.getTextFormat() != textFormat) {
 			_textField.setTextFormat(textFormat);
 			_textField.height = _textField.textHeight;
@@ -172,7 +172,7 @@ class LabelButton extends UIComponent {
 			removeChild(_currentIcon);
 		var styleName:String = (_selected == true ? "selected" + _mouseState.charAt(0).toUpperCase() + _mouseState.substr(1).toLowerCase() : _mouseState)
 			+ "Icon";
-		var newIcon:DisplayObject = styles.get(styleName);
+		var newIcon:DisplayObject = getStyle(styleName);
 		if (newIcon != null) {
 			var iconBounds:Rectangle = newIcon.getBounds(null);
 			newIcon.visible = true;
@@ -185,11 +185,11 @@ class LabelButton extends UIComponent {
 			_currentSkin.visible = false;
 			removeChild(_currentSkin);
 		}
-		var newSkin:DisplayObject = styles.get((_selected == true ? "selected" + _mouseState.charAt(0)
+		var newSkin:DisplayObject = getStyle((_selected == true ? "selected" + _mouseState.charAt(0)
 			.toUpperCase() + _mouseState.substr(1).toLowerCase() : _mouseState)
 			+ "Skin");
 		if (newSkin == null)
-			styles.get("upSkin");
+			getStyle("upSkin");
 		if (newSkin != null) {
 			addChildAt(newSkin, 0);
 			newSkin.x = 0.0;

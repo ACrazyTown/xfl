@@ -1,5 +1,6 @@
 package openfl.controls;
 
+import openfl.controls.TextInput;
 import openfl.core.UIComponent;
 import openfl.data.DataProvider;
 import openfl.events.Event;
@@ -21,8 +22,10 @@ class ComboBox extends UIComponent {
 	public var dataProvider(get, set):DataProvider;
 	public var selectedIndex(get, set):Int;
 	public var selectedItem(get, never):Dynamic;
+	public var textField(get, never):TextInput;
+	public var dropdown(get, never):List;
 
-	private var _textField:TextField;
+	private var _textField:TextInput;
 	private var _list:List;
 	private var _mouseState:String;
 	private var _currentSkin:DisplayObject;
@@ -58,7 +61,7 @@ class ComboBox extends UIComponent {
 	private function set_dataProvider(dataProvider:DataProvider):DataProvider {
 		_list.dataProvider = dataProvider;
 		selectedIndex = 0;
-		_textField.text = dataProvider.getItemAt(selectedIndex).label;
+		_textField.text = dataProvider.length == 0 ? "" : dataProvider.getItemAt(selectedIndex).label;
 		return dataProvider;
 	}
 
@@ -76,20 +79,22 @@ class ComboBox extends UIComponent {
 		return _list.selectedItem;
 	}
 
+	private function get_textField():TextInput {
+		return _textField;
+	}
+
+	private function get_dropdown():List {
+		return _list;
+	}
+
 	override public function draw():Void {
-		var textFormat = styles.get("textFormat");
-		if (textFormat != null && _textField.getTextFormat() != textFormat) {
-			_textField.setTextFormat(textFormat);
-			_textField.height = _textField.textHeight;
-			_textField.y = (_height - _textField.height) / 2.0;
-		}
 		if (_currentSkin != null) {
 			_currentSkin.visible = false;
 			removeChild(_currentSkin);
 		}
-		var newSkin:DisplayObject = styles.get(_mouseState + "Skin");
+		var newSkin:DisplayObject = getStyle(_mouseState + "Skin");
 		if (newSkin == null)
-			newSkin = styles.get("upSkin");
+			newSkin = getStyle("upSkin");
 		if (newSkin != null) {
 			addChildAt(newSkin, 0);
 			newSkin.visible = true;

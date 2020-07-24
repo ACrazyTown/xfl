@@ -94,8 +94,8 @@ class DataGrid extends BaseScrollPane {
 
 	override private function draw() {
 		disposeChildren();
-		var headerRenderer:Class<Dynamic> = styles.get("headerRenderer") != null ? cast(styles.get("headerRenderer"), Class<Dynamic>) : null;
-		var cellRenderer:Class<Dynamic> = styles.get("cellRenderer") != null ? cast(styles.get("cellRenderer"), Class<Dynamic>) : null;
+		var headerRenderer:Class<Dynamic> = getStyle("headerRenderer") != null ? cast(getStyle("headerRenderer"), Class<Dynamic>) : null;
+		var cellRenderer:Class<Dynamic> = getStyle("cellRenderer") != null ? cast(getStyle("cellRenderer"), Class<Dynamic>) : null;
 		for (column in columns) {
 			column.headerRenderer = headerRenderer;
 			column.cellRenderer = cellRenderer;
@@ -104,7 +104,7 @@ class DataGrid extends BaseScrollPane {
 			return;
 		var _x:Float = 0.0;
 		var columnIdx:Int = 0;
-		var headerTextFormat:TextFormat = styles.get("headerTextFormat") != null ? cast(styles.get("headerTextFormat"), TextFormat) : null;
+		var headerTextFormat:TextFormat = getStyle("headerTextFormat") != null ? cast(getStyle("headerTextFormat"), TextFormat) : null;
 		var headerRow:DisplayObjectContainer = new DisplayObjectContainer();
 		headerRow.x = 0.0;
 		headerRow.y = 0.0;
@@ -128,7 +128,7 @@ class DataGrid extends BaseScrollPane {
 		_headerDisplayObjects.push(headerRow);
 		addChild(headerRow);
 		if (_dataProvider != null) {
-			var textFormat:TextFormat = styles.get("textFormat") != null ? cast(styles.get("textFormat"), TextFormat) : null;
+			var textFormat:TextFormat = getStyle("textFormat") != null ? cast(getStyle("textFormat"), TextFormat) : null;
 			for (i in 0..._dataProvider.length) {
 				_x = 0;
 				var rowData:Dynamic = _dataProvider.getItemAt(i);

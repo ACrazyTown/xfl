@@ -16,6 +16,7 @@ import xfl.XFLAssets;
 class TextInput extends UIComponent {
 	public var horizontalScrollPosition:Float;
 
+	public var textField(get, never):TextField;
 	public var htmlText(get, set):String;
 	public var text(get, set):String;
 	public var editable:Bool;
@@ -43,6 +44,10 @@ class TextInput extends UIComponent {
 
 	override public function drawFocus(draw:Bool):Void {}
 
+	public function get_textField():TextField {
+		return _textField;
+	}
+
 	public function set_htmlText(_htmlText:String):String {
 		_textField.htmlText = _htmlText;
 		draw();
@@ -68,15 +73,18 @@ class TextInput extends UIComponent {
 			_currentSkin.visible = false;
 			removeChild(_currentSkin);
 		}
-		var newSkin:DisplayObject = styles.get("upSkin");
+		var newSkin:DisplayObject = getStyle("upSkin");
 		if (newSkin != null) {
 			addChildAt(newSkin, 0);
 			newSkin.visible = true;
 			_currentSkin = newSkin;
 		}
 		var textFormat:TextFormat = getStyle("textFormat");
-		if (textFormat != null)
+		if (textFormat != null && _textField.getTextFormat() != textFormat) {
 			_textField.setTextFormat(textFormat);
+			_textField.height = _textField.textHeight;
+			_textField.y = (_height - _textField.height) / 2.0;
+		}
 	}
 
 	override public function setSize(_width:Float, _height:Float) {

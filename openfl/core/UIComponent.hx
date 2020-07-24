@@ -21,14 +21,14 @@ class UIComponent extends XFLSprite {
 	private var _scrolling:Bool;
 	private var _scrollY:Float;
 
-	private var styles:Map<String, Dynamic>;
+	private var _styles:Map<String, Dynamic>;
 
 	public function new(name:String, xlfSymbolArguments:XFLSymbolArguments = null) {
 		super(xlfSymbolArguments);
 
 		// defaults
 		_disabled = false;
-		styles = new Map<String, Dynamic>();
+		_styles = new Map<String, Dynamic>();
 
 		// determine from component avarar if we have any
 		if (getXFLDisplayObject("Component_avatar") == null) {
@@ -142,7 +142,7 @@ class UIComponent extends XFLSprite {
 	public function drawFocus(draw:Bool):Void {}
 
 	public function getStyle(style:String):Dynamic {
-		return styles.get(style);
+		return _styles.get(style);
 	}
 
 	public function setStyle(style:String, value:Dynamic):Void {
@@ -151,7 +151,7 @@ class UIComponent extends XFLSprite {
 			while (getChildByName(cast(value, DisplayObject).name) != null)
 				removeChild(getChildByName(cast(value, DisplayObject).name));
 		}
-		styles.set(style, value);
+		_styles.set(style, value);
 		draw();
 	}
 

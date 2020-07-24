@@ -102,6 +102,7 @@ class SelectableList extends BaseScrollPane {
 		var idx:Int = 0;
 		for (i in 0..._dataProvider.length) {
 			var cellRenderer:CellRenderer = new CellRenderer();
+			cellRenderer.setStyle("textFormat", _styles.get("textFormat"));
 			cellRenderer.toggle = true;
 			cellRenderer.listData = new ListData(0, null, idx, _dataProvider.getItemAt(i).label, this, idx);
 			cellRenderer.y = cellRendererY;
