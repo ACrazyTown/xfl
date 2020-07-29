@@ -92,6 +92,8 @@ class Symbols {
 			bitmapData = new BitmapData(1, 1, false, 0xFFFFFF);
 		}
 		bitmap = new Bitmap(bitmapData);
+		if (XFL.BITMAP_SMOOTHING == true)
+			bitmap.smoothing = true;
 		if (instance.matrix != null) {
 			bitmap.transform.matrix = instance.matrix;
 		}

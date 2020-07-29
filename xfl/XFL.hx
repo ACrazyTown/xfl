@@ -14,6 +14,7 @@ import openfl.media.Sound;
 class XFL {
 	public static var BITMAPDATA_DISPOSEIMAGE:Bool = true;
 	public static var BITMAPDATA_USECACHE:Bool = false;
+	public static var BITMAP_SMOOTHING:Bool = true;
 	public static var SOUND_USECACHE:Bool = false;
 	public static var ASSETS_CLEARCACHE:Bool = true;
 	public static var XML_USECOLLECTION:Bool = false;
