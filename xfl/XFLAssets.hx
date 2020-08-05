@@ -33,6 +33,24 @@ class XFLAssets {
 	}
 
 	/**
+	 * Get font mapping for given font
+	 * @param font
+	 * @return mapped font
+	 */
+	public function getFontMapping(font:String):String {
+		return xfl.getFontMapping(font);
+	}
+
+	/**
+	 * Add font mapping for given font
+	 * @param font
+	 * @param font mapping
+	 */
+	public function addFontMapping(font:String, fontMapping:String):Void {
+		xfl.addFontMapping(font, fontMapping);
+	}
+
+	/**
 	 *  Get XML asset
 	 *  @param asset name
 	 *  @return haxe.xml.Access

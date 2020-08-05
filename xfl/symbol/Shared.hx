@@ -158,7 +158,7 @@ class Shared {
 							trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
 							continue;
 						}
-						text = Symbols.createDynamicText(cast element);
+						text = Symbols.createDynamicText(xfl, cast element);
 						if (text != null) {
 							text.visible = false;
 							container.addChild(text);
@@ -166,7 +166,7 @@ class Shared {
 							maskDisplayObjects[layer.index].push(text);
 						}
 					} else if (Std.is(element, DOMStaticText)) {
-						var text:DisplayObject = Symbols.createStaticText(cast element);
+						var text:DisplayObject = Symbols.createStaticText(xfl, cast element);
 						if (text != null) {
 							text.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 							text.visible = false;
@@ -291,7 +291,7 @@ class Shared {
 							trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
 							continue;
 						}
-						text = Symbols.createDynamicText(cast element);
+						text = Symbols.createDynamicText(xfl, cast element);
 						if (text != null) {
 							if (containerMask == false
 								&& layer.parentLayerIndex != -1
@@ -305,7 +305,7 @@ class Shared {
 							children.push(text);
 						}
 					} else if (Std.is(element, DOMStaticText)) {
-						var text = Symbols.createStaticText(cast element);
+						var text = Symbols.createStaticText(xfl, cast element);
 						if (text != null) {
 							if (containerMask == false
 								&& layer.parentLayerIndex != -1

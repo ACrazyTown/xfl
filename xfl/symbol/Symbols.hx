@@ -100,7 +100,7 @@ class Symbols {
 		return bitmap;
 	}
 
-	public static function createDynamicText(instance:DOMDynamicText):TextField {
+	public static function createDynamicText(xfl:XFL, instance:DOMDynamicText):TextField {
 		var textField:TextField = new TextField();
 		textField.type = instance.type == DOMDynamicText.TYPE_INPUT ? TextFieldType.INPUT : TextFieldType.DYNAMIC;
 		textField.width = instance.width;
@@ -122,7 +122,7 @@ class Symbols {
 			var pos:Int = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null)
-				format.font = textRun.textAttrs.face;
+				format.font = xfl.getFontMapping(textRun.textAttrs.face);
 			if (textRun.textAttrs.alignment != null) {
 				switch (textRun.textAttrs.alignment) {
 					case "center":
@@ -153,7 +153,7 @@ class Symbols {
 		return textField;
 	}
 
-	public static function createStaticText(instance:DOMStaticText):TextField {
+	public static function createStaticText(xfl:XFL, instance:DOMStaticText):TextField {
 		var textField:TextField = new TextField();
 		textField.width = instance.width;
 		textField.height = instance.height;
@@ -172,7 +172,7 @@ class Symbols {
 			var pos:Int = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null)
-				format.font = textRun.textAttrs.face;
+				format.font = xfl.getFontMapping(textRun.textAttrs.face);
 			if (textRun.textAttrs.alignment != null) {
 				switch (textRun.textAttrs.alignment) {
 					case "center":

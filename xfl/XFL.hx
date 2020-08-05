@@ -19,19 +19,46 @@ class XFL {
 	public static var ASSETS_CLEARCACHE:Bool = true;
 	public static var XML_USECOLLECTION:Bool = false;
 
-	public var paths:Array<String>;
-	public var documents:Array<DOMDocument>;
-	public var customSymbolLoader:XFLCustomSymbolLoader;
+	public var paths(get, never):Array<String>;
+	public var documents(get, never):Array<DOMDocument>;
+	public var customSymbolLoader(get, never):XFLCustomSymbolLoader;
+
+	private var _paths:Array<String>;
+	private var _documents:Array<DOMDocument>;
+	private var _customSymbolLoader:XFLCustomSymbolLoader;
+	private var _fontMapping:Map<String, String>;
 
 	private static var xmlCollection:haxe.xml.Access = null;
 
 	public function new(paths:Array<String>, customSymbolLoader:XFLCustomSymbolLoader = null) {
-		this.documents = [];
-		this.paths = paths;
-		this.customSymbolLoader = customSymbolLoader;
-		for (path in this.paths) {
+		this._documents = [];
+		this._paths = paths;
+		this._customSymbolLoader = customSymbolLoader;
+		this._fontMapping = new Map<String, String>();
+		for (path in _paths) {
 			documents.push(DOMDocument.load(path, "DOMDocument.xml"));
 		}
+	}
+
+	private function get_paths():Array<String> {
+		return _paths;
+	}
+
+	private function get_documents():Array<DOMDocument> {
+		return _documents;
+	}
+
+	private function get_customSymbolLoader():XFLCustomSymbolLoader {
+		return _customSymbolLoader;
+	}
+
+	public function getFontMapping(font:String):String {
+		var mappedFont:String = _fontMapping.get(font);
+		return mappedFont != null ? mappedFont : font;
+	}
+
+	public function addFontMapping(font:String, fontMapping:String):Void {
+		_fontMapping.set(font, fontMapping);
 	}
 
 	public static function getXMLData(name:String):haxe.xml.Access {
@@ -66,7 +93,7 @@ class XFL {
 
 	public function getBitmapData(name:String):BitmapData {
 		var bitmapData:BitmapData = null;
-		for (document in documents) {
+		for (document in _documents) {
 			for (medium in document.media) {
 				if (medium.linkageClassName == name) {
 					var bitmapItem:DOMBitmapItem = medium.item;
@@ -90,7 +117,7 @@ class XFL {
 
 	public function getBitmapDataByPath(path:String):BitmapData {
 		var bitmapData:BitmapData = null;
-		for (document in documents) {
+		for (document in _documents) {
 			for (medium in document.media) {
 				if (medium.name == path) {
 					var bitmapItem:DOMBitmapItem = medium.item;
@@ -114,7 +141,7 @@ class XFL {
 
 	public function getSound(name:String):Sound {
 		var sound:Sound = null;
-		for (document in documents) {
+		for (document in _documents) {
 			for (medium in document.media) {
 				if (medium.linkageClassName == name) {
 					var soundItem:DOMSoundItem = medium.item;
@@ -135,7 +162,7 @@ class XFL {
 	}
 
 	private function getSymbolItem(name:String):DOMSymbolItem {
-		for (document in documents) {
+		for (document in _documents) {
 			for (symbol in document.symbols) {
 				if (symbol.linkageClassName == name) {
 					var domSymbolItem:DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", symbol.fileName);
