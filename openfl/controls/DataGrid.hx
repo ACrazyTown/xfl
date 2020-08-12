@@ -316,10 +316,10 @@ class DataGrid extends BaseScrollPane {
 		for (rowDisplayObjects in _headerDisplayObjects) {
 			for (i in 0...rowDisplayObjects.numChildren) {
 				var rowDisplayObject:DisplayObject = rowDisplayObjects.getChildAt(i);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
 			}
 			removeChild(rowDisplayObjects);
 		}
@@ -327,11 +327,11 @@ class DataGrid extends BaseScrollPane {
 		for (rowDisplayObjects in _dataDisplayObjects) {
 			for (i in 0...rowDisplayObjects.numChildren) {
 				var rowDisplayObject:DisplayObject = rowDisplayObjects.getChildAt(i);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
-				rowDisplayObject.addEventListener(MouseEvent.CLICK, onMouseEventClick);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+				rowDisplayObject.removeEventListener(MouseEvent.CLICK, onMouseEventClick);
 			}
 			_scrollPaneSource.removeChild(rowDisplayObjects);
 		}
