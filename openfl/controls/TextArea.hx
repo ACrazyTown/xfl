@@ -213,7 +213,7 @@ class TextArea extends UIComponent {
 
 	override public function dispose():Void {
 		_textField.removeEventListener(Event.CHANGE, _textFieldChangeHandler);
-		_scrollBar.addEventListener(ScrollEvent.SCROLL, onScrollEvent);
+		_scrollBar.removeEventListener(ScrollEvent.SCROLL, onScrollEvent);
 		removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
 	}
 }
