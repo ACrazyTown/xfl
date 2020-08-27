@@ -263,8 +263,10 @@ class Symbols {
 				movieClip.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
+				trace(movieClip.name + ": " + symbolItem.scaleGrid);
 				for (i in 0...movieClip.numChildren) {
 					movieClip.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
+					Utils.dumpDisplayObject(movieClip.getChildAt(i), 1);
 				}
 			}
 			if (loadedByCustomLoader == true) {
@@ -315,8 +317,10 @@ class Symbols {
 				sprite.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
+				trace(sprite.name + ": " + symbolItem.scaleGrid);
 				for (i in 0...sprite.numChildren) {
 					sprite.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
+					Utils.dumpDisplayObject(sprite.getChildAt(i), 1);
 				}
 			}
 			if (loadedByCustomLoader == true) {
@@ -359,8 +363,10 @@ class Symbols {
 				other.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
+				trace(other.name + ": " + symbolItem.scaleGrid);
 				for (i in 0...other.numChildren) {
 					other.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
+					Utils.dumpDisplayObject(other.getChildAt(i), 1);
 				}
 			}
 			/*

@@ -116,8 +116,7 @@ class Shared {
 							maskDisplayObjects[layer.index].push(symbol);
 						}
 					} else if (Std.is(element, DOMBitmapInstance)) {
-						var bitmap:DisplayObject = scale9Grid == true ? Symbols.createBitmapGraphicsSprite(xfl,
-							cast element) : Symbols.createBitmap(xfl, cast element);
+						var bitmap:DisplayObject = Symbols.createBitmap(xfl, cast element);
 						bitmap.name = "xfl_anonymous_" + currentLayer + "_" + frame.index + "_" + (frameAnonymousObjectId++);
 						bitmap.visible = false;
 						container.addChild(bitmap);
@@ -231,8 +230,7 @@ class Shared {
 							children.push(symbol);
 						}
 					} else if (Std.is(element, DOMBitmapInstance)) {
-						var bitmap:DisplayObject = scale9Grid == true ? Symbols.createBitmapGraphicsSprite(xfl,
-							cast element) : Symbols.createBitmap(xfl, cast element);
+						var bitmap:DisplayObject = Symbols.createBitmap(xfl, cast element);
 						if (containerMask == false && layer.parentLayerIndex != -1 && maskDisplayObjects[layer.parentLayerIndex] != null) {
 							for (maskDisplayObject in maskDisplayObjects[layer.parentLayerIndex]) {
 								bitmap.mask = maskDisplayObject;

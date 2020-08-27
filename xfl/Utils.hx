@@ -115,6 +115,7 @@ class Utils {
 			+ (object.visible == true ? "visible" : "unvisible")
 			+ ", "
 			+ (object.mask != null ? "mask" : "nomask")
+			+ (object.scale9Grid != null ? ", scale9grid: " + object.scale9Grid : "")
 			+ (Std.is(object,
 				DisplayObjectContainer) == true ? (cast(object, DisplayObjectContainer).mouseEnabled == true ? ", mouse enabled" : ", mouse disabled") : "")
 			+ (Std.is(object,

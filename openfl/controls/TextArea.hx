@@ -44,6 +44,8 @@ class TextArea extends UIComponent {
 		_textField.type = TextFieldType.INPUT;
 		_textField.multiline = true;
 		_textField.wordWrap = true;
+		_textField.border = true;
+		_textField.borderColor = 0xff0000;
 		_textField.addEventListener(Event.CHANGE, _textFieldChangeHandler);
 		_textFieldNumLinesLast = _textField.numLines;
 		addChild(_textField);
@@ -152,14 +154,13 @@ class TextArea extends UIComponent {
 			if (getChildByName(_scrollBar.name) != null)
 				removeChild(_scrollBar);
 		}
-		/*
-			trace("_textField.numLines: " + _textField.numLines);
-			trace("_textField.scrollV: " + _textField.scrollV);
-			trace("_textField.bottomScrollV: " + _textField.bottomScrollV);
-			trace("_scrollBar.visibleScrollRange: " + _scrollBar.visibleScrollRange);
-			trace("_scrollBar.pageScrollSize: " + _scrollBar.pageScrollSize);
-			trace("_scrollBar.maxScrollPosition: " + _scrollBar.maxScrollPosition);
-		 */
+
+		trace("_textField.numLines: " + _textField.numLines);
+		trace("_textField.scrollV: " + _textField.scrollV);
+		trace("_textField.bottomScrollV: " + _textField.bottomScrollV);
+		trace("_scrollBar.visibleScrollRange: " + _scrollBar.visibleScrollRange);
+		trace("_scrollBar.pageScrollSize: " + _scrollBar.pageScrollSize);
+		trace("_scrollBar.maxScrollPosition: " + _scrollBar.maxScrollPosition);
 	}
 
 	private function layoutChildren() {
