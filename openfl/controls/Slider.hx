@@ -206,7 +206,7 @@ class Slider extends UIComponent {
 
 	private function set_snapInterval(newValue:Float):Float {
 		if (newValue < 0.001) {
-			trace("set_snapInterval(): invalid value: " + newValue);
+			// trace("set_snapInterval(): invalid value: " + newValue);
 		} else {
 			snapInterval = newValue;
 			setState(state);

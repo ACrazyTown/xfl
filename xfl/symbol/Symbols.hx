@@ -263,10 +263,10 @@ class Symbols {
 				movieClip.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				trace(movieClip.name + ": " + symbolItem.scaleGrid);
+				// trace(movieClip.name + ": " + symbolItem.scaleGrid);
 				for (i in 0...movieClip.numChildren) {
 					movieClip.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
-					Utils.dumpDisplayObject(movieClip.getChildAt(i), 1);
+					// Utils.dumpDisplayObject(movieClip.getChildAt(i), 1);
 				}
 			}
 			if (loadedByCustomLoader == true) {
@@ -317,10 +317,10 @@ class Symbols {
 				sprite.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				trace(sprite.name + ": " + symbolItem.scaleGrid);
+				// trace(sprite.name + ": " + symbolItem.scaleGrid);
 				for (i in 0...sprite.numChildren) {
 					sprite.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
-					Utils.dumpDisplayObject(sprite.getChildAt(i), 1);
+					// Utils.dumpDisplayObject(sprite.getChildAt(i), 1);
 				}
 			}
 			if (loadedByCustomLoader == true) {
@@ -363,10 +363,10 @@ class Symbols {
 				other.transform.colorTransform = instance.color;
 			}
 			if (symbolItem != null && symbolItem.scaleGrid != null) {
-				trace(other.name + ": " + symbolItem.scaleGrid);
+				// trace(other.name + ": " + symbolItem.scaleGrid);
 				for (i in 0...other.numChildren) {
 					other.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
-					Utils.dumpDisplayObject(other.getChildAt(i), 1);
+					// Utils.dumpDisplayObject(other.getChildAt(i), 1);
 				}
 			}
 			/*
@@ -422,12 +422,12 @@ class Symbols {
 									instanceVariablesLeft.remove(variable.variable);
 								}
 							default:
-								trace("createComponent(): unknown variable type '" + variable.type + "': " + variable);
+								// trace("createComponent(): unknown variable type '" + variable.type + "': " + variable);
 						}
 					}
 				}
 				if (instanceVariablesLeft.length > 0) {
-					trace("createComponent(): left unset variables: " + instanceVariablesLeft);
+					// trace("createComponent(): left unset variables: " + instanceVariablesLeft);
 				}
 				break;
 			}

@@ -105,7 +105,7 @@ class Shared {
 					if (Std.is(element, DOMSymbolInstance)) {
 						var symbol:DisplayObject = element.name != null ? container.getChildByName(element.name) : null;
 						if (symbol != null) {
-							trace("createFrames(): movie clip with name '" + symbol.name + "' already exists");
+							// trace("createFrames(): movie clip with name '" + symbol.name + "' already exists");
 							continue;
 						}
 						symbol = Symbols.createSymbol(xfl, cast element);
@@ -126,7 +126,7 @@ class Shared {
 						var name:String = cast(element, DOMComponentInstance).name;
 						var component:DisplayObject = name != null ? container.getChildByName(name) : null;
 						if (component != null) {
-							trace("createFrames(): component with name '" + component.name + "' already exists");
+							// trace("createFrames(): component with name '" + component.name + "' already exists");
 							continue;
 						}
 						component = Symbols.createComponent(xfl, cast element);
@@ -154,7 +154,7 @@ class Shared {
 					} else if (Std.is(element, DOMDynamicText)) {
 						var text:DisplayObject = element.name != null ? container.getChildByName(element.name) : null;
 						if (text != null) {
-							trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
+							// trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
 							continue;
 						}
 						text = Symbols.createDynamicText(xfl, cast element);
@@ -213,7 +213,7 @@ class Shared {
 					if (Std.is(element, DOMSymbolInstance)) {
 						var symbol:DisplayObject = element.name != null ? container.getChildByName(element.name) : null;
 						if (symbol != null) {
-							trace("createFrames(): movie clip with name '" + symbol.name + "' already exists");
+							// trace("createFrames(): movie clip with name '" + symbol.name + "' already exists");
 							continue;
 						}
 						symbol = Symbols.createSymbol(xfl, cast element);
@@ -244,7 +244,7 @@ class Shared {
 						var name:String = cast(element, DOMComponentInstance).name;
 						var component:DisplayObject = name != null ? container.getChildByName(name) : null;
 						if (component != null) {
-							trace("createFrames(): component with name '" + component.name + "' already exists");
+							// trace("createFrames(): component with name '" + component.name + "' already exists");
 							continue;
 						}
 						component = Symbols.createComponent(xfl, cast element);
@@ -286,7 +286,7 @@ class Shared {
 					} else if (Std.is(element, DOMDynamicText)) {
 						var text:DisplayObject = element.name != null ? container.getChildByName(element.name) : null;
 						if (text != null) {
-							trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
+							// trace("createFrames(): dynamic text with name '" + text.name + "' already exists");
 							continue;
 						}
 						text = Symbols.createDynamicText(xfl, cast element);
