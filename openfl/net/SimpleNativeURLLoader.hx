@@ -95,7 +95,7 @@ class SimpleNativeURLLoader extends EventDispatcher {
 		headers.push("Expect: ");
 
 		var contentType = null;
-		for (header in cast(request.requestHeaders, Array<Dynamic>)) {
+		for (header in request.requestHeaders) {
 			if (header.name == "Content-Type") {
 				contentType = header.value;
 			} else {
