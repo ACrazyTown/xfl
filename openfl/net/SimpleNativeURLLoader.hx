@@ -28,10 +28,15 @@ class SimpleNativeURLLoader extends EventDispatcher {
 	private var ioThread:Thread;
 	private var ioThreadFinished:Bool;
 
+	private var bytesLoaded:Int;
+	private var bytesTotal:Int;
+
 	public function new(request:URLRequest = null) {
 		super();
 		dataFormat = URLLoaderDataFormat.TEXT;
 		ioThreadFinished = true;
+		bytesLoaded = 0;
+		bytesTotal = 1000;
 		if (request != null) {
 			load(request);
 		}
@@ -79,7 +84,11 @@ class SimpleNativeURLLoader extends EventDispatcher {
 		//
 		http = new Http(uri);
 		http.onError = onError;
-		http.onData = onData;
+		if (dataFormat == URLLoaderDataFormat.TEXT) {
+			http.onData = onData;
+		} else {
+			http.onBytes = onBytes;
+		}
 		http.onStatus = onStatus;
 
 		//
@@ -159,6 +168,11 @@ class SimpleNativeURLLoader extends EventDispatcher {
 		ioThreadFinished = true;
 	}
 
+	private function onBytes(bytes:Bytes):Void {
+		this.data = bytes;
+		ioThreadFinished = true;
+	}
+
 	private function threadRun():Void {
 		http.request(request.method == POST ? true : false);
 		ioThreadFinished = true;
@@ -167,12 +181,11 @@ class SimpleNativeURLLoader extends EventDispatcher {
 
 	private function timerRun():Void {
 		if (ioThreadFinished == false) {
-			/*
-				var event = new ProgressEvent(ProgressEvent.PROGRESS);
-				event.bytesLoaded = writeBytesLoaded;
-				event.bytesTotal = writeBytesTotal;
-				dispatchEvent(event);
-			 */
+			var event = new ProgressEvent(ProgressEvent.PROGRESS);
+			bytesLoaded = (bytesLoaded + 120) % bytesTotal;
+			event.bytesLoaded = bytesLoaded;
+			event.bytesTotal = bytesTotal;
+			dispatchEvent(event);
 			return;
 		}
 		//
