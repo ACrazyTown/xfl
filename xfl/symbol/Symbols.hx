@@ -446,7 +446,7 @@ class Symbols {
 			component.scaleY = Math.abs(instance.matrix.d) < 0.0001 ? rotatedDimension.y : instance.matrix.d;
 			component.transform.matrix = matrix;
 		}
-		if (Std.is(component, DisplayObjectContainer) == true) {
+		if (Std.isOfType(component, DisplayObjectContainer) == true) {
 			var container:DisplayObjectContainer = cast(component, DisplayObjectContainer);
 			var containerWidth:Float = container.width;
 			var containerHeight:Float = container.height;
@@ -456,11 +456,11 @@ class Symbols {
 			container.scaleY = 1.0;
 			var parametersAreBlocked:Bool = false;
 			var children:Array<DisplayObject> = null;
-			if (Std.is(component, XFLSprite) == true) {
+			if (Std.isOfType(component, XFLSprite) == true) {
 				var xflSprite:XFLSprite = cast(component, XFLSprite);
 				children = xflSprite.children;
 				parametersAreBlocked = xflSprite.xflSymbolArguments.parametersAreLocked;
-			} else if (Std.is(component, XFLMovieClip) == true) {
+			} else if (Std.isOfType(component, XFLMovieClip) == true) {
 				var xflMovieClip:XFLMovieClip = cast(component, XFLMovieClip);
 				children = xflMovieClip.children;
 				parametersAreBlocked = xflMovieClip.xflSymbolArguments.parametersAreLocked;
@@ -479,7 +479,7 @@ class Symbols {
 					child.height = child.height * containerScaleY;
 				}
 			}
-			if (Std.is(component, UIComponent) == true) {
+			if (Std.isOfType(component, UIComponent) == true) {
 				cast(component, UIComponent).setSize(containerWidth * containerScaleX, containerHeight * containerScaleY);
 			}
 		}

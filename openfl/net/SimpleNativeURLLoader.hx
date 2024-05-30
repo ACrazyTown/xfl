@@ -59,7 +59,7 @@ class SimpleNativeURLLoader extends EventDispatcher {
 		uri = request.url;
 		var postData:String = null;
 		var query:String = "";
-		if (Std.is(request.data, Dynamic) == true) {
+		if (Std.isOfType(request.data, Dynamic) == true) {
 			for (key in Reflect.fields(request.data)) {
 				if (query.length > 0)
 					query += "&";

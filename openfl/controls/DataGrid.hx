@@ -180,7 +180,7 @@ class DataGrid extends BaseScrollPane {
 				var cellHeight:Float = 0.0;
 				for (j in 0...columns.length) {
 					var cell:DisplayObject = displayObjects[i].getChildAt(j);
-					if (Std.is(cell, HeaderRenderer)) {
+					if (Std.isOfType(cell, HeaderRenderer)) {
 						cast(cell, HeaderRenderer).init();
 						cast(cell, HeaderRenderer).validateNow();
 					} else {
@@ -195,7 +195,7 @@ class DataGrid extends BaseScrollPane {
 				var _x:Float = 0.0;
 				for (j in 0...columns.length) {
 					var cell:DisplayObject = displayObjects[i].getChildAt(j);
-					if (Std.is(cell, HeaderRenderer)) {
+					if (Std.isOfType(cell, HeaderRenderer)) {
 						cast(cell, HeaderRenderer).setSize(columns[j].width, cellHeight);
 					} else {
 						cast(cell, CellRenderer).setSize(columns[j].width, cellHeight);
@@ -265,7 +265,7 @@ class DataGrid extends BaseScrollPane {
 	}
 
 	private function onMouseEvent(event:MouseEvent):Void {
-		if (Std.is(event.target, HeaderRenderer) == true) {
+		if (Std.isOfType(event.target, HeaderRenderer) == true) {
 			var mouseHeaderRenderer:HeaderRenderer = cast(event.target, HeaderRenderer);
 			for (columnIdx in 0...columns.length) {
 				var headerRenderer:DisplayObject = _headerDisplayObjects[0].getChildAt(columnIdx);
@@ -289,7 +289,7 @@ class DataGrid extends BaseScrollPane {
 
 		// find mouse cell renderer down up the hierarchy
 		var mouseCellRendererCandidate:DisplayObject = event.target;
-		while (mouseCellRendererCandidate != null && Std.is(mouseCellRendererCandidate, CellRenderer) == false)
+		while (mouseCellRendererCandidate != null && Std.isOfType(mouseCellRendererCandidate, CellRenderer) == false)
 			mouseCellRendererCandidate = mouseCellRendererCandidate.parent;
 		var mouseCellRenderer:CellRenderer = mouseCellRendererCandidate != null ? cast(mouseCellRendererCandidate, CellRenderer) : null;
 		if (mouseCellRenderer != null) {
@@ -305,7 +305,7 @@ class DataGrid extends BaseScrollPane {
 	}
 
 	private function onMouseEventClick(event:MouseEvent):Void {
-		if (Std.is(cast(event.target, DisplayObject), CellRenderer) == true) {
+		if (Std.isOfType(cast(event.target, DisplayObject), CellRenderer) == true) {
 			var cell:CellRenderer = cast(event.target, CellRenderer);
 			var listData:ListData = cell.listData;
 			dispatchEvent(new ListEvent(ListEvent.ITEM_CLICK, false, false, listData.column, listData.row, listData.index, cell.data));

@@ -155,7 +155,7 @@ class BaseScrollPane extends UIComponent {
 			if (_scrollBar.visible == true && getChildAt(numChildren - 1) != _scrollBar) {
 				addChildAt(_scrollBar, numChildren - 1);
 			}
-			if (_source != null && Std.is(_source, DisplayObjectContainer) == true) {
+			if (_source != null && Std.isOfType(_source, DisplayObjectContainer) == true) {
 				var container: DisplayObjectContainer = cast(_source, DisplayObjectContainer);
 				for (i in 0...container.numChildren - 1) {
 					var child: DisplayObject = container.getChildAt(i);
@@ -169,7 +169,7 @@ class BaseScrollPane extends UIComponent {
 		if (_scrollBar.visible == true && getChildAt(numChildren - 1) != _scrollBar) {
 			addChildAt(_scrollBar, numChildren - 1);
 		}
-		if (_source != null && Std.is(_source, DisplayObjectContainer) == true) {
+		if (_source != null && Std.isOfType(_source, DisplayObjectContainer) == true) {
 			var container:DisplayObjectContainer = cast(_source, DisplayObjectContainer);
 			for (i in 0...container.numChildren - 1) {
 				var child:DisplayObject = container.getChildAt(i);

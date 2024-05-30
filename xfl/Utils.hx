@@ -20,7 +20,7 @@ class Utils {
 		// trace("disposeDisplayObject(): " + displayObject.name);
 
 		// dispose UI components
-		if (Std.is(displayObject, UIComponent) == true) {
+		if (Std.isOfType(displayObject, UIComponent) == true) {
 			cast(displayObject, UIComponent).dispose();
 		}
 
@@ -34,32 +34,32 @@ class Utils {
 		if (displayObjectMask != null) {
 			displayObject.mask = null;
 			// dispose if graphics
-			if (Std.is(displayObjectMask, Shape) == true) {
+			if (Std.isOfType(displayObjectMask, Shape) == true) {
 				cast(displayObjectMask, Shape).graphics.clear();
 			} else
 				// and dispose if bitmap
-				if (Std.is(displayObjectMask, Bitmap) == true && cast(displayObjectMask, Bitmap).bitmapData != null) {
+				if (Std.isOfType(displayObjectMask, Bitmap) == true && cast(displayObjectMask, Bitmap).bitmapData != null) {
 					cast(displayObjectMask, Bitmap).bitmapData.dispose();
 					cast(displayObjectMask, Bitmap).bitmapData = null;
 				} else
 					// dispose hierarchy if display object container
-					if (Std.is(displayObjectMask, DisplayObjectContainer) == true) {
+					if (Std.isOfType(displayObjectMask, DisplayObjectContainer) == true) {
 						disposeDisplayObject(displayObjectMask);
 					}
 		}
 
 		// clear graphics
-		if (Std.is(displayObject, Shape)) {
+		if (Std.isOfType(displayObject, Shape)) {
 			cast(displayObject, Shape).graphics.clear();
 		} else
 			// dispose bitmap data if displayobject is bitmap
-			if (Std.is(displayObject, Bitmap) && cast(displayObject, Bitmap).bitmapData != null) {
+			if (Std.isOfType(displayObject, Bitmap) && cast(displayObject, Bitmap).bitmapData != null) {
 				// trace("disposeDisplayObject(): disposing bitmap data: " + child.name);
 				cast(displayObject, Bitmap).bitmapData.dispose();
 				cast(displayObject, Bitmap).bitmapData = null;
 			} else
 				// if its a display object container, dispose childs
-				if (Std.is(displayObject, DisplayObjectContainer)) {
+				if (Std.isOfType(displayObject, DisplayObjectContainer)) {
 					var container:DisplayObjectContainer = cast(displayObject, DisplayObjectContainer);
 					for (i in 0...container.numChildren)
 						disposeDisplayObject(container.getChildAt(i), false);
@@ -116,16 +116,16 @@ class Utils {
 			+ ", "
 			+ (object.mask != null ? "mask" : "nomask")
 			+ (object.scale9Grid != null ? ", scale9grid: " + object.scale9Grid : "")
-			+ (Std.is(object,
+			+ (Std.isOfType(object,
 				DisplayObjectContainer) == true ? (cast(object, DisplayObjectContainer).mouseEnabled == true ? ", mouse enabled" : ", mouse disabled") : "")
-			+ (Std.is(object,
+			+ (Std.isOfType(object,
 				DisplayObjectContainer) == true ? (cast(object, DisplayObjectContainer)
 					.mouseChildren == true ? ", mouse children enabled" : ", mouse children disabled") : "")
-			+ (Std.is(object, Sprite) == true ? (cast(object, Sprite).buttonMode == true ? ", button mode enabled" : ", button mode disabled") : "")
+			+ (Std.isOfType(object, Sprite) == true ? (cast(object, Sprite).buttonMode == true ? ", button mode enabled" : ", button mode disabled") : "")
 			+ "("
 			+ Type.getClassName(Type.getClass(object))
 			+ ")");
-		if ((maxDepth == 0 || depth < maxDepth) && Std.is(object, DisplayObjectContainer) == true) {
+		if ((maxDepth == 0 || depth < maxDepth) && Std.isOfType(object, DisplayObjectContainer) == true) {
 			var container:DisplayObjectContainer = cast(object, DisplayObjectContainer);
 			for (i in 0...container.numChildren) {
 				dumpDisplayObject(container.getChildAt(i), maxDepth, depth + 1, indent + 2);

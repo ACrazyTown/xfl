@@ -120,10 +120,10 @@ class MovieClip extends xfl.display.MovieClip {
 	}
 
 	private function getFrame (frame: Dynamic): Int {
-		if (Std.is(frame, Int)) {
+		if (Std.isOfType(frame, Int)) {
 			return cast frame;
 		} else 
-		if (Std.is (frame, String)) {
+		if (Std.isOfType (frame, String)) {
 			for (label in currentLabels) {
 				if (label.name == frame) {
 					return label.frame + 1;

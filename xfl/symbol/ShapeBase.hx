@@ -94,14 +94,14 @@ class ShapeBase extends openfl.display.Sprite {
 			g.endFill();
 		});
 		for (fillStyle in domShape.fills) {
-			if (Std.is(fillStyle.data, SolidColor)) {
+			if (Std.isOfType(fillStyle.data, SolidColor)) {
 				var color = fillStyle.data.color;
 				var alpha = fillStyle.data.alpha;
 				result.push(function (g:Graphics) {
 					g.beginFill(color, alpha);
 				});
 			} else 
-			if (Std.is(fillStyle.data, LinearGradient)) {
+			if (Std.isOfType(fillStyle.data, LinearGradient)) {
 				var data: LinearGradient = cast fillStyle.data;
 				var colors : Array<UInt> = [];
 				var alphas : Array<Float> = [];
@@ -115,7 +115,7 @@ class ShapeBase extends openfl.display.Sprite {
 					g.beginGradientFill(GradientType.LINEAR, colors, alphas, ratios, data.matrix);
 				});
 			} else 
-			if (Std.is(fillStyle.data, RadialGradient)) {
+			if (Std.isOfType(fillStyle.data, RadialGradient)) {
 				#if !html5
 				var data: RadialGradient = cast fillStyle.data;
 				var colors : Array<UInt> = [];
@@ -131,7 +131,7 @@ class ShapeBase extends openfl.display.Sprite {
 				});
 				#end
 			} else
-			if (Std.is(fillStyle.data, Bitmap)) {
+			if (Std.isOfType(fillStyle.data, Bitmap)) {
 				var bitmapData = XFLAssets.getInstance().getXFLBitmapDataAssetByPath(fillStyle.data.bitmapPath);
 				var matrix = fillStyle.data.matrix;
 				result.push(function (g:Graphics) {
@@ -148,8 +148,8 @@ class ShapeBase extends openfl.display.Sprite {
 			g.lineStyle();
 		});
 		for (strokeStyle in domShape.strokes) {
-			if (Std.is(strokeStyle.data, SolidStroke)) {
-				if (Std.is(strokeStyle.data.fill, SolidColor)) {
+			if (Std.isOfType(strokeStyle.data, SolidStroke)) {
+				if (Std.isOfType(strokeStyle.data.fill, SolidColor)) {
 					var weight = strokeStyle.data.weight;
 					var color = strokeStyle.data.fill.color;
 					var alpha = strokeStyle.data.fill.alpha;
