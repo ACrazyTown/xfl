@@ -11,41 +11,46 @@ import openfl.events.SecurityErrorEvent;
 import sys.Http;
 import sys.thread.Thread;
 
-class SimpleNativeURLLoader extends EventDispatcher {
+class SimpleNativeURLLoader extends EventDispatcher
+{
 	public static inline var GET:String = "GET";
 	public static inline var POST:String = "POST";
-
+	
 	public var data:Dynamic;
 	public var dataFormat:URLLoaderDataFormat;
-
+	
 	private var request:URLRequest;
 	private var http:Http;
 	private var responseCode:Int;
 	private var responseHeaders:Array<URLRequestHeader>;
 	private var uri:String;
-
+	
 	private var timer:Timer;
 	private var ioThread:Thread;
 	private var ioThreadFinished:Bool;
-
+	
 	private var bytesLoaded:Int;
 	private var bytesTotal:Int;
-
-	public function new(request:URLRequest = null) {
+	
+	public function new(request:URLRequest = null)
+	{
 		super();
 		dataFormat = URLLoaderDataFormat.TEXT;
 		ioThreadFinished = true;
 		bytesLoaded = 0;
 		bytesTotal = 1000;
-		if (request != null) {
+		if (request != null)
+		{
 			load(request);
 		}
 	}
-
+	
 	public function close():Void {}
-
-	public function load(request:URLRequest):Void {
-		if (ioThreadFinished == false) {
+	
+	public function load(request:URLRequest):Void
+	{
+		if (ioThreadFinished == false)
+		{
 			trace("load(): a request is already pending: " + uri);
 			return;
 		}
@@ -55,132 +60,170 @@ class SimpleNativeURLLoader extends EventDispatcher {
 		responseCode = 0;
 		responseHeaders = [];
 		uri = null;
-
+		
 		uri = request.url;
 		var postData:String = null;
 		var query:String = "";
-		if (Std.isOfType(request.data, Dynamic) == true) {
-			for (key in Reflect.fields(request.data)) {
+		if (Std.isOfType(request.data, Dynamic) == true)
+		{
+			for (key in Reflect.fields(request.data))
+			{
 				if (query.length > 0)
 					query += "&";
 				query += StringTools.urlEncode(key) + "=" + StringTools.urlEncode(Std.string(Reflect.field(request.data, key)));
 			}
-			if (query != "") {
-				if (request.method == GET) {
-					if (uri.indexOf("?") > -1) {
+			if (query != "")
+			{
+				if (request.method == GET)
+				{
+					if (uri.indexOf("?") > -1)
+					{
 						uri += "&" + query;
-					} else {
+					}
+					else
+					{
 						uri += "?" + query;
 					}
 					query = "";
-				} else {
+				}
+				else
+				{
 					postData = query;
 				}
 			}
-		} else {
+		}
+		else
+		{
 			postData = request.data;
 		}
-
+		
 		//
 		http = new Http(uri);
 		http.onError = onError;
-		if (dataFormat == URLLoaderDataFormat.TEXT) {
+		if (dataFormat == URLLoaderDataFormat.TEXT)
+		{
 			http.onData = onData;
-		} else {
+		}
+		else
+		{
 			http.onBytes = onBytes;
 		}
 		http.onStatus = onStatus;
-
+		
 		//
-		switch (request.method) {
+		switch (request.method)
+		{
 			case GET:
 			case POST:
-				if (postData != null) {
+				if (postData != null)
+				{
 					http.setPostData(postData);
 				}
 		}
-
+		
 		var headers = [];
 		headers.push("Expect: ");
-
+		
 		var contentType = null;
-		for (header in request.requestHeaders) {
-			if (header.name == "Content-Type") {
+		for (header in request.requestHeaders)
+		{
+			if (header.name == "Content-Type")
+			{
 				contentType = header.value;
-			} else {
+			}
+			else
+			{
 				http.setHeader(header.name, header.value);
 			}
 		}
-		if (request.contentType != null) {
+		if (request.contentType != null)
+		{
 			contentType = request.contentType;
 		}
-		if (contentType == null) {
-			if (query != "") {
+		if (contentType == null)
+		{
+			if (query != "")
+			{
 				contentType = "application/x-www-form-urlencoded";
-			} else if (request.data != null) {
+			}
+			else if (request.data != null)
+			{
 				contentType = "application/octet-stream";
 			}
 		}
-		if (contentType != null) {
+		if (contentType != null)
+		{
 			http.setHeader("Content-Type", contentType);
 		}
 		http.setHeader("User-Agent", request.userAgent == null ? "libcurl-agent/1.0" : request.userAgent);
-
+		
 		timer = new Timer(Math.ceil(1000.0 / 60.0));
 		timer.run = timerRun;
-
+		
 		ioThread = Thread.create(threadRun);
 	}
-
-	private function dispatchStatus():Void {
+	
+	private function dispatchStatus():Void
+	{
 		var event = new HTTPStatusEvent(HTTPStatusEvent.HTTP_STATUS, false, false, responseCode);
 		event.responseURL = uri;
 		event.responseHeaders = responseHeaders;
 		dispatchEvent(event);
 	}
-
+	
 	// Event Handlers
-	private function dispatchError():Void {
+	private function dispatchError():Void
+	{
 		dispatchStatus();
-		if (responseCode == 403) {
+		if (responseCode == 403)
+		{
 			var event = new SecurityErrorEvent(SecurityErrorEvent.SECURITY_ERROR);
 			event.text = Std.string(responseCode);
 			dispatchEvent(event);
-		} else {
+		}
+		else
+		{
 			var event = new IOErrorEvent(IOErrorEvent.IO_ERROR);
 			event.text = Std.string(responseCode);
 			dispatchEvent(event);
 		}
 	}
-
-	private function onError(msg:String):Void {
+	
+	private function onError(msg:String):Void
+	{
 		trace("onError(): " + msg);
 		responseCode = -1;
 		ioThreadFinished = true;
 	}
-
-	private function onStatus(status:Int):Void {
+	
+	private function onStatus(status:Int):Void
+	{
 		responseCode = status;
 	}
-
-	private function onData(data:String):Void {
+	
+	private function onData(data:String):Void
+	{
 		this.data = data;
 		ioThreadFinished = true;
 	}
-
-	private function onBytes(bytes:Bytes):Void {
+	
+	private function onBytes(bytes:Bytes):Void
+	{
 		this.data = bytes;
 		ioThreadFinished = true;
 	}
-
-	private function threadRun():Void {
+	
+	private function threadRun():Void
+	{
 		http.request(request.method == POST ? true : false);
 		ioThreadFinished = true;
 		ioThread = null;
 	}
-
-	private function timerRun():Void {
-		if (ioThreadFinished == false) {
+	
+	private function timerRun():Void
+	{
+		if (ioThreadFinished == false)
+		{
 			var event = new ProgressEvent(ProgressEvent.PROGRESS);
 			bytesLoaded = (bytesLoaded + 120) % bytesTotal;
 			event.bytesLoaded = bytesLoaded;
@@ -191,14 +234,20 @@ class SimpleNativeURLLoader extends EventDispatcher {
 		//
 		timer.stop();
 		timer = null;
-		if (responseCode < 200 || responseCode >= 399) {
+		if (responseCode < 200 || responseCode >= 399)
+		{
 			dispatchError();
-		} else {
-			if (dataFormat == BINARY) {
+		}
+		else
+		{
+			if (dataFormat == BINARY)
+			{
 				dispatchStatus();
 				var event = new Event(Event.COMPLETE);
 				dispatchEvent(event);
-			} else {
+			}
+			else
+			{
 				dispatchStatus();
 				var event = new Event(Event.COMPLETE);
 				dispatchEvent(event);

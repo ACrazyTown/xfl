@@ -21,13 +21,14 @@ import xfl.XFLSymbolArguments;
 /**
  * XFL element
  */
-interface XFLElement {
+interface XFLElement
+{
 	// xfl symbol arguments
 	public var xflSymbolArguments(get, never):XFLSymbolArguments;
-
+	
 	// display object container
 	public function addChild(child:DisplayObject):DisplayObject;
-
+	
 	// XFL elements
 	public function getXFLElementUntyped(name:String):Dynamic;
 	public function getXFLElement(name:String):XFLElement;
@@ -49,7 +50,7 @@ interface XFLElement {
 	public function getXFLScrollPane(name:String):ScrollPane;
 	public function getXFLProgressBar(name:String):ProgressBar;
 	public function getXFLCellRenderer(name:String):CellRenderer;
-
+	
 	// values
 	public function removeValue(key:String):Void;
 	public function addValue(key:String, value:Dynamic):Void;

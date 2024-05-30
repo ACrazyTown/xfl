@@ -10,79 +10,99 @@ import openfl.display.XFLElement;
 import openfl.display.XFLMovieClip;
 import openfl.display.Shape;
 
-class Utils {
+class Utils
+{
 	/**
 	 * Completely clears a display object and its references
 	 */
-	public static function disposeDisplayObject(displayObject:DisplayObject, removeFromParent:Bool = false):Void {
+	public static function disposeDisplayObject(displayObject:DisplayObject, removeFromParent:Bool = false):Void
+	{
 		if (displayObject == null)
 			return;
 		// trace("disposeDisplayObject(): " + displayObject.name);
-
+		
 		// dispose UI components
-		if (Std.isOfType(displayObject, UIComponent) == true) {
+		if (Std.isOfType(displayObject, UIComponent) == true)
+		{
 			cast(displayObject, UIComponent).dispose();
 		}
-
+		
 		// remove from parent
-		if (removeFromParent == true && displayObject.parent != null) {
+		if (removeFromParent == true && displayObject.parent != null)
+		{
 			displayObject.parent.removeChild(displayObject);
 		}
-
+		
 		// unset mask, if we have any
 		var displayObjectMask:DisplayObject = displayObject.mask;
-		if (displayObjectMask != null) {
+		if (displayObjectMask != null)
+		{
 			displayObject.mask = null;
 			// dispose if graphics
-			if (Std.isOfType(displayObjectMask, Shape) == true) {
+			if (Std.isOfType(displayObjectMask, Shape) == true)
+			{
 				cast(displayObjectMask, Shape).graphics.clear();
-			} else
+			}
+			else
 				// and dispose if bitmap
-				if (Std.isOfType(displayObjectMask, Bitmap) == true && cast(displayObjectMask, Bitmap).bitmapData != null) {
+				if (Std.isOfType(displayObjectMask, Bitmap) == true && cast(displayObjectMask, Bitmap).bitmapData != null)
+				{
 					cast(displayObjectMask, Bitmap).bitmapData.dispose();
 					cast(displayObjectMask, Bitmap).bitmapData = null;
-				} else
+				}
+				else
 					// dispose hierarchy if display object container
-					if (Std.isOfType(displayObjectMask, DisplayObjectContainer) == true) {
+					if (Std.isOfType(displayObjectMask, DisplayObjectContainer) == true)
+					{
 						disposeDisplayObject(displayObjectMask);
 					}
 		}
-
+		
 		// clear graphics
-		if (Std.isOfType(displayObject, Shape)) {
+		if (Std.isOfType(displayObject, Shape))
+		{
 			cast(displayObject, Shape).graphics.clear();
-		} else
+		}
+		else
 			// dispose bitmap data if displayobject is bitmap
-			if (Std.isOfType(displayObject, Bitmap) && cast(displayObject, Bitmap).bitmapData != null) {
+			if (Std.isOfType(displayObject, Bitmap) && cast(displayObject, Bitmap).bitmapData != null)
+			{
 				// trace("disposeDisplayObject(): disposing bitmap data: " + child.name);
 				cast(displayObject, Bitmap).bitmapData.dispose();
 				cast(displayObject, Bitmap).bitmapData = null;
-			} else
+			}
+			else
 				// if its a display object container, dispose childs
-				if (Std.isOfType(displayObject, DisplayObjectContainer)) {
+				if (Std.isOfType(displayObject, DisplayObjectContainer))
+				{
 					var container:DisplayObjectContainer = cast(displayObject, DisplayObjectContainer);
 					for (i in 0...container.numChildren)
 						disposeDisplayObject(container.getChildAt(i), false);
 					container.removeChildren();
 				}
 	}
-
-	public static function dumpDisplayObjectParents(object:DisplayObject) {
+	
+	public static function dumpDisplayObjectParents(object:DisplayObject)
+	{
 		dumpDisplayObject(object, 1, 1, 0);
 		var parent:DisplayObjectContainer = object.parent;
-		while (parent != null) {
+		while (parent != null)
+		{
 			dumpDisplayObject(parent, 1, 1, 0);
 			parent = parent.parent;
 		}
 	}
-
-	public static function dumpDisplayObject(object:DisplayObject, maxDepth:Int = 0, depth:Int = 0, indent:Int = 0) {
-		if (object == null) {
+	
+	public static function dumpDisplayObject(object:DisplayObject, maxDepth:Int = 0, depth:Int = 0, indent:Int = 0)
+	{
+		if (object == null)
+		{
 			trace("dumpDisplayObject(): object == null");
 			return;
 		}
 		var indentionString:String = "";
-		for (i in 0...indent) {
+		for (i in 0...indent)
+		{
 			indentionString += " ";
 		}
 		trace(indentionString
@@ -125,9 +145,11 @@ class Utils {
 			+ "("
 			+ Type.getClassName(Type.getClass(object))
 			+ ")");
-		if ((maxDepth == 0 || depth < maxDepth) && Std.isOfType(object, DisplayObjectContainer) == true) {
+		if ((maxDepth == 0 || depth < maxDepth) && Std.isOfType(object, DisplayObjectContainer) == true)
+		{
 			var container:DisplayObjectContainer = cast(object, DisplayObjectContainer);
-			for (i in 0...container.numChildren) {
+			for (i in 0...container.numChildren)
+			{
 				dumpDisplayObject(container.getChildAt(i), maxDepth, depth + 1, indent + 2);
 			}
 		}

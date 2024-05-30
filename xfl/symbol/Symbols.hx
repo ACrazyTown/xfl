@@ -26,32 +26,40 @@ import xfl.dom.DOMSymbolInstance;
 import xfl.dom.DOMSymbolItem;
 import xfl.XFL;
 
-class Symbols {
-	public static function createShape(xfl:XFL, instance:DOMShape):Shape {
+class Symbols
+{
+	public static function createShape(xfl:XFL, instance:DOMShape):Shape
+	{
 		var shape:Shape = new Shape(instance);
-		if (instance.matrix != null) {
+		if (instance.matrix != null)
+		{
 			shape.transform.matrix = instance.matrix;
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// shape.cacheAsBitmap = true;
 		return shape;
 	}
-
-	public static function createRectangle(xfl:XFL, instance:DOMRectangle):Rectangle {
+	
+	public static function createRectangle(xfl:XFL, instance:DOMRectangle):Rectangle
+	{
 		var rectangle:Rectangle = new Rectangle(instance);
-		if (instance.matrix != null) {
+		if (instance.matrix != null)
+		{
 			rectangle.transform.matrix = instance.matrix;
 		}
 		// TODO: a.drewke, this increases rendering time a lot
 		// rectangle.cacheAsBitmap = true;
 		return rectangle;
 	}
-
-	public static function createBitmapGraphicsSprite(xfl:XFL, instance:DOMBitmapInstance):Sprite {
+	
+	public static function createBitmapGraphicsSprite(xfl:XFL, instance:DOMBitmapInstance):Sprite
+	{
 		var bitmap:Bitmap = null;
 		var bitmapData:BitmapData = null;
-		for (document in xfl.documents) {
-			if (document.media.exists(instance.libraryItemName)) {
+		for (document in xfl.documents)
+		{
+			if (document.media.exists(instance.libraryItemName))
+			{
 				var bitmapItem:DOMBitmapItem = document.media.get(instance.libraryItemName).item;
 				var assetUrl:String = document.path + "/LIBRARY/" + bitmapItem.name;
 				if (Assets.exists(assetUrl) == true)
@@ -60,7 +68,8 @@ class Symbols {
 					break;
 			}
 		}
-		if (bitmapData == null) {
+		if (bitmapData == null)
+		{
 			trace("createBitmap(): " + instance.libraryItemName + ": not found");
 			bitmapData = new BitmapData(1, 1, false, 0xFFFFFF);
 		}
@@ -68,17 +77,21 @@ class Symbols {
 		bitmapSprite.graphics.beginBitmapFill(bitmapData);
 		bitmapSprite.graphics.drawRect(0.0, 0.0, bitmapData.width, bitmapData.height);
 		bitmapSprite.graphics.endFill();
-		if (instance.matrix != null) {
+		if (instance.matrix != null)
+		{
 			bitmapSprite.transform.matrix = instance.matrix;
 		}
 		return bitmapSprite;
 	}
-
-	public static function createBitmap(xfl:XFL, instance:DOMBitmapInstance):Bitmap {
+	
+	public static function createBitmap(xfl:XFL, instance:DOMBitmapInstance):Bitmap
+	{
 		var bitmap:Bitmap = null;
 		var bitmapData:BitmapData = null;
-		for (document in xfl.documents) {
-			if (document.media.exists(instance.libraryItemName)) {
+		for (document in xfl.documents)
+		{
+			if (document.media.exists(instance.libraryItemName))
+			{
 				var bitmapItem:DOMBitmapItem = document.media.get(instance.libraryItemName).item;
 				var assetUrl:String = document.path + "/LIBRARY/" + bitmapItem.name;
 				if (Assets.exists(assetUrl) == true)
@@ -87,20 +100,23 @@ class Symbols {
 					break;
 			}
 		}
-		if (bitmapData == null) {
+		if (bitmapData == null)
+		{
 			trace("createBitmap(): " + instance.libraryItemName + ": not found");
 			bitmapData = new BitmapData(1, 1, false, 0xFFFFFF);
 		}
 		bitmap = new Bitmap(bitmapData);
 		if (XFL.BITMAP_SMOOTHING == true)
 			bitmap.smoothing = true;
-		if (instance.matrix != null) {
+		if (instance.matrix != null)
+		{
 			bitmap.transform.matrix = instance.matrix;
 		}
 		return bitmap;
 	}
-
-	public static function createDynamicText(xfl:XFL, instance:DOMDynamicText):TextField {
+	
+	public static function createDynamicText(xfl:XFL, instance:DOMDynamicText):TextField
+	{
 		var textField:TextField = new TextField();
 		textField.type = instance.type == DOMDynamicText.TYPE_INPUT ? TextFieldType.INPUT : TextFieldType.DYNAMIC;
 		textField.width = instance.width;
@@ -108,23 +124,28 @@ class Symbols {
 		textField.name = instance.name;
 		textField.selectable = instance.isSelectable;
 		textField.multiline = instance.multiLine;
-		if (textField.multiline == true) {
+		if (textField.multiline == true)
+		{
 			textField.wordWrap = true;
 		}
-		if (instance.matrix != null) {
+		if (instance.matrix != null)
+		{
 			textField.transform.matrix = instance.matrix;
 		}
-
+		
 		textField.x += instance.left;
 		textField.y += instance.top;
-		for (textRun in instance.textRuns) {
+		for (textRun in instance.textRuns)
+		{
 			var format:TextFormat = new TextFormat();
 			var pos:Int = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null)
 				format.font = xfl.getFontMapping(textRun.textAttrs.face);
-			if (textRun.textAttrs.alignment != null) {
-				switch (textRun.textAttrs.alignment) {
+			if (textRun.textAttrs.alignment != null)
+			{
+				switch (textRun.textAttrs.alignment)
+				{
 					case "center":
 						format.align = TextFormatAlign.CENTER;
 					case "justify":
@@ -139,11 +160,15 @@ class Symbols {
 			}
 			if (textRun.textAttrs.size != null)
 				format.size = Std.int(textRun.textAttrs.size);
-			if (textRun.textAttrs.fillColor != 0) {
-				if (textRun.textAttrs.alpha != 0) {
+			if (textRun.textAttrs.fillColor != 0)
+			{
+				if (textRun.textAttrs.alpha != 0)
+				{
 					// need to add alpha to color
 					format.color = textRun.textAttrs.fillColor;
-				} else {
+				}
+				else
+				{
 					format.color = textRun.textAttrs.fillColor;
 				}
 			}
@@ -152,29 +177,35 @@ class Symbols {
 		}
 		return textField;
 	}
-
-	public static function createStaticText(xfl:XFL, instance:DOMStaticText):TextField {
+	
+	public static function createStaticText(xfl:XFL, instance:DOMStaticText):TextField
+	{
 		var textField:TextField = new TextField();
 		textField.width = instance.width;
 		textField.height = instance.height;
 		textField.selectable = instance.isSelectable;
 		textField.multiline = instance.multiLine;
-		if (textField.multiline == true) {
+		if (textField.multiline == true)
+		{
 			textField.wordWrap = true;
 		}
-		if (instance.matrix != null) {
+		if (instance.matrix != null)
+		{
 			textField.transform.matrix = instance.matrix;
 		}
 		textField.x += instance.left;
 		textField.y += instance.top;
-		for (textRun in instance.textRuns) {
+		for (textRun in instance.textRuns)
+		{
 			var format:TextFormat = new TextFormat();
 			var pos:Int = textField.text.length;
 			textField.appendText(textRun.characters);
 			if (textRun.textAttrs.face != null)
 				format.font = xfl.getFontMapping(textRun.textAttrs.face);
-			if (textRun.textAttrs.alignment != null) {
-				switch (textRun.textAttrs.alignment) {
+			if (textRun.textAttrs.alignment != null)
+			{
+				switch (textRun.textAttrs.alignment)
+				{
 					case "center":
 						format.align = TextFormatAlign.CENTER;
 					case "justify":
@@ -189,11 +220,15 @@ class Symbols {
 			}
 			if (textRun.textAttrs.size != null)
 				format.size = Std.int(textRun.textAttrs.size);
-			if (textRun.textAttrs.fillColor != 0) {
-				if (textRun.textAttrs.alpha != 0) {
+			if (textRun.textAttrs.fillColor != 0)
+			{
+				if (textRun.textAttrs.alpha != 0)
+				{
 					// need to add alpha to color
 					format.color = textRun.textAttrs.fillColor;
-				} else {
+				}
+				else
+				{
 					format.color = textRun.textAttrs.fillColor;
 				}
 			}
@@ -202,23 +237,29 @@ class Symbols {
 		}
 		return textField;
 	}
-
-	public static function createSymbol(xfl:XFL, instance:DOMSymbolInstance):DisplayObject {
-		for (document in xfl.documents) {
-			if (document.symbols.exists(instance.libraryItemName)) {
+	
+	public static function createSymbol(xfl:XFL, instance:DOMSymbolInstance):DisplayObject
+	{
+		for (document in xfl.documents)
+		{
+			if (document.symbols.exists(instance.libraryItemName))
+			{
 				var symbolItem:DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				// have a movie clip by default
 				if ((symbolItem.linkageBaseClass == null || symbolItem.linkageBaseClass == "")
 					&& (symbolItem.linkageClassName == null
-						|| StringTools.startsWith(symbolItem.linkageClassName, "fl.controls.") == false)) {
+						|| StringTools.startsWith(symbolItem.linkageClassName, "fl.controls.") == false))
+				{
 					return createMovieClip(xfl, instance);
 				}
 				// otherwise determine class name
 				var className:String = symbolItem.linkageBaseClass;
-				if (className == null || className == "") {
+				if (className == null || className == "")
+				{
 					className = StringTools.replace(symbolItem.linkageClassName, "fl.controls.", "openfl.controls.");
 				}
-				switch (className) {
+				switch (className)
+				{
 					case "flash.display.Sprite":
 						return createSprite(xfl, instance);
 					default:
@@ -228,48 +269,61 @@ class Symbols {
 		}
 		return null;
 	}
-
-	private static function createMovieClip(xfl:XFL, instance:DOMSymbolInstance):XFLMovieClip {
+	
+	private static function createMovieClip(xfl:XFL, instance:DOMSymbolInstance):XFLMovieClip
+	{
 		var symbolItem:DOMSymbolItem = null;
 		var movieClip:XFLMovieClip = null;
 		var loadedByCustomLoader:Bool = false;
-		for (document in xfl.documents) {
-			if (document.symbols.exists(instance.libraryItemName)) {
+		for (document in xfl.documents)
+		{
+			if (document.symbols.exists(instance.libraryItemName))
+			{
 				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
-				if (xfl.customSymbolLoader != null) {
+				if (xfl.customSymbolLoader != null)
+				{
 					movieClip = xfl.customSymbolLoader.createMovieClip(xfl, symbolItem);
 					if (movieClip != null)
 						loadedByCustomLoader = true;
 				}
-				if (movieClip == null) {
+				if (movieClip == null)
+				{
 					movieClip = new XFLMovieClip(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked,
 						symbolItem.scaleGrid != null));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
-				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
+				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "")
+				{
 					instance.name = symbolItem.timeline.name;
 				}
-				if (instance.name != null && instance.name != "") {
+				if (instance.name != null && instance.name != "")
+				{
 					movieClip.name = instance.name;
 				}
 				break;
 			}
 		}
-		if (movieClip != null) {
-			if (instance.matrix != null) {
+		if (movieClip != null)
+		{
+			if (instance.matrix != null)
+			{
 				movieClip.transform.matrix = instance.matrix;
 			}
-			if (instance.color != null) {
+			if (instance.color != null)
+			{
 				movieClip.transform.colorTransform = instance.color;
 			}
-			if (symbolItem != null && symbolItem.scaleGrid != null) {
+			if (symbolItem != null && symbolItem.scaleGrid != null)
+			{
 				// trace(movieClip.name + ": " + symbolItem.scaleGrid);
-				for (i in 0...movieClip.numChildren) {
+				for (i in 0...movieClip.numChildren)
+				{
 					movieClip.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
 					// Utils.dumpDisplayObject(movieClip.getChildAt(i), 1);
 				}
 			}
-			if (loadedByCustomLoader == true) {
+			if (loadedByCustomLoader == true)
+			{
 				xfl.customSymbolLoader.onMovieClipLoaded(xfl, symbolItem, movieClip);
 			}
 			/*
@@ -282,48 +336,61 @@ class Symbols {
 		}
 		return movieClip;
 	}
-
-	private static function createSprite(xfl:XFL, instance:DOMSymbolInstance):XFLSprite {
+	
+	private static function createSprite(xfl:XFL, instance:DOMSymbolInstance):XFLSprite
+	{
 		var symbolItem:DOMSymbolItem = null;
 		var sprite:XFLSprite = null;
 		var loadedByCustomLoader:Bool = false;
-		for (document in xfl.documents) {
-			if (document.symbols.exists(instance.libraryItemName)) {
+		for (document in xfl.documents)
+		{
+			if (document.symbols.exists(instance.libraryItemName))
+			{
 				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
-				if (xfl.customSymbolLoader != null) {
+				if (xfl.customSymbolLoader != null)
+				{
 					sprite = xfl.customSymbolLoader.createSprite(xfl, symbolItem);
 					if (sprite != null)
 						loadedByCustomLoader = true;
 				}
-				if (sprite == null) {
+				if (sprite == null)
+				{
 					sprite = new XFLSprite(new XFLSymbolArguments(xfl, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked,
 						symbolItem.scaleGrid != null));
 				}
 				// TODO: a.drewke, hack to inject timeline name into symbol instance if it has no name
-				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "") {
+				if ((instance.name == null || instance.name == "") && symbolItem.timeline.name != null && symbolItem.timeline.name != "")
+				{
 					instance.name = symbolItem.timeline.name;
 				}
-				if (instance.name != null && instance.name != "") {
+				if (instance.name != null && instance.name != "")
+				{
 					sprite.name = instance.name;
 				}
 				break;
 			}
 		}
-		if (sprite != null) {
-			if (instance.matrix != null) {
+		if (sprite != null)
+		{
+			if (instance.matrix != null)
+			{
 				sprite.transform.matrix = instance.matrix;
 			}
-			if (instance.color != null) {
+			if (instance.color != null)
+			{
 				sprite.transform.colorTransform = instance.color;
 			}
-			if (symbolItem != null && symbolItem.scaleGrid != null) {
+			if (symbolItem != null && symbolItem.scaleGrid != null)
+			{
 				// trace(sprite.name + ": " + symbolItem.scaleGrid);
-				for (i in 0...sprite.numChildren) {
+				for (i in 0...sprite.numChildren)
+				{
 					sprite.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
 					// Utils.dumpDisplayObject(sprite.getChildAt(i), 1);
 				}
 			}
-			if (loadedByCustomLoader == true) {
+			if (loadedByCustomLoader == true)
+			{
 				xfl.customSymbolLoader.onSpriteLoaded(xfl, symbolItem, sprite);
 			}
 			/*
@@ -336,12 +403,15 @@ class Symbols {
 		}
 		return sprite;
 	}
-
-	private static function createOther(xfl:XFL, instance:DOMSymbolInstance, className:String):Sprite {
+	
+	private static function createOther(xfl:XFL, instance:DOMSymbolInstance, className:String):Sprite
+	{
 		var symbolItem:DOMSymbolItem = null;
 		var other:Sprite = null;
-		for (document in xfl.documents) {
-			if (document.symbols.exists(instance.libraryItemName)) {
+		for (document in xfl.documents)
+		{
+			if (document.symbols.exists(instance.libraryItemName))
+			{
 				symbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				var classType:Class<Dynamic> = Type.resolveClass(className);
 				var otherName:String = (instance.name == null || instance.name == "")
@@ -355,16 +425,21 @@ class Symbols {
 				break;
 			}
 		}
-		if (other != null) {
-			if (instance.matrix != null) {
+		if (other != null)
+		{
+			if (instance.matrix != null)
+			{
 				other.transform.matrix = instance.matrix;
 			}
-			if (instance.color != null) {
+			if (instance.color != null)
+			{
 				other.transform.colorTransform = instance.color;
 			}
-			if (symbolItem != null && symbolItem.scaleGrid != null) {
+			if (symbolItem != null && symbolItem.scaleGrid != null)
+			{
 				// trace(other.name + ": " + symbolItem.scaleGrid);
-				for (i in 0...other.numChildren) {
+				for (i in 0...other.numChildren)
+				{
 					other.getChildAt(i).scale9Grid = symbolItem.scaleGrid;
 					// Utils.dumpDisplayObject(other.getChildAt(i), 1);
 				}
@@ -379,11 +454,14 @@ class Symbols {
 		}
 		return other;
 	}
-
-	public static function createComponent(xfl:XFL, instance:DOMComponentInstance):DisplayObject {
+	
+	public static function createComponent(xfl:XFL, instance:DOMComponentInstance):DisplayObject
+	{
 		var component:DisplayObject = null;
-		for (document in xfl.documents) {
-			if (document.symbols.exists(instance.libraryItemName)) {
+		for (document in xfl.documents)
+		{
+			if (document.symbols.exists(instance.libraryItemName))
+			{
 				var symbolItem:DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", document.symbols.get(instance.libraryItemName).fileName);
 				var className:String = symbolItem.linkageClassName;
 				if (StringTools.startsWith(className, "fl."))
@@ -398,13 +476,17 @@ class Symbols {
 				]);
 				component.name = componentName;
 				var instanceVariablesLeft:Array<String> = [];
-				for (variable in instance.variables) {
+				for (variable in instance.variables)
+				{
 					instanceVariablesLeft.push(variable.variable);
 				}
 				var instanceFields:Array<String> = Type.getInstanceFields(classType);
-				for (variable in instance.variables) {
-					if (instanceFields.indexOf(variable.variable) != -1 || instanceFields.indexOf("set_" + variable.variable) != -1) {
-						switch (variable.type) {
+				for (variable in instance.variables)
+				{
+					if (instanceFields.indexOf(variable.variable) != -1 || instanceFields.indexOf("set_" + variable.variable) != -1)
+					{
+						switch (variable.type)
+						{
 							case "List":
 								Reflect.setProperty(component, variable.variable, variable.defaultValue);
 								instanceVariablesLeft.remove(variable.variable);
@@ -415,9 +497,12 @@ class Symbols {
 								Reflect.setProperty(component, variable.variable, Std.parseFloat(variable.defaultValue));
 								instanceVariablesLeft.remove(variable.variable);
 							case "String":
-								if (variable.variable == "source") {
+								if (variable.variable == "source")
+								{
 									trace("createComponent(): skipping variable 'source': FIXME!");
-								} else {
+								}
+								else
+								{
 									Reflect.setProperty(component, variable.variable, variable.defaultValue);
 									instanceVariablesLeft.remove(variable.variable);
 								}
@@ -426,13 +511,15 @@ class Symbols {
 						}
 					}
 				}
-				if (instanceVariablesLeft.length > 0) {
+				if (instanceVariablesLeft.length > 0)
+				{
 					// trace("createComponent(): left unset variables: " + instanceVariablesLeft);
 				}
 				break;
 			}
 		}
-		if (component != null && instance.matrix != null) {
+		if (component != null && instance.matrix != null)
+		{
 			var matrix:Matrix = instance.matrix.clone();
 			matrix.tx = 0.0;
 			matrix.ty = 0.0;
@@ -446,7 +533,8 @@ class Symbols {
 			component.scaleY = Math.abs(instance.matrix.d) < 0.0001 ? rotatedDimension.y : instance.matrix.d;
 			component.transform.matrix = matrix;
 		}
-		if (Std.isOfType(component, DisplayObjectContainer) == true) {
+		if (Std.isOfType(component, DisplayObjectContainer) == true)
+		{
 			var container:DisplayObjectContainer = cast(component, DisplayObjectContainer);
 			var containerWidth:Float = container.width;
 			var containerHeight:Float = container.height;
@@ -456,30 +544,38 @@ class Symbols {
 			container.scaleY = 1.0;
 			var parametersAreBlocked:Bool = false;
 			var children:Array<DisplayObject> = null;
-			if (Std.isOfType(component, XFLSprite) == true) {
+			if (Std.isOfType(component, XFLSprite) == true)
+			{
 				var xflSprite:XFLSprite = cast(component, XFLSprite);
 				children = xflSprite.children;
 				parametersAreBlocked = xflSprite.xflSymbolArguments.parametersAreLocked;
-			} else if (Std.isOfType(component, XFLMovieClip) == true) {
+			}
+			else if (Std.isOfType(component, XFLMovieClip) == true)
+			{
 				var xflMovieClip:XFLMovieClip = cast(component, XFLMovieClip);
 				children = xflMovieClip.children;
 				parametersAreBlocked = xflMovieClip.xflSymbolArguments.parametersAreLocked;
 			}
-			for (childIdx in 0...container.numChildren) {
+			for (childIdx in 0...container.numChildren)
+			{
 				var child:DisplayObject = container.getChildAt(childIdx);
-				if (children != null && children.indexOf(child) == -1) {
+				if (children != null && children.indexOf(child) == -1)
+				{
 					child.x = child.x / containerScaleX;
 					child.y = child.y / containerScaleY;
 					child.width = child.width / containerScaleX;
 					child.height = child.height / containerScaleY;
-				} else if (parametersAreBlocked == false) {
+				}
+				else if (parametersAreBlocked == false)
+				{
 					child.x = child.x * containerScaleX;
 					child.y = child.y * containerScaleY;
 					child.width = child.width * containerScaleX;
 					child.height = child.height * containerScaleY;
 				}
 			}
-			if (Std.isOfType(component, UIComponent) == true) {
+			if (Std.isOfType(component, UIComponent) == true)
+			{
 				cast(component, UIComponent).setSize(containerWidth * containerScaleX, containerHeight * containerScaleY);
 			}
 		}

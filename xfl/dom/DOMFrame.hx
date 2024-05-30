@@ -3,24 +3,28 @@ package xfl.dom;
 import haxe.xml.Access;
 import xfl.geom.MotionObject;
 
-class DOMFrame {
-
-	public var name: String;
-	public var duration: Int;
-	public var elements: Array<Dynamic>;
-	public var index: Int;
-	public var motionObject: MotionObject;
-	public var tweenType: String;
-
-	public function new() {
+class DOMFrame
+{
+	public var name:String;
+	public var duration:Int;
+	public var elements:Array<Dynamic>;
+	public var index:Int;
+	public var motionObject:MotionObject;
+	public var tweenType:String;
+	
+	public function new()
+	{
 		duration = 1;
 		elements = new Array<Dynamic>();
 	}
-
-	private static function parseElements(elements: Iterator<haxe.xml.Access>): Array<Dynamic> {
-		var frameElements: Array<Dynamic> = [];
-		for (childElement in elements) {
-			switch (childElement.name) {
+	
+	private static function parseElements(elements:Iterator<haxe.xml.Access>):Array<Dynamic>
+	{
+		var frameElements:Array<Dynamic> = [];
+		for (childElement in elements)
+		{
+			switch (childElement.name)
+			{
 				case "DOMBitmapInstance":
 					frameElements.push(DOMBitmapInstance.parse(childElement));
 				case "DOMComponentInstance":
@@ -38,32 +42,42 @@ class DOMFrame {
 				case "DOMInputText":
 					frameElements.push(DOMDynamicText.parse(childElement, DOMDynamicText.TYPE_INPUT));
 				case "DOMGroup":
-					for (frameElement in DOMFrame.parseElements(childElement.node.members.elements)) {
+					for (frameElement in DOMFrame.parseElements(childElement.node.members.elements))
+					{
 						frameElements.push(frameElement);
 					}
 				case "DOMCompiledClipInstance":
-					// no op
+				// no op
 				default:
-					trace("Warning: Unrecognized DOMFrame element '" + childElement.name + "' with name = '" + (childElement.has.name?childElement.att.name:"null" + "'"));
+					trace("Warning: Unrecognized DOMFrame element '"
+						+ childElement.name
+						+ "' with name = '"
+						+ (childElement.has.name ? childElement.att.name : "null" + "'"));
 			}
 		}
 		return frameElements;
 	}
-
-	public static function parse(xml: Access): DOMFrame {
-		var frame: DOMFrame = new DOMFrame();
-		frame.name = xml.has.name == true?xml.att.name:null;
+	
+	public static function parse(xml:Access):DOMFrame
+	{
+		var frame:DOMFrame = new DOMFrame();
+		frame.name = xml.has.name == true ? xml.att.name : null;
 		frame.index = Std.parseInt(xml.att.index);
-		frame.duration = xml.has.duration == true?Std.parseInt(xml.att.duration):1;
-		if (xml.has.tweenType) frame.tweenType = xml.att.tweenType;
-		for (element in xml.elements) {
-			switch (element.name) {
+		frame.duration = xml.has.duration == true ? Std.parseInt(xml.att.duration) : 1;
+		if (xml.has.tweenType)
+			frame.tweenType = xml.att.tweenType;
+		for (element in xml.elements)
+		{
+			switch (element.name)
+			{
 				case "DOMGroup":
-					for (frameElement in DOMFrame.parseElements(element.node.members.elements)) {
+					for (frameElement in DOMFrame.parseElements(element.node.members.elements))
+					{
 						frame.elements.push(frameElement);
 					}
 				case "elements":
-					for (frameElement in DOMFrame.parseElements(element.elements)) {
+					for (frameElement in DOMFrame.parseElements(element.elements))
+					{
 						frame.elements.push(frameElement);
 					}
 				case "motionObjectXML":
@@ -72,5 +86,4 @@ class DOMFrame {
 		}
 		return frame;
 	}
-
 }

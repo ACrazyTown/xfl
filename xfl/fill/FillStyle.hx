@@ -2,19 +2,21 @@ package xfl.fill;
 
 import haxe.xml.Access;
 
-class FillStyle {
-
-	public var data: Dynamic;
-	public var index: Int;
-
-	public function new() {
-	}
-
-	public static function parse(xml: Access): FillStyle {
+class FillStyle
+{
+	public var data:Dynamic;
+	public var index:Int;
+	
+	public function new() {}
+	
+	public static function parse(xml:Access):FillStyle
+	{
 		var fillStyle = new FillStyle();
 		fillStyle.index = Std.parseInt(xml.att.index);
-		for (element in xml.elements) {
-			switch (element.name) {
+		for (element in xml.elements)
+		{
+			switch (element.name)
+			{
 				case "SolidColor":
 					fillStyle.data = SolidColor.parse(element);
 				case "LinearGradient":
@@ -27,5 +29,4 @@ class FillStyle {
 		}
 		return fillStyle;
 	}
-
 }

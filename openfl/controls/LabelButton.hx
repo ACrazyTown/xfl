@@ -12,26 +12,28 @@ import openfl.text.TextFormat;
 import xfl.XFLSymbolArguments;
 import xfl.dom.DOMTimeline;
 
-class LabelButton extends UIComponent {
+class LabelButton extends UIComponent
+{
 	public var label(get, set):String;
 	public var labelPlacement(get, set):String;
 	public var textField(get, never):TextField;
 	public var textPadding(get, set):Float;
 	public var selected(get, set):Bool;
 	public var toggle:Bool;
-
+	
 	private var _textPadding:Float;
 	private var _labelPlacement:String;
 	private var _textField:TextField;
 	private var _selected:Bool;
-
+	
 	private var _mouseState:String;
 	private var _currentIcon:DisplayObject;
 	private var _currentSkin:DisplayObject;
-
+	
 	private var _maxIconWidth:Float;
-
-	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null) {
+	
+	public function new(name:String = null, xflSymbolArguments:XFLSymbolArguments = null)
+	{
 		super(name, xflSymbolArguments);
 		_textPadding = 5.0;
 		_textField = new TextField();
@@ -54,8 +56,9 @@ class LabelButton extends UIComponent {
 		addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
 		setMouseState("up");
 	}
-
-	override public function setStyle(style:String, value:Dynamic):Void {
+	
+	override public function setStyle(style:String, value:Dynamic):Void
+	{
 		super.setStyle(style, value);
 		var tmpIconWidth:Float = 0.0;
 		_maxIconWidth = 0.0;
@@ -105,16 +108,19 @@ class LabelButton extends UIComponent {
 				- cast(getStyle("selectedDisabledIcon"), DisplayObject).width) / 2.0
 				- getStyle("selectedDisabledIcon").getBounds(null).x;
 	}
-
-	private function get_textField():TextField {
+	
+	private function get_textField():TextField
+	{
 		return _textField;
 	}
-
-	private function get_label():String {
+	
+	private function get_label():String
+	{
 		return _textField.text;
 	}
-
-	private function set_label(label:String):String {
+	
+	private function set_label(label:String):String
+	{
 		var defaultTextFormat:TextFormat = getStyle("defaultTextFormat");
 		if (defaultTextFormat != null)
 			_textField.defaultTextFormat = defaultTextFormat;
@@ -124,46 +130,55 @@ class LabelButton extends UIComponent {
 		draw();
 		return label;
 	}
-
-	private function get_labelPlacement():String {
+	
+	private function get_labelPlacement():String
+	{
 		return _labelPlacement;
 	}
-
-	private function set_labelPlacement(labelPlacement:String):String {
+	
+	private function set_labelPlacement(labelPlacement:String):String
+	{
 		_labelPlacement = labelPlacement;
 		draw();
 		return _labelPlacement;
 	}
-
-	public function get_textPadding():Float {
+	
+	public function get_textPadding():Float
+	{
 		return _textPadding;
 	}
-
-	public function set_textPadding(_textPadding:Float):Float {
+	
+	public function set_textPadding(_textPadding:Float):Float
+	{
 		_textField.x = _textPadding;
 		_textField.width = _width - _textPadding;
 		draw();
 		return this._textPadding = _textPadding;
 	}
-
-	private function get_selected():Bool {
+	
+	private function get_selected():Bool
+	{
 		return _selected;
 	}
-
-	private function set_selected(selected:Bool):Bool {
+	
+	private function set_selected(selected:Bool):Bool
+	{
 		_selected = selected;
 		draw();
 		return _selected;
 	}
-
-	public function setMouseState(newMouseState:String):Void {
+	
+	public function setMouseState(newMouseState:String):Void
+	{
 		_mouseState = newMouseState == "out" ? "up" : newMouseState;
 		draw();
 	}
-
-	override private function draw() {
+	
+	override private function draw()
+	{
 		var textFormat = getStyle("textFormat");
-		if (textFormat != null && _textField.getTextFormat() != textFormat) {
+		if (textFormat != null && _textField.getTextFormat() != textFormat)
+		{
 			_textField.setTextFormat(textFormat);
 			_textField.height = _textField.textHeight;
 			_textField.y = (_height - _textField.height) / 2.0;
@@ -173,7 +188,8 @@ class LabelButton extends UIComponent {
 		var styleName:String = (_selected == true ? "selected" + _mouseState.charAt(0).toUpperCase() + _mouseState.substr(1).toLowerCase() : _mouseState)
 			+ "Icon";
 		var newIcon:DisplayObject = getStyle(styleName);
-		if (newIcon != null) {
+		if (newIcon != null)
+		{
 			var iconBounds:Rectangle = newIcon.getBounds(null);
 			newIcon.visible = true;
 			newIcon.y = (_height - newIcon.height) / 2.0 - iconBounds.y;
@@ -181,7 +197,8 @@ class LabelButton extends UIComponent {
 			_currentIcon = newIcon;
 			addChild(_currentIcon);
 		}
-		if (_currentSkin != null) {
+		if (_currentSkin != null)
+		{
 			_currentSkin.visible = false;
 			removeChild(_currentSkin);
 		}
@@ -190,7 +207,8 @@ class LabelButton extends UIComponent {
 			+ "Skin");
 		if (newSkin == null)
 			getStyle("upSkin");
-		if (newSkin != null) {
+		if (newSkin != null)
+		{
 			addChildAt(newSkin, 0);
 			newSkin.x = 0.0;
 			newSkin.y = 0.0;
@@ -200,21 +218,25 @@ class LabelButton extends UIComponent {
 			_currentSkin = newSkin;
 		}
 	}
-
-	override public function setSize(_width:Float, _height:Float):Void {
+	
+	override public function setSize(_width:Float, _height:Float):Void
+	{
 		super.setSize(_width, _height);
 		_textField.width = _width - _textPadding;
 		_textField.y = (_height - _textField.height) / 2.0;
 	}
-
-	private function onMouseEvent(event:MouseEvent):Void {
-		switch (event.type) {
+	
+	private function onMouseEvent(event:MouseEvent):Void
+	{
+		switch (event.type)
+		{
 			case MouseEvent.MOUSE_OVER:
 				setMouseState("over");
 			case MouseEvent.MOUSE_OUT:
 				setMouseState("out");
 			case MouseEvent.MOUSE_UP:
-				if (toggle == true) {
+				if (toggle == true)
+				{
 					_selected = !_selected;
 					dispatchEvent(new Event(Event.CHANGE));
 				}
@@ -225,8 +247,9 @@ class LabelButton extends UIComponent {
 				trace("onMouseEvent(): unsupported mouse event type '" + event.type + "'");
 		}
 	}
-
-	override public function dispose():Void {
+	
+	override public function dispose():Void
+	{
 		removeEventListener(MouseEvent.MOUSE_UP, onMouseEvent);
 		removeEventListener(MouseEvent.MOUSE_OUT, onMouseEvent);
 		removeEventListener(MouseEvent.MOUSE_OVER, onMouseEvent);

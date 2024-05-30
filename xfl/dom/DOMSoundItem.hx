@@ -2,32 +2,34 @@ package xfl.dom;
 
 import haxe.xml.Access;
 
-class DOMSoundItem {
-
+class DOMSoundItem
+{
 	// public var soundDataHRef:String;
 	public var href:String;
+	
 	// public var itemID:String;
 	// public var linkageClassName:String;
 	// public var linkageExportForAS:Bool;
 	// public var name:String;
 	// public var sourceExternalFilepath:String;
 	// public var sourceLastImported:Int;
-    // public var format: String;
-
-	public function new () {
-	}
-
-	public static function parseIndex(xml: Access): DOMItemIndex {
-		var index: DOMItemIndex = new DOMItemIndex();
+	// public var format: String;
+	
+	public function new() {}
+	
+	public static function parseIndex(xml:Access):DOMItemIndex
+	{
+		var index:DOMItemIndex = new DOMItemIndex();
 		index.name = xml.att.name;
-		index.linkageClassName = xml.has.linkageClassName == true?xml.att.linkageClassName:null;
+		index.linkageClassName = xml.has.linkageClassName == true ? xml.att.linkageClassName : null;
 		index.item = null;
 		index.fileName = null;
 		return index;
 	}
-
-	public static function parse (xml: Access): DOMSoundItem {
-		var soundItem = new DOMSoundItem();		
+	
+	public static function parse(xml:Access):DOMSoundItem
+	{
+		var soundItem = new DOMSoundItem();
 		// soundItem.name = xml.att.name;
 		// soundItem.itemID = xml.att.itemID;
 		// if (xml.has.linkageClassName) soundItem.linkageClassName = xml.att.linkageClassName;
@@ -39,5 +41,4 @@ class DOMSoundItem {
 		// soundItem.soundDataHRef = xml.att.soundDataHRef;
 		return soundItem;
 	}
-
 }

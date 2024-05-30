@@ -11,78 +11,97 @@ import openfl.display.XFLMovieClip;
 import openfl.display.XFLSprite;
 import openfl.media.Sound;
 
-class XFL {
+class XFL
+{
 	public static var BITMAPDATA_DISPOSEIMAGE:Bool = true;
 	public static var BITMAPDATA_USECACHE:Bool = false;
 	public static var BITMAP_SMOOTHING:Bool = true;
 	public static var SOUND_USECACHE:Bool = false;
 	public static var ASSETS_CLEARCACHE:Bool = true;
 	public static var XML_USECOLLECTION:Bool = false;
-
+	
 	public var paths(get, never):Array<String>;
 	public var documents(get, never):Array<DOMDocument>;
 	public var customSymbolLoader(get, never):XFLCustomSymbolLoader;
-
+	
 	private var _paths:Array<String>;
 	private var _documents:Array<DOMDocument>;
 	private var _customSymbolLoader:XFLCustomSymbolLoader;
 	private var _fontMapping:Map<String, String>;
-
+	
 	private static var xmlCollection:haxe.xml.Access = null;
-
-	public function new(paths:Array<String>, customSymbolLoader:XFLCustomSymbolLoader = null) {
+	
+	public function new(paths:Array<String>, customSymbolLoader:XFLCustomSymbolLoader = null)
+	{
 		this._documents = [];
 		this._paths = paths;
 		this._customSymbolLoader = customSymbolLoader;
 		this._fontMapping = new Map<String, String>();
-		for (path in _paths) {
+		for (path in _paths)
+		{
 			documents.push(DOMDocument.load(path, "DOMDocument.xml"));
 		}
 	}
-
-	private function get_paths():Array<String> {
+	
+	private function get_paths():Array<String>
+	{
 		return _paths;
 	}
-
-	private function get_documents():Array<DOMDocument> {
+	
+	private function get_documents():Array<DOMDocument>
+	{
 		return _documents;
 	}
-
-	private function get_customSymbolLoader():XFLCustomSymbolLoader {
+	
+	private function get_customSymbolLoader():XFLCustomSymbolLoader
+	{
 		return _customSymbolLoader;
 	}
-
-	public function getFontMapping(font:String):String {
+	
+	public function getFontMapping(font:String):String
+	{
 		var mappedFont:String = _fontMapping.get(font);
 		return mappedFont != null ? mappedFont : font;
 	}
-
-	public function addFontMapping(font:String, fontMapping:String):Void {
+	
+	public function addFontMapping(font:String, fontMapping:String):Void
+	{
 		_fontMapping.set(font, fontMapping);
 	}
-
-	public static function getXMLData(name:String):haxe.xml.Access {
-		if (XML_USECOLLECTION == false) {
+	
+	public static function getXMLData(name:String):haxe.xml.Access
+	{
+		if (XML_USECOLLECTION == false)
+		{
 			var textAsset:String = openfl.Assets.getText(name);
-			if (textAsset != null) {
-				if (ASSETS_CLEARCACHE == true) {
+			if (textAsset != null)
+			{
+				if (ASSETS_CLEARCACHE == true)
+				{
 					Assets.cache.clear();
 				}
 				return new haxe.xml.Access(Xml.parse(textAsset).firstElement());
 			}
 			trace("getXMLData(): xml data not found: " + name);
-		} else {
-			if (xmlCollection == null) {
+		}
+		else
+		{
+			if (xmlCollection == null)
+			{
 				var textAsset:String = openfl.Assets.getText("xml-collection/xml-collection.xmlcol");
-				if (textAsset != null) {
-					if (ASSETS_CLEARCACHE == true) {
+				if (textAsset != null)
+				{
+					if (ASSETS_CLEARCACHE == true)
+					{
 						Assets.cache.clear();
 					}
 					xmlCollection = new haxe.xml.Access(Xml.parse(textAsset).firstElement());
 				}
 			}
-			for (entry in xmlCollection.nodes.entry) {
-				if (entry.att.name == name) {
+			for (entry in xmlCollection.nodes.entry)
+			{
+				if (entry.att.name == name)
+				{
 					return new haxe.xml.Access(entry.x.firstElement());
 				}
 			}
@@ -90,20 +109,26 @@ class XFL {
 		}
 		return null;
 	}
-
-	public function getBitmapData(name:String):BitmapData {
+	
+	public function getBitmapData(name:String):BitmapData
+	{
 		var bitmapData:BitmapData = null;
-		for (document in _documents) {
-			for (medium in document.media) {
-				if (medium.linkageClassName == name) {
+		for (document in _documents)
+		{
+			for (medium in document.media)
+			{
+				if (medium.linkageClassName == name)
+				{
 					var bitmapItem:DOMBitmapItem = medium.item;
 					var assetUrl:String = document.path + "/LIBRARY/" + bitmapItem.href;
 					if (Assets.exists(assetUrl) == true)
 						bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
-					if (bitmapData != null) {
+					if (bitmapData != null)
+					{
 						if (BITMAPDATA_DISPOSEIMAGE == true)
 							bitmapData.disposeImage();
-						if (ASSETS_CLEARCACHE == true) {
+						if (ASSETS_CLEARCACHE == true)
+						{
 							Assets.cache.clear();
 						}
 						return bitmapData;
@@ -114,20 +139,26 @@ class XFL {
 		trace("getBitmapData(): bitmap data not found: " + name);
 		return null;
 	}
-
-	public function getBitmapDataByPath(path:String):BitmapData {
+	
+	public function getBitmapDataByPath(path:String):BitmapData
+	{
 		var bitmapData:BitmapData = null;
-		for (document in _documents) {
-			for (medium in document.media) {
-				if (medium.name == path) {
+		for (document in _documents)
+		{
+			for (medium in document.media)
+			{
+				if (medium.name == path)
+				{
 					var bitmapItem:DOMBitmapItem = medium.item;
 					var assetUrl:String = document.path + "/LIBRARY/" + bitmapItem.href;
 					if (Assets.exists(assetUrl) == true)
 						bitmapData = Assets.getBitmapData(assetUrl, BITMAPDATA_USECACHE);
-					if (bitmapData != null) {
+					if (bitmapData != null)
+					{
 						if (BITMAPDATA_DISPOSEIMAGE == true)
 							bitmapData.disposeImage();
-						if (ASSETS_CLEARCACHE == true) {
+						if (ASSETS_CLEARCACHE == true)
+						{
 							Assets.cache.clear();
 						}
 						return bitmapData;
@@ -138,18 +169,24 @@ class XFL {
 		trace("getBitmapDataByPath(): bitmap data not found by path: " + path);
 		return null;
 	}
-
-	public function getSound(name:String):Sound {
+	
+	public function getSound(name:String):Sound
+	{
 		var sound:Sound = null;
-		for (document in _documents) {
-			for (medium in document.media) {
-				if (medium.linkageClassName == name) {
+		for (document in _documents)
+		{
+			for (medium in document.media)
+			{
+				if (medium.linkageClassName == name)
+				{
 					var soundItem:DOMSoundItem = medium.item;
 					var assetUrl:String = document.path + "/LIBRARY/" + soundItem.href;
 					if (Assets.exists(assetUrl) == true)
 						sound = Assets.getSound(assetUrl, SOUND_USECACHE);
-					if (sound != null) {
-						if (ASSETS_CLEARCACHE == true) {
+					if (sound != null)
+					{
+						if (ASSETS_CLEARCACHE == true)
+						{
 							Assets.cache.clear();
 						}
 						return sound;
@@ -160,14 +197,20 @@ class XFL {
 		trace("getSound(): sound not found: " + name);
 		return sound;
 	}
-
-	private function getSymbolItem(name:String):DOMSymbolItem {
-		for (document in _documents) {
-			for (symbol in document.symbols) {
-				if (symbol.linkageClassName == name) {
+	
+	private function getSymbolItem(name:String):DOMSymbolItem
+	{
+		for (document in _documents)
+		{
+			for (symbol in document.symbols)
+			{
+				if (symbol.linkageClassName == name)
+				{
 					var domSymbolItem:DOMSymbolItem = DOMSymbolItem.load(document.path + "/LIBRARY", symbol.fileName);
-					if (domSymbolItem != null) {
-						if (ASSETS_CLEARCACHE == true) {
+					if (domSymbolItem != null)
+					{
+						if (ASSETS_CLEARCACHE == true)
+						{
 							Assets.cache.clear();
 						}
 					}
@@ -178,23 +221,28 @@ class XFL {
 		trace("getSymbolItem(): symbol not found: " + name);
 		return null;
 	}
-
-	public function createSymbolArguments(name:String):XFLSymbolArguments {
+	
+	public function createSymbolArguments(name:String):XFLSymbolArguments
+	{
 		var symbolItem:DOMSymbolItem = getSymbolItem(name);
-		if (symbolItem != null) {
-			return new XFLSymbolArguments(this, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked,
-				symbolItem.scaleGrid != null);
+		if (symbolItem != null)
+		{
+			return new XFLSymbolArguments(this, symbolItem.linkageClassName, symbolItem.timeline, symbolItem.parametersAreLocked, symbolItem.scaleGrid != null);
 		}
 		trace("createSymbolArguments(): symbol not found: " + name);
 		return null;
 	}
-
-	public function createMovieClip(name:String):XFLMovieClip {
+	
+	public function createMovieClip(name:String):XFLMovieClip
+	{
 		var symbolItem:DOMSymbolItem = getSymbolItem(name);
-		if (symbolItem != null) {
-			if (customSymbolLoader != null) {
+		if (symbolItem != null)
+		{
+			if (customSymbolLoader != null)
+			{
 				var movieClip:XFLMovieClip = customSymbolLoader.createMovieClip(this, symbolItem);
-				if (movieClip != null) {
+				if (movieClip != null)
+				{
 					customSymbolLoader.onMovieClipLoaded(this, symbolItem, movieClip);
 					return movieClip;
 				}
@@ -205,13 +253,17 @@ class XFL {
 		trace("createMovieClip(): movie clip not found: " + name);
 		return null;
 	}
-
-	public function createSprite(name:String):XFLSprite {
+	
+	public function createSprite(name:String):XFLSprite
+	{
 		var symbolItem:DOMSymbolItem = getSymbolItem(name);
-		if (symbolItem != null) {
-			if (customSymbolLoader != null) {
+		if (symbolItem != null)
+		{
+			if (customSymbolLoader != null)
+			{
 				var sprite:XFLSprite = customSymbolLoader.createSprite(this, symbolItem);
-				if (sprite != null) {
+				if (sprite != null)
+				{
 					customSymbolLoader.onSpriteLoaded(this, symbolItem, sprite);
 					return sprite;
 				}

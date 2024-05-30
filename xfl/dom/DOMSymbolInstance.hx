@@ -5,7 +5,8 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 import haxe.xml.Access;
 
-class DOMSymbolInstance {
+class DOMSymbolInstance
+{
 	public var cacheAsBitmap:Bool;
 	public var color:Color;
 	public var exportAsBitmap:Bool;
@@ -15,10 +16,11 @@ class DOMSymbolInstance {
 	public var name:String;
 	public var symbolType:String;
 	public var transformationPoint:Point;
-
+	
 	public function new() {}
-
-	public function clone():DOMSymbolInstance {
+	
+	public function clone():DOMSymbolInstance
+	{
 		var duplicate:DOMSymbolInstance = new DOMSymbolInstance();
 		if (color != null)
 			duplicate.color = new Color(color.redMultiplier, color.greenMultiplier, color.blueMultiplier, color.alphaMultiplier, color.redOffset,
@@ -32,8 +34,9 @@ class DOMSymbolInstance {
 		duplicate.transformationPoint = transformationPoint;
 		return duplicate;
 	}
-
-	public static function parse(xml:Access):DOMSymbolInstance {
+	
+	public static function parse(xml:Access):DOMSymbolInstance
+	{
 		var symbolInstance = new DOMSymbolInstance();
 		symbolInstance.libraryItemName = xml.att.libraryItemName;
 		if (xml.has.name)
@@ -46,8 +49,10 @@ class DOMSymbolInstance {
 			symbolInstance.cacheAsBitmap = (xml.att.cacheAsBitmap == "true");
 		if (xml.has.exportAsBitmap)
 			symbolInstance.exportAsBitmap = (xml.att.exportAsBitmap == "true");
-		for (element in xml.elements) {
-			switch (element.name) {
+		for (element in xml.elements)
+		{
+			switch (element.name)
+			{
 				case "transformationPoint":
 					symbolInstance.transformationPoint = xfl.geom.Point.parse(element.elements.next());
 				case "matrix":
